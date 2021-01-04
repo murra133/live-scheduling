@@ -31,3 +31,4 @@ $('#contactForm').submit(function(e) {
  
     $('#contactForm')[0].reset();
 });
+

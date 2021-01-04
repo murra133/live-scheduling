@@ -1,0 +1,67 @@
+/* Main View Page */
+#main_title{
+    text-align: center;
+    display:block;
+}
+#upload_button{
+    
+    float: right;
+    display:block;
+    padding-left: 85%;
+}
+
+.submit_button{
+    padding-left: 10rem;
+}
+
+/* -----Styles for Activity Headers----  */
+#cell{
+    display:block;
+}
+
+#cell_header{
+    display:inline-block;
+    width: 48%;
+    text-align: center;
+}
+
+.cell_item{
+    display:inline-block;
+    border-style: solid;
+    padding:.5vw;
+    border-radius: .5vw;
+    margin-left: .05vw;
+    font-size: 1vw;
+
+}
+
+/* -----Style for Date Headers----  */
+#cell_dates{
+    display:inline-block;
+    width: 50%;
+    text-align: center;
+    overflow-x:auto;
+    white-space: nowrap;
+    overflow-y: hidden;
+}
+
+
+.date{
+display:inline-block;
+border-style: solid;
+padding:.5vw;
+font-size:small;
+margin:-.1vw;
+border-radius: 10px;
+position: sticky;
+
+overflow-x: auto;
+
+}
+
+/* Response Tablet */
+
+
+
+
+/* Responive Phone */

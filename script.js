@@ -36,10 +36,8 @@ function three_week_ahead(){
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; 
-  console.log(today);
   for(n=0;n<21;n++) {
-    console.log(dd);
-    console.log(mm);
+
     if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
       dd=1;
       mm=mm+1;
@@ -54,7 +52,6 @@ function three_week_ahead(){
     }
     ndd=dd;
     nmm=mm;
-    console.log(dd);
 
     if(ndd<10) 
     {
@@ -70,3 +67,61 @@ function three_week_ahead(){
   }
 
   };
+
+  function add_main_activity(){
+    var add_cell = document.getElementById('added_cell');
+    var n =add_cell.children.length;
+    n=n+1;
+    console.log(n);
+    var div = document.createElement('div');
+    div.setAttribute("id",n);
+    div.setAttribute("class","main_activity");
+    var form=document.createElement('form')
+    form.setAttribute("method","post");
+    var inp = document.createElement('input');
+    inp.setAttribute("type","text");
+    inp.setAttribute("class","main_activity_input");
+    inp.setAttribute("name","main_activity"+n);
+    var submit = document.createElement("div");
+    submit.setAttribute("type","submit");
+    submitchild = document.createElement("i");
+    submitchild.setAttribute("class","fa fa-check-square")
+    submitchild.setAttribute("onclick","change_input_to_title(this)")
+    rejectchild = document.createElement("i");
+    rejectchild.setAttribute("class","fa fa-times-circle-o")
+    var subadd=document.createElement('div');
+    subadd.setAttribute("class","sub_activity_add");
+    subadd.setAttribute("onclick","add_sub_activity()");
+    var subaddtwo=document.createElement("i");
+    subaddtwo.setAttribute("class","far fa-plus-square");
+    subadd.appendChild(subaddtwo);
+    submit.appendChild(submitchild);
+    submit.appendChild(rejectchild)
+    form.appendChild(inp);
+    form.appendChild(submit);
+    div.appendChild(form)
+    div.appendChild(subadd);
+    add_cell.appendChild(div);
+  };
+
+
+  function change_input_to_title(this_element){
+    var input_parent= this_element.parentElement.parentElement;
+    var input_value= input_parent.children[0].value;
+    console.log(input_parent)
+    var main_div=input_parent.parentElement;
+    console.log("main_div="+main_div)
+    var subadd=main_div.lastChild;
+    console.log(subadd)
+    var title = document.createElement("h2");
+    title.innerHTML=input_value;
+    for (i=0;i<main_div.children.length;i++) {
+      child=main_div.children[i];
+      main_div.removeChild(child);
+    }
+    
+    main_div.appendChild(title);
+    main_div.appendChild(subadd);
+    
+
+  }

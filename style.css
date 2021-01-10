@@ -1,4 +1,8 @@
 /* Main View Page */
+html, body{
+    margin:0;
+    height: 100%;
+}
 #main_title{
     text-align: center;
     display:block;
@@ -17,12 +21,14 @@
 /* -----Styles for Activity Headers----  */
 #cell{
     display:block;
+    float:
 }
 
 #cell_header{
     display:inline-block;
     width: 48%;
     text-align: center;
+    height: 100%;
 }
 
 .cell_item{
@@ -38,11 +44,13 @@
 /* -----Style for Date Headers----  */
 #cell_dates{
     display:inline-block;
-    width: 50%;
+    width: 48%;
     text-align: center;
     overflow-x:auto;
     white-space: nowrap;
     overflow-y: hidden;
+    height: 100%;
+    float:right;
 }
 
 
@@ -53,12 +61,100 @@ padding:.5vw;
 font-size:small;
 margin:-.1vw;
 border-radius: 10px;
+position:-webkit-sticky;
 position: sticky;
-
 overflow-x: auto;
+}
+
+#added_cell{
+    display: block;
+    width: 100%
+}
+.main_activity_input{
+    text-align: left;
+    display: block;
+    position: relative;
+    left:2%;
+    width: 80%;
+    float:left;
+}
+#main_activity_add{
+    float:left;
+    position: relative;
+    left:1vw;
+    font-size: 150%;
+    color: rgb(128,128,128);
+
+}
+#main_activity_add:hover{
+    color:	rgb(190,190,190);
+    cursor:pointer
 
 }
 
+#main_activity_add:active{
+    color:rgb(24,24,24);
+}
+
+.fa-check-square{
+    color:#00cc00;
+    font-size: 150%;
+    text-align: center;
+}
+
+.fa-check-square:hover{
+    color:#66ff66;
+    cursor: pointer;
+}
+.fa-check-square:active{
+    color:#006600;
+}
+
+.fa-times-circle-o{
+    color:#cd5c5c;
+    font-size: 150%;
+    text-align: center;
+    padding-left: .5vw;
+    position: relative;
+
+}
+.fa-times-circle-o:hover{
+    color:#ebbebe;
+    cursor: pointer;
+
+}
+.fa-times-circle-o:active{
+    color:#CC0066;
+
+}
+
+
+
+
+.sub_activity_add{
+    display: block;
+    float:left;
+    position: relative;
+    left:1vw;
+    font-size: 150%;
+    color: rgb(128,128,128);
+    text-align: left;
+    position: relative;
+    left:6%;
+    width:100%;
+    font-size: 120%;
+    color: rgb(128,128,128);
+}
+.sub_activity{
+text-align: left;
+display: block;
+position: relative;
+left:6%;
+width: 94%;
+float:left;
+position:relative;
+top:2vh;
+}
 /* Response Tablet */
 
 

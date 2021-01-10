@@ -1,3 +1,4 @@
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
 /* Main View Page */
 html, body{
     margin:0;
@@ -21,7 +22,6 @@ html, body{
 /* -----Styles for Activity Headers----  */
 #cell{
     display:block;
-    float:
 }
 
 #cell_header{
@@ -43,7 +43,7 @@ html, body{
 
 /* -----Style for Date Headers----  */
 #cell_dates{
-    display:inline-block;
+
     width: 48%;
     text-align: center;
     overflow-x:auto;

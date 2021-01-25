@@ -54,28 +54,24 @@ html, body{
 }
 
 
-.date{
-display:inline-block;
-border-style: solid;
-padding:.5vw;
-font-size:small;
-margin:-.1vw;
-border-radius: 10px;
-position:-webkit-sticky;
-position: sticky;
-overflow-x: auto;
-}
 
 #added_cell{
-    display: block;
-    width: 100%
+    display:block;
+    width: 100%;
+    float: left;
+}
+
+/* ---------- Main Activity CSS  ------------*/
+.main_activity{
+    display:grid;
+    padding-bottom: 3%;
 }
 .main_activity_input{
     text-align: left;
     display: block;
     position: relative;
     left:2%;
-    width: 80%;
+    width: 45%;
     float:left;
 }
 #main_activity_add{
@@ -84,6 +80,7 @@ overflow-x: auto;
     left:1vw;
     font-size: 150%;
     color: rgb(128,128,128);
+    padding-top:-6%;
 
 }
 #main_activity_add:hover{
@@ -96,10 +93,34 @@ overflow-x: auto;
     color:rgb(24,24,24);
 }
 
+.main_activity_title{
+    width:49%;
+    position:relative;
+    left:2%;
+ 
+
+}
+.main_activity_title > h2{
+text-align: left;
+font-size: 100%;
+padding:.8vh;
+color:white;
+background-color: gray;
+width:98%;
+border-style: solid;
+border:black;
+border-radius: 5px;
+
+}
+
+/* ------ Buttons ------*/
+
 .fa-check-square{
+    display: inline-block;
     color:#00cc00;
     font-size: 150%;
     text-align: center;
+    padding-left:2.5%
 }
 
 .fa-check-square:hover{
@@ -111,6 +132,7 @@ overflow-x: auto;
 }
 
 .fa-times-circle-o{
+    display: inline-block;
     color:#cd5c5c;
     font-size: 150%;
     text-align: center;
@@ -128,7 +150,7 @@ overflow-x: auto;
 
 }
 
-
+/*-------Sub Activity CSS -----*/
 
 
 .sub_activity_add{
@@ -136,12 +158,9 @@ overflow-x: auto;
     float:left;
     position: relative;
     left:1vw;
-    font-size: 150%;
-    color: rgb(128,128,128);
     text-align: left;
     position: relative;
-    left:6%;
-    width:100%;
+    width:50%;
     font-size: 120%;
     color: rgb(128,128,128);
 }
@@ -149,11 +168,97 @@ overflow-x: auto;
 text-align: left;
 display: block;
 position: relative;
-left:6%;
-width: 94%;
+left:3%;
+width: 98%;
 float:left;
 position:relative;
-top:2vh;
+top: 2vh;
+overflow: hidden;
+}
+
+.sub{
+    display: inline-block;
+    float:left;
+    position: relative;
+}
+.sub h3{
+    font-size: 1vw;
+}
+
+.sub_activity_id{
+    width:2%;
+}
+.sub_activity_name{
+    width:22.5%;
+
+}
+.sub_activity_sdate{
+    width:6.5%;
+
+}
+.sub_activity_edate{
+    width:6.5%;
+
+}
+.sub_activity_contractor{
+    width:7.5%;
+
+}
+.sub_id{
+
+}
+.sub_name{
+    width:98%;
+    margin-bottom: .6rem;
+}
+.sub_sdate{
+    width:95%;
+    margin-bottom: .6rem;
+}
+.sub_edate{
+    width:95%;
+    margin-bottom: .6rem;
+}
+.sub_contractor{
+height:120%;
+width:95%;
+margin-bottom: .92rem;
+}
+
+.date{
+    display:inline-block;
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+    padding:.2vw;
+    font-size:small;
+    margin-bottom: auto;
+    position:relative;
+    left:4.5vw;
+    width:4vw;
+    text-align: center;
+    }
+    
+
+.date_box{
+    display:inline-block;
+    border-style: solid;
+    border-width: 1px;
+    padding:.8vw 1.451vw;
+    font-size:small;
+    position: relative;
+    width:4vw;
+}
+
+.sub_bdate{
+    position: relative;
+    left:4.5vw;
+
+}
+
+.sub_activity_bdate{
+    width:55%;
+    white-space: nowrap;
+    overflow: auto;
 }
 /* Response Tablet */
 

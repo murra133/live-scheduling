@@ -31,7 +31,7 @@ function parseHTML(fileName) {
 
 
 
-function three_week_ahead(){
+function three_week_ahead(this_tag){
   var n;
   var today = new Date();
   var dd = today.getDate();
@@ -61,11 +61,26 @@ function three_week_ahead(){
     {
         nmm='0'+nmm;
     } 
-
-        document.write('<h3 class="date">'+nmm+'/'+ndd+'</h3>');
-        dd= dd+1;
+      var date = document.createElement("h3");
+      date.setAttribute("class","date");
+      date.innerHTML = nmm+'/'+ndd;
+      this_tag.appendChild(date);
+      dd=dd+1;
   }
+  return (this_tag);
 
+  };
+
+  function date_box(this_tag,id,this_dates){
+    var dates = this_dates.getElementsByClassName("date");
+    for (i=0;i<dates.length;i++){
+      box_id = id+"_"+dates[i].innerHTML;
+      var box = document.createElement("div");
+      box.setAttribute("id",box_id);
+      box.setAttribute("class","date_box")
+      this_tag.appendChild(box);
+    }
+    return (this_tag);
   };
 
   function add_main_activity(){
@@ -89,39 +104,233 @@ function three_week_ahead(){
     submitchild.setAttribute("onclick","change_input_to_title(this)")
     rejectchild = document.createElement("i");
     rejectchild.setAttribute("class","fa fa-times-circle-o")
-    var subadd=document.createElement('div');
-    subadd.setAttribute("class","sub_activity_add");
-    subadd.setAttribute("onclick","add_sub_activity()");
-    var subaddtwo=document.createElement("i");
-    subaddtwo.setAttribute("class","far fa-plus-square");
-    subadd.appendChild(subaddtwo);
+    /*  Adds Div for Dates for Main Activity */
+    var div_date_id = document.createElement("div");
+    div_date_id.setAttribute("id","date_"+n)
+    var cell_date = document.getElementById("cell_dates");
+    /* Appends All childs */
     submit.appendChild(submitchild);
     submit.appendChild(rejectchild)
+    div.appendChild(form)
     form.appendChild(inp);
     form.appendChild(submit);
-    div.appendChild(form)
-    div.appendChild(subadd);
     add_cell.appendChild(div);
+    cell_date.appendChild(div_date_id)
   };
 
 
   function change_input_to_title(this_element){
     var input_parent= this_element.parentElement.parentElement;
     var input_value= input_parent.children[0].value;
-    console.log(input_parent)
-    var main_div=input_parent.parentElement;
-    console.log("main_div="+main_div)
-    var subadd=main_div.lastChild;
-    console.log(subadd)
-    var title = document.createElement("h2");
-    title.innerHTML=input_value;
-    for (i=0;i<main_div.children.length;i++) {
-      child=main_div.children[i];
-      main_div.removeChild(child);
+    if(input_value!=""){
+      var main_div=input_parent.parentElement;
+      var subadd=document.createElement('div');
+      subadd.setAttribute("class","sub_activity_add");
+      subadd.setAttribute("onclick","add_sub_activity(this)");
+      var subaddtwo=document.createElement("i");
+      subaddtwo.setAttribute("class","far fa-plus-square");
+      subadd.appendChild(subaddtwo);
+      var title = document.createElement("h2");
+      var divtitle=document.createElement("div")
+      divtitle.setAttribute("class","main_activity_title")
+      title.innerHTML=input_value;
+      for (i=0;i<main_div.children.length;i++) {
+        child=main_div.children[i];
+        main_div.removeChild(child);
     }
     
-    main_div.appendChild(title);
+    divtitle.appendChild(title)
+    main_div.appendChild(divtitle);
     main_div.appendChild(subadd);
     
 
+    }
+  };
+
+function add_sub_activity(this_tag){
+  var parent_div=this_tag.parentElement;
+  var parent_id=parent_div.id;
+  if (parent_div.children.length < 3){
+    var activity_div=document.createElement('div');
+    activity_div.setAttribute("class","sub_activity");
+    /* Add Title for ID */
+    var id_div = document.createElement('div');
+    id_div.setAttribute("class","sub_activity_id sub")
+    var id_title = document.createElement("h3");
+    id_title.setAttribute("class","id_title");
+    id_title.innerHTML="Id";
+    id_div.appendChild(id_title);
+    /* Add Title for Activity */
+    var name_div = document.createElement('div');
+    name_div.setAttribute("class","sub_activity_name sub")
+    var name_title = document.createElement("h3");
+    name_title.setAttribute("class","activity_title");
+    name_title.innerHTML="Activity";
+    name_div.appendChild(name_title);
+    /* Add Title for Start Date */
+    var sdate_div = document.createElement('div');
+    sdate_div.setAttribute("class","sub_activity_sdate sub")
+    var sdate_title = document.createElement("h3");
+    sdate_title.setAttribute("class","sdate_title");
+    sdate_title.innerHTML="Start Date";
+    sdate_div.appendChild(sdate_title);
+    /* Add Title for End Date */
+    var edate_div = document.createElement('div');
+    edate_div.setAttribute("class","sub_activity_edate sub")
+    var edate_title = document.createElement("h3");
+    edate_title.setAttribute("class","edate_title");
+    edate_title.innerHTML="End Date";
+    edate_div.appendChild(edate_title);
+    /* Add Party Invloved */
+    var contractor_div = document.createElement('div');
+    contractor_div.setAttribute("class","sub_activity_contractor sub")
+    var contractor_title = document.createElement("h3");
+    contractor_title.setAttribute("class","contractor_title");
+    contractor_title.innerHTML="Party Involved";
+    contractor_div.appendChild(contractor_title);
+
+    /* Add Dates to the Activity Location */
+    var bdate = document.createElement('div');
+    bdate.setAttribute("class","sub_activity_bdate sub")
+    var bdate_dates = document.createElement("div");
+    bdate_dates.setAttribute("class","cell_dates");
+    three_week_ahead(bdate_dates);
+    bdate.appendChild(bdate_dates);
+
+
+
+  /*  Creat ID */
+  var id=parent_id+"001";
+  var p_id = document.createElement("p");
+  p_id.setAttribute("class","sub_id");
+  p_id.setAttribute("id",id)
+  p_id.innerHTML="001";
+  id_div.appendChild(p_id);
+
+  /* Create Activity */
+  var activity_parent= parent_div.getElementsByClassName("sub_activity_name")[0];
+  var input_activity = document.createElement("input");
+  input_activity.setAttribute("class","sub_name");
+  input_activity.setAttribute("id","name_"+id);
+  input_activity.setAttribute("type","text");
+  input_activity.setAttribute("value","Enter Activity Here");
+  name_div.appendChild(input_activity);
+
+   /* Create Start Date */
+   var sdate_parent= parent_div.getElementsByClassName("sub_activity_sdate")[0];
+   var input_sdate = document.createElement("input");
+   input_sdate.setAttribute("class","sub_sdate");
+   input_sdate.setAttribute("id","sdate_"+id);
+   input_sdate.setAttribute("type","date");
+   sdate_div.appendChild(input_sdate);
+
+   /* Create End Date */
+   var edate_parent= parent_div.getElementsByClassName("sub_activity_edate")[0];
+   var input_edate = document.createElement("input");
+   input_edate.setAttribute("class","sub_edate");
+   input_edate.setAttribute("id","edate_"+id);
+   input_edate.setAttribute("type","date");
+   edate_div.appendChild(input_edate);
+
+     /* Create Contartcor Option */
+   var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
+   var input_contractor = document.createElement("select");
+   input_contractor.setAttribute("class","sub_contractor");
+   input_contractor.setAttribute("id","contractor_"+id);
+   contractor_div.appendChild(input_contractor);
+
+   /* Create Date Box Div */
+
+   var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
+   var bdate_box = document.createElement("div");
+   bdate_box.setAttribute("class","sub_bdate");
+   bdate_box.setAttribute("id","bdate_"+id);
+   date_box(bdate_box,id,bdate);
+   bdate.appendChild(bdate_box);
+
+    activity_div.appendChild(id_div);
+    activity_div.appendChild(name_div);
+    activity_div.appendChild(sdate_div);
+    activity_div.appendChild(edate_div);
+    activity_div.appendChild(contractor_div);
+    activity_div.appendChild(bdate);
+    parent_div.appendChild(activity_div);
+    parent_div.appendChild(this_tag);
+    return;
   }
+
+  /* Add Id to sub activity number */
+  var current_id=parent_div.getElementsByClassName("sub_id");
+  var id=Number(current_id[current_id.length-1].id) +1;
+
+  /*  Create ID */
+  var id_parent= current_id[0].parentElement;
+  var p_id = document.createElement("p");
+  p_id.setAttribute("class","sub_id");
+  p_id.setAttribute("id",id)
+  if(id-Number(parent_id)*1000 < 10){
+    var attribute_id="00"+(id-Number(parent_id)*1000).toString();
+  }
+  else if (id-Number(parent_id)*1000 < 100){
+    var attribute_id="0"+(id-Number(parent_id)*1000).toString();
+  }
+  else{
+    var attribute_id=(id-Number(parent_id)*1000).toString();
+  }
+  p_id.innerHTML=attribute_id;
+  id_parent.appendChild(p_id);
+
+  /* Create Activity */
+  var activity_parent= parent_div.getElementsByClassName("sub_activity_name")[0];
+  var input_activity = document.createElement("input");
+  input_activity.setAttribute("class","sub_name");
+  input_activity.setAttribute("id","name_"+id.toString());
+  input_activity.setAttribute("type","text");
+  input_activity.setAttribute("value","Enter Activity Here");
+  activity_parent.appendChild(input_activity);
+
+   /* Create Start Date */
+   var sdate_parent= parent_div.getElementsByClassName("sub_activity_sdate")[0];
+   var input_sdate = document.createElement("input");
+   input_sdate.setAttribute("class","sub_sdate");
+   input_sdate.setAttribute("id","sdate_"+id.toString());
+   input_sdate.setAttribute("type","date");
+   sdate_parent.appendChild(input_sdate);
+
+   /* Create End Date */
+   var edate_parent= parent_div.getElementsByClassName("sub_activity_edate")[0];
+   var input_edate = document.createElement("input");
+   input_edate.setAttribute("class","sub_edate");
+   input_edate.setAttribute("id","edate_"+id.toString());
+   input_edate.setAttribute("type","date");
+   edate_parent.appendChild(input_edate);
+
+     /* Create Contartcor Option */
+   var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
+   var input_contractor = document.createElement("select");
+   input_contractor.setAttribute("class","sub_contractor");
+   input_contractor.setAttribute("id","contractor_"+id.toString());;
+   contractor_parent.appendChild(input_contractor);
+
+   /* Create Date Box */
+   var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
+   var bdate_box = document.createElement("div");
+   bdate_box.setAttribute("class","sub_bdate");
+   bdate_box.setAttribute("id","bdate_"+id);
+   dates=bdate_parent.getElementsByClassName("cell_dates")[0];
+   date_box(bdate_box,id,dates);
+   bdate_parent.appendChild(bdate_box);
+
+
+
+  console.log(id_parent);
+console.log('running');
+}
+  
+
+/*  if (parent_div,children[0].tagName=="form"){
+    var warning = document.createElement("h4")
+    warning.style.color = "red";
+    warning.innerHTML = "You Must Create the Mani Activity Above First";
+    parent_div.appendChild(warning);
+  }*/

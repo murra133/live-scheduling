@@ -232,8 +232,6 @@ margin-bottom: .92rem;
     padding:.2vw;
     font-size:small;
     margin-bottom: auto;
-    position:relative;
-    left:4.5vw;
     width:4vw;
     text-align: center;
     }
@@ -243,15 +241,14 @@ margin-bottom: .92rem;
     display:inline-block;
     border-style: solid;
     border-width: 1px;
-    padding:.8vw 1.451vw;
+    padding:.822vw 1.451vw;
     font-size:small;
     position: relative;
     width:4vw;
 }
 
 .sub_bdate{
-    position: relative;
-    left:4.5vw;
+
 
 }
 
@@ -259,6 +256,8 @@ margin-bottom: .92rem;
     width:55%;
     white-space: nowrap;
     overflow: auto;
+    position: relative;
+    left: 4.5vw;
 }
 /* Response Tablet */
 

@@ -71,6 +71,50 @@ function three_week_ahead(this_tag){
 
   };
 
+  function date_filler(sdate,edate){
+    var ndd;
+    var nmm;
+    var sdate_split = sdate.split("-");
+    var edate_split = edate.split("-");
+    var dd = sdate_split[2];
+    var mm = sdate_split[1]; 
+    var edd = edate_split[2]
+    var emm = edate_split[1]
+    while((ndd!=edd) && (nmm!=emm)) {
+      var n =0;
+  
+      if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
+        dd=1;
+        mm=mm+1;
+      }
+      else if ((dd==32 && (mm==1||mm==3||mm==5||mm==7||mm==8||mm==10||mm==12))){
+        dd=1;
+        mm=mm+1;
+      }
+      else if ((dd==29 && mm==2)){
+        dd=1;
+        mm=mm+1;
+      }
+      ndd=dd;
+      nmm=mm;
+  
+      if(ndd<10) 
+      {
+          ndd='0'+ndd;
+      }     
+      if(nmm<10) 
+      {
+          nmm='0'+nmm;
+      } 
+        var date = Array();
+        date[n] = nmm+'/'+ndd;
+        dd=dd+1;
+        n=n+1;
+    }
+    return (date);
+  
+    };
+
   function date_box(this_tag,id,this_dates){
     var dates = this_dates.getElementsByClassName("date");
     for (i=0;i<dates.length;i++){
@@ -326,7 +370,27 @@ function add_sub_activity(this_tag){
   console.log(id_parent);
 console.log('running');
 }
-  
+
+$(document).on('change', '.sub_sdate', function(){
+  console.log("runnig")
+  var id=this.id;
+  var value = this.value;
+  var sdate_id_array= id.split("_");
+  var edate_id = "edate_"+sdate_id_array[sdate_id_array.length-1];
+  var id = sdate_id_array[sdate_id_array.length-1];
+  console.log(edate_id);
+  console.log(sdate_id_array);
+  var edate = document.getElementById(edate_id);
+  if (edate.value==""){
+    edate.value=this.value;
+  }
+  var date_array = date_filler(this,edate);
+  console.log(date_array);
+
+
+}
+
+)
 
 /*  if (parent_div,children[0].tagName=="form"){
     var warning = document.createElement("h4")

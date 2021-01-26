@@ -76,12 +76,14 @@ function three_week_ahead(this_tag){
     var nmm;
     var sdate_split = sdate.split("-");
     var edate_split = edate.split("-");
-    var dd = sdate_split[2];
-    var mm = sdate_split[1]; 
-    var edd = edate_split[2]
-    var emm = edate_split[1]
-    while((ndd!=edd) && (nmm!=emm)) {
-      var n =0;
+    var dd = parseInt(sdate_split[2]);
+    var mm = parseInt(sdate_split[1]); 
+    var edd = parseInt(edate_split[2]);
+    var emm = parseInt(edate_split[1]);
+    console.log(edd);
+    var n =0;
+    var date = Array();
+    while((ndd!=edd) || (nmm!=emm)) {
   
       if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
         dd=1;
@@ -95,8 +97,8 @@ function three_week_ahead(this_tag){
         dd=1;
         mm=mm+1;
       }
-      ndd=dd;
-      nmm=mm;
+      ndd=''+dd;
+      nmm=''+mm;
   
       if(ndd<10) 
       {
@@ -106,7 +108,7 @@ function three_week_ahead(this_tag){
       {
           nmm='0'+nmm;
       } 
-        var date = Array();
+        console.log(ndd);
         date[n] = nmm+'/'+ndd;
         dd=dd+1;
         n=n+1;
@@ -378,15 +380,24 @@ $(document).on('change', '.sub_sdate', function(){
   var sdate_id_array= id.split("_");
   var edate_id = "edate_"+sdate_id_array[sdate_id_array.length-1];
   var id = sdate_id_array[sdate_id_array.length-1];
+  var date_all = document.getElementById("bdate_"+id).children;
+  for (var j = 0; j<date_all.length; j++){
+    var date_j = date_all[j];
+    date_j.style.backgroundColor = "white";
+  }
   console.log(edate_id);
   console.log(sdate_id_array);
   var edate = document.getElementById(edate_id);
   if (edate.value==""){
     edate.value=this.value;
   }
-  var date_array = date_filler(this,edate);
+  console.log("Sdate="+value+" Edate="+edate.value);
+  var date_array = date_filler(value,edate.value);
   console.log(date_array);
-
+  var i;
+  for(i = 0; i<date_array.length; i++){
+    document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+  }
 
 }
 

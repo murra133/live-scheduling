@@ -377,6 +377,7 @@ $(document).on('change', '.sub_sdate', function(){
   console.log("runnig")
   var id=this.id;
   var value = this.value;
+  console.log(value);
   var sdate_id_array= id.split("_");
   var edate_id = "edate_"+sdate_id_array[sdate_id_array.length-1];
   var id = sdate_id_array[sdate_id_array.length-1];
@@ -396,12 +397,51 @@ $(document).on('change', '.sub_sdate', function(){
   console.log(date_array);
   var i;
   for(i = 0; i<date_array.length; i++){
-    document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    if( document.getElementById(id+"_"+date_array[i])===null){
+      continue;
+    }
+    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    }
   }
 
-}
 
+}
 )
+
+$(document).on('change', '.sub_edate', function(){
+  console.log("runnig")
+  var id=this.id;
+  var value = this.value;
+  var edate_id_array= id.split("_");
+  var sdate_id = "sdate_"+edate_id_array[edate_id_array.length-1];
+  var id = edate_id_array[edate_id_array.length-1];
+  var date_all = document.getElementById("bdate_"+id).children;
+  for (var j = 0; j<date_all.length; j++){
+    var date_j = date_all[j];
+    date_j.style.backgroundColor = "white";
+  }
+  console.log(sdate_id);
+  console.log(edate_id_array);
+  var sdate = document.getElementById(sdate_id);
+  if (sdate.value==""){
+    sdate.value=this.value;
+  }
+  console.log("edate="+value+" sdate="+sdate.value);
+  var date_array = date_filler(sdate.value,value);
+  console.log(date_array);
+  var i;
+  for(i = 0; i<date_array.length; i++){
+    if( document.getElementById(id+"_"+date_array[i])===null){
+      continue;
+    }
+    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    }
+  }
+
+
+}
+)
+
 
 /*  if (parent_div,children[0].tagName=="form"){
     var warning = document.createElement("h4")

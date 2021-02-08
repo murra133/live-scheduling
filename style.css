@@ -19,6 +19,13 @@ html, body{
     padding-left: 10rem;
 }
 
+.start_date{
+    display:inline-block;
+}
+.start_date_div>h3{
+    font-size: 2vh;
+}
+
 /* -----Styles for Activity Headers----  */
 #cell{
     display:block;

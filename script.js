@@ -29,13 +29,59 @@ function parseHTML(fileName) {
     }
   };
 
+  /* This function changes the input date box int a block element once clicked*/
+  function start_date_block_style(){
+    
+    var start_date_id = document.getElementById("start_date_input");
+    console.log(start_date_id);
+    function display_null(){
+      start_date_id.style.display=null;
+      start_date_id.setAttribute("name","yes");
+    }
+    if(start_date_id.getAttribute("name")=="yes"){
+      start_date_id.setAttribute("name","no");
+      start_date_id.style.display="block";
+      return;
+    }
+    else{
+      setTimeout(display_null,328);
+    }
+  };
+
+/*Checks for today's date once the document loads and inputs it onto the start date div*/
+  $(document).ready(function start_date_today(){
+    var start_date_input = document.getElementById("start_date_input");
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    document.getElementById("start_date").innerHTML= mm+"/"+dd;
+  })
+/*Checks for updated start date on the input box and updates the start date div*/
+  $(document).on('change', '#start_date_input', function(){
+    console.log("running")
+    var new_date= document.getElementById("start_date_input").value;
+    var dd= new_date.split("-")[2];
+    var mm = new_date.split("-")[1];
+    document.getElementById("start_date").innerHTML=(mm+"/"+dd);
+
+    /*Updates all existing date cells and their id's*/
+    var cell_dates = document.getElementsByClassName("cell_dates");
+    for (i=0;i<cell_dates.length;i++){
+      var parent_node = cell_dates[i].parentElement;
+      cell_dates[i].removeAllChildNodes();
+      three_week_ahead(cell_dates[i]);
+      parent_node.appendChild(cell_dates[i]);
+    }
 
 
+  })
+
+  /* Creates the dates to go on the three week ahead using the existing start date*/
 function three_week_ahead(this_tag){
   var n;
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth()+1; 
+  var date = document.getElementById("start_date").innerHTML;
+  var dd = parseInt(date.split("/")[1]);
+  var mm = parseInt(date.split("/")[0]); 
   for(n=0;n<21;n++) {
 
     if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
@@ -71,6 +117,7 @@ function three_week_ahead(this_tag){
 
   };
 
+  /*Takes the start date and end date inputs and fills the respective cells*/
   function date_filler(sdate,edate){
     var ndd;
     var nmm;
@@ -117,6 +164,7 @@ function three_week_ahead(this_tag){
   
     };
 
+    /* Creates the boxes using the respective dates of the Div above*/
   function date_box(this_tag,id,this_dates){
     var dates = this_dates.getElementsByClassName("date");
     for (i=0;i<dates.length;i++){
@@ -128,7 +176,7 @@ function three_week_ahead(this_tag){
     }
     return (this_tag);
   };
-
+/* Adds the Main Activity Line */
   function add_main_activity(){
     var add_cell = document.getElementById('added_cell');
     var n =add_cell.children.length;
@@ -164,7 +212,7 @@ function three_week_ahead(this_tag){
     cell_date.appendChild(div_date_id)
   };
 
-
+/* Creates the main activity title from an input format to a title*/
   function change_input_to_title(this_element){
     var input_parent= this_element.parentElement.parentElement;
     var input_value= input_parent.children[0].value;
@@ -193,6 +241,7 @@ function three_week_ahead(this_tag){
     }
   };
 
+/* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
   var parent_div=this_tag.parentElement;
   var parent_id=parent_div.id;
@@ -373,6 +422,7 @@ function add_sub_activity(this_tag){
 console.log('running');
 }
 
+/* Fills in cells once start date is inputted */
 $(document).on('change', '.sub_sdate', function(){
   console.log("runnig")
   var id=this.id;
@@ -408,6 +458,7 @@ $(document).on('change', '.sub_sdate', function(){
 }
 )
 
+/* Fills in cells once end date is inputted */
 $(document).on('change', '.sub_edate', function(){
   console.log("runnig")
   var id=this.id;

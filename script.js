@@ -241,6 +241,14 @@ function three_week_ahead(this_tag){
     }
   };
 
+  function add_id_to_box(id){
+      document.getElementById("main_id").innerHTML=id;
+  }
+
+  function Add_Activity_title(id){
+    var activity_title = document.getElementById("activity_title_input").value;
+    var activity_input=document.getElementById("name"+id);
+  }
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
   document.getElementById("main_page").style.blur = "10px";
@@ -253,6 +261,7 @@ function add_sub_activity(this_tag){
       "filter": "blur(3px)", 
     }
   );
+
   var parent_div=this_tag.parentElement;
   var parent_id=parent_div.id;
   if (parent_div.children.length < 3){
@@ -361,12 +370,17 @@ function add_sub_activity(this_tag){
     activity_div.appendChild(bdate);
     parent_div.appendChild(activity_div);
     parent_div.appendChild(this_tag);
+
+
+    setTimeout(add_id_to_box,150,id);
+    
     return;
   }
 
   /* Add Id to sub activity number */
   var current_id=parent_div.getElementsByClassName("sub_id");
   var id=Number(current_id[current_id.length-1].id) +1;
+  document.getElementById("main_id").innerHTML=id;
 
   /*  Create ID */
   var id_parent= current_id[0].parentElement;
@@ -425,6 +439,8 @@ function add_sub_activity(this_tag){
    dates=bdate_parent.getElementsByClassName("cell_dates")[0];
    date_box(bdate_box,id,dates);
    bdate_parent.appendChild(bdate_box);
+
+   setTimeout(add_id_to_box,150,id);
 
 
 

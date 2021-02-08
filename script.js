@@ -442,6 +442,24 @@ $(document).on('change', '.sub_sdate', function(){
   if (edate.value==""){
     edate.value=this.value;
   }
+
+  //fix sdate>edate scenario
+  var sdate_part = value.split("-");
+  var edate_part = edate.value.split("-");
+  if(sdate_part[0]>edate_part[0]){
+    edate.value=this.value;
+  }
+  if(sdate_part[0]==edate_part[0]){
+    if(sdate_part[1]>edate_part[1]){
+      edate.value=this.value;
+    }
+    if(sdate_part[1]==edate_part[1]){
+      if(sdate_part[2]>edate_part[2]){
+        edate.value=this.value;
+      }
+    }
+  }
+  
   console.log("Sdate="+value+" Edate="+edate.value);
   var date_array = date_filler(value,edate.value);
   console.log(date_array);
@@ -477,6 +495,24 @@ $(document).on('change', '.sub_edate', function(){
   if (sdate.value==""){
     sdate.value=this.value;
   }
+
+  //fix sdate>edate scenario
+  var sdate_part = sdate.value.split("-");
+  var edate_part = value.split("-");
+  if(sdate_part[0]<edate_part[0]){
+    this.value=sdate.value;
+  }
+  if(sdate_part[0]==edate_part[0]){
+    if(sdate_part[1]<edate_part[1]){
+      this.value=sdate.value;
+    }
+    if(sdate_part[1]==edate_part[1]){
+      if(sdate_part[2]<edate_part[2]){
+        this.value=sdate.value;
+      }
+    }
+  }
+
   console.log("edate="+value+" sdate="+sdate.value);
   var date_array = date_filler(sdate.value,value);
   console.log(date_array);

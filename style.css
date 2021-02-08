@@ -159,7 +159,9 @@ border-radius: 5px;
 
 /*-------Sub Activity CSS -----*/
 
-
+#content{
+    position:fixed;
+}
 .sub_activity_add{
     display: block;
     float:left;

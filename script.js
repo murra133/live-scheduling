@@ -243,7 +243,16 @@ function three_week_ahead(this_tag){
 
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
+  document.getElementById("main_page").style.blur = "10px";
     $('#content').load("add_sub_activity.html");
+    $("#main_page").css({
+      "-webkit-filter": "blur(3px)", 
+      "-moz-filter": "blur(3px)", 
+      "-o-filter": "blur(3px)", 
+      "-ms-filter": "blur(3px)", 
+      "filter": "blur(3px)", 
+    }
+  );
   var parent_div=this_tag.parentElement;
   var parent_id=parent_div.id;
   if (parent_div.children.length < 3){

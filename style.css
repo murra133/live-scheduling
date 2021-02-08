@@ -26,6 +26,9 @@ html, body{
     font-size: 2vh;
 }
 
+#main_page{
+}
+
 /* -----Styles for Activity Headers----  */
 #cell{
     display:block;

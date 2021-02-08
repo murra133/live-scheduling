@@ -529,6 +529,68 @@ $(document).on('change', '.sub_edate', function(){
 }
 )
 
+//For Add Sub Activity HTML//
+
+
+function number_of_days_from_date(date){
+  //Input in yyyy-mm-dd//
+  var yyyy = date.split("-")[0];
+  var mm = date.split("-")[1];
+  var dd = date.split("-")[2];
+
+  var n_yyyy=parseInt(yyyy)*365;
+  var n_dd = parseInt(dd);
+
+  if ((mm==4||mm==6||mm==9||mm==11)){
+    var n_mm=30;
+  }
+  else if ((mm==1||mm==3||mm==5||mm==7||mm==8||mm==10||mm==12)){
+    var n_mm=31;
+  }
+  else if (( mm==2)){
+    var n_mm=28;
+  }
+
+  var number_days = n_yyyy+n_dd+n_mm;
+  return(number_days);
+
+}
+
+function add_duration_to_dates(start_date,end_date,duration){
+  //Input is duration in days  start date in yyyy-mm-dd, end date in yyyy-mm-dd//
+  
+}
+
+$(document).on('change','#start_date_input_box', function(){
+  var start_date = this.value;
+  var end_date_tag = document.getElementById("end_date_input_box");
+  console.log(start_date)
+
+  if (end_date_tag.value==""){
+    end_date_tag.value=start_date;
+  }
+
+  var duration_tag = document.getElementById("duration");
+  duration_tag.value = number_of_days_from_date(end_date_tag.value)-number_of_days_from_date(start_date);
+})
+
+
+$(document).on('change','#end_date_input_box', function(){
+  var end_date = this.value;
+  var start_date_tag = document.getElementById("start_date_input_box");
+
+  if (start_date_tag.value==""){
+    start_date_tag.value=end_date;
+  }
+
+  var duration_tag = document.getElementById("duration");
+  duration_tag.value = number_of_days_from_date(end_date)-number_of_days_from_date(start_date_tag.value);
+})
+
+$(document).on('change','#duration', function(){
+  var duration_value = this.value;
+
+})
 
 /*  if (parent_div,children[0].tagName=="form"){
     var warning = document.createElement("h4")

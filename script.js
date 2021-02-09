@@ -28,7 +28,7 @@ function parseHTML(fileName) {
       }
     }
   };
-
+//////////////////////////////////////////////////////////////////////////////
   /* This function changes the input date box int a block element once clicked*/
   function start_date_block_style(){
     
@@ -47,7 +47,7 @@ function parseHTML(fileName) {
       setTimeout(display_null,328);
     }
   };
-
+//////////////////////////////////////////////////////////////////////
 /*Checks for today's date once the document loads and inputs it onto the start date div*/
   $(document).ready(function start_date_today(){
     var start_date_input = document.getElementById("start_date_input");
@@ -56,6 +56,7 @@ function parseHTML(fileName) {
     var mm = today.getMonth()+1;
     document.getElementById("start_date").innerHTML= mm+"/"+dd;
   })
+  //////////////////////////////////////////////////////////////////////////////
 /*Checks for updated start date on the input box and updates the start date div*/
   $(document).on('change', '#start_date_input', function(){
     console.log("running")
@@ -75,6 +76,7 @@ function parseHTML(fileName) {
 
 
   })
+  //////////////////////////////////////////////////////////////////////////////
 
   /* Creates the dates to go on the three week ahead using the existing start date*/
 function three_week_ahead(this_tag){
@@ -116,7 +118,7 @@ function three_week_ahead(this_tag){
   return (this_tag);
 
   };
-
+//////////////////////////////////////////////////////////////////////////////
   /*Takes the start date and end date inputs and fills the respective cells*/
   function date_filler(sdate,edate){
     var ndd;
@@ -163,7 +165,7 @@ function three_week_ahead(this_tag){
     return (date);
   
     };
-
+//////////////////////////////////////////////////////////////////////////////
     /* Creates the boxes using the respective dates of the Div above*/
   function date_box(this_tag,id,this_dates){
     var dates = this_dates.getElementsByClassName("date");
@@ -176,6 +178,7 @@ function three_week_ahead(this_tag){
     }
     return (this_tag);
   };
+  //////////////////////////////////////////////////////////////////////////////
 /* Adds the Main Activity Line */
   function add_main_activity(){
     var add_cell = document.getElementById('added_cell');
@@ -211,7 +214,7 @@ function three_week_ahead(this_tag){
     add_cell.appendChild(div);
     cell_date.appendChild(div_date_id)
   };
-
+//////////////////////////////////////////////////////////////////////////////
 /* Creates the main activity title from an input format to a title*/
   function change_input_to_title(this_element){
     var input_parent= this_element.parentElement.parentElement;
@@ -241,14 +244,20 @@ function three_week_ahead(this_tag){
     }
   };
 
+//////////////////////////////////////////////////////////////////////////////
+
   function add_id_to_box(id){
       document.getElementById("main_id").innerHTML=id;
   }
+
+  //////////////////////////////////////////////////////////////////////////////
 
   function Add_Activity_title(id){
     var activity_title = document.getElementById("activity_title_input").value;
     var activity_input=document.getElementById("name"+id);
   }
+
+  //////////////////////////////////////////////////////////////////////////////
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
   document.getElementById("main_page").style.blur = "10px";
@@ -313,7 +322,7 @@ function add_sub_activity(this_tag){
 
 
 
-  /*  Creat ID */
+  /*  Create ID */
   var id=parent_id+"001";
   var p_id = document.createElement("p");
   p_id.setAttribute("class","sub_id");
@@ -321,39 +330,35 @@ function add_sub_activity(this_tag){
   p_id.innerHTML="001";
   id_div.appendChild(p_id);
 
-  /* Create Activity */
+  /* Create Activity Header Empty Div*/
   var activity_parent= parent_div.getElementsByClassName("sub_activity_name")[0];
-  var input_activity = document.createElement("input");
-  input_activity.setAttribute("class","sub_name");
-  input_activity.setAttribute("id","name_"+id);
-  input_activity.setAttribute("type","text");
-  input_activity.setAttribute("value","Enter Activity Here");
-  name_div.appendChild(input_activity);
+  var h5_activity = document.createElement("h5");
+  h5_activity.setAttribute("class","sub_name");
+  h5_activity.setAttribute("id","name_"+id);
+  name_div.appendChild(h5_activity);
 
-   /* Create Start Date */
+   /* Create Start Date Header Empty Div* */
    var sdate_parent= parent_div.getElementsByClassName("sub_activity_sdate")[0];
-   var input_sdate = document.createElement("input");
+   var input_sdate = document.createElement("h5");
    input_sdate.setAttribute("class","sub_sdate");
    input_sdate.setAttribute("id","sdate_"+id);
-   input_sdate.setAttribute("type","date");
    sdate_div.appendChild(input_sdate);
 
-   /* Create End Date */
+   /* Create End Date Header Empty Div**/
    var edate_parent= parent_div.getElementsByClassName("sub_activity_edate")[0];
-   var input_edate = document.createElement("input");
+   var input_edate = document.createElement("h5");
    input_edate.setAttribute("class","sub_edate");
    input_edate.setAttribute("id","edate_"+id);
-   input_edate.setAttribute("type","date");
    edate_div.appendChild(input_edate);
 
-     /* Create Contartcor Option */
+     /* Create Contartcor Option Header Empty Div* */
    var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
-   var input_contractor = document.createElement("select");
+   var input_contractor = document.createElement("h5");
    input_contractor.setAttribute("class","sub_contractor");
    input_contractor.setAttribute("id","contractor_"+id);
    contractor_div.appendChild(input_contractor);
 
-   /* Create Date Box Div */
+   /* Create Date Box Div Header Empty Div* */
 
    var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
    var bdate_box = document.createElement("div");
@@ -401,32 +406,28 @@ function add_sub_activity(this_tag){
 
   /* Create Activity */
   var activity_parent= parent_div.getElementsByClassName("sub_activity_name")[0];
-  var input_activity = document.createElement("input");
+  var input_activity = document.createElement("h5");
   input_activity.setAttribute("class","sub_name");
   input_activity.setAttribute("id","name_"+id.toString());
-  input_activity.setAttribute("type","text");
-  input_activity.setAttribute("value","Enter Activity Here");
   activity_parent.appendChild(input_activity);
 
    /* Create Start Date */
    var sdate_parent= parent_div.getElementsByClassName("sub_activity_sdate")[0];
-   var input_sdate = document.createElement("input");
+   var input_sdate = document.createElement("h5");
    input_sdate.setAttribute("class","sub_sdate");
    input_sdate.setAttribute("id","sdate_"+id.toString());
-   input_sdate.setAttribute("type","date");
    sdate_parent.appendChild(input_sdate);
 
    /* Create End Date */
    var edate_parent= parent_div.getElementsByClassName("sub_activity_edate")[0];
-   var input_edate = document.createElement("input");
+   var input_edate = document.createElement("h5");
    input_edate.setAttribute("class","sub_edate");
    input_edate.setAttribute("id","edate_"+id.toString());
-   input_edate.setAttribute("type","date");
    edate_parent.appendChild(input_edate);
 
      /* Create Contartcor Option */
    var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
-   var input_contractor = document.createElement("select");
+   var input_contractor = document.createElement("h5");
    input_contractor.setAttribute("class","sub_contractor");
    input_contractor.setAttribute("id","contractor_"+id.toString());;
    contractor_parent.appendChild(input_contractor);
@@ -443,11 +444,9 @@ function add_sub_activity(this_tag){
    setTimeout(add_id_to_box,150,id);
 
 
-
-  console.log(id_parent);
-console.log('running');
 }
 
+//////////////////////////////////////////////////////////////////////////////
 /* Fills in cells once start date is inputted */
 $(document).on('change', '.sub_sdate', function(){
   console.log("runnig")
@@ -501,7 +500,7 @@ $(document).on('change', '.sub_sdate', function(){
 
 }
 )
-
+//////////////////////////////////////////////////////////////////////////////
 /* Fills in cells once end date is inputted */
 $(document).on('change', '.sub_edate', function(){
   console.log("runnig")
@@ -557,7 +556,7 @@ $(document).on('change', '.sub_edate', function(){
 
 //For Add Sub Activity HTML//
 
-
+//////////////////////////////////////////////////////////////////////////////
 function number_of_days_from_date(date){
   //Input in yyyy-mm-dd//
   var yyyy = date.split("-")[0];
@@ -581,12 +580,12 @@ function number_of_days_from_date(date){
   return(number_days);
 
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function add_duration_to_dates(start_date,end_date,duration){
   //Input is duration in days  start date in yyyy-mm-dd, end date in yyyy-mm-dd//
   
 }
-
+//////////////////////////////////////////////////////////////////////////////
 $(document).on('change','#start_date_input_box', function(){
   var start_date = this.value;
   var end_date_tag = document.getElementById("end_date_input_box");
@@ -600,7 +599,7 @@ $(document).on('change','#start_date_input_box', function(){
   duration_tag.value = number_of_days_from_date(end_date_tag.value)-number_of_days_from_date(start_date);
 })
 
-
+//////////////////////////////////////////////////////////////////////////////
 $(document).on('change','#end_date_input_box', function(){
   var end_date = this.value;
   var start_date_tag = document.getElementById("start_date_input_box");
@@ -617,7 +616,7 @@ $(document).on('change','#duration', function(){
   var duration_value = this.value;
 
 })
-
+//////////////////////////////////////////////////////////////////////////////
 /*  if (parent_div,children[0].tagName=="form"){
     var warning = document.createElement("h4")
     warning.style.color = "red";

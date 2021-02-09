@@ -29,6 +29,12 @@ function parseHTML(fileName) {
     }
   };
 //////////////////////////////////////////////////////////////////////////////
+  function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+//////////////////////////////////////////////////////////////////////////////
   /* This function changes the input date box int a block element once clicked*/
   function start_date_block_style(){
     
@@ -252,10 +258,6 @@ function three_week_ahead(this_tag){
 
   //////////////////////////////////////////////////////////////////////////////
 
-  function Add_Activity_title(id){
-    var activity_title = document.getElementById("activity_title_input").value;
-    var activity_input=document.getElementById("name"+id);
-  }
 
   //////////////////////////////////////////////////////////////////////////////
 /* Adds a sub Activity to the corresponding main activty*/
@@ -385,7 +387,6 @@ function add_sub_activity(this_tag){
   /* Add Id to sub activity number */
   var current_id=parent_div.getElementsByClassName("sub_id");
   var id=Number(current_id[current_id.length-1].id) +1;
-  document.getElementById("main_id").innerHTML=id;
 
   /*  Create ID */
   var id_parent= current_id[0].parentElement;
@@ -500,6 +501,29 @@ $(document).on('change', '.sub_sdate', function(){
 
 }
 )
+
+function sdate_greater_edate(sdate, edate){
+  //fix sdate>edate scenario
+  var sdate_part = sdate.split("-");
+  var edate_part = edate.split("-");
+  if(parseInt(sdate_part[0])>parseInt(edate_part[0])){
+    console.log("yyyy")
+    return [sdate,edate]
+  }
+  if(parseInt(sdate_part[0])==parseInt(edate_part[0])){
+    if(parseInt(sdate_part[1])>parseInt(edate_part[1])){
+      console.log("mm")
+      return [sdate,edate]
+    }
+    if(parseInt(sdate_part[1])==parseInt(edate_part[1])){
+      if(parseInt(sdate_part[2])>parseInt(edate_part[2])){
+        console.log(sdate_part[2]+"_____"+edate_part[2])
+        return [sdate,edate]
+      }
+    }
+  }
+  return [];
+}
 //////////////////////////////////////////////////////////////////////////////
 /* Fills in cells once end date is inputted */
 $(document).on('change', '.sub_edate', function(){
@@ -560,22 +584,23 @@ $(document).on('change', '.sub_edate', function(){
 function number_of_days_from_date(date){
   //Input in yyyy-mm-dd//
   var yyyy = date.split("-")[0];
-  var mm = date.split("-")[1];
+  var v_mm = date.split("-")[1];
   var dd = date.split("-")[2];
 
   var n_yyyy=parseInt(yyyy)*365;
   var n_dd = parseInt(dd);
-
-  if ((mm==4||mm==6||mm==9||mm==11)){
-    var n_mm=30;
-  }
-  else if ((mm==1||mm==3||mm==5||mm==7||mm==8||mm==10||mm==12)){
-    var n_mm=31;
-  }
-  else if (( mm==2)){
-    var n_mm=28;
-  }
-
+  var n_mm=0;
+  for(mm=1;mm<=parseInt(v_mm);mm++){
+    if ((mm==4||mm==6||mm==9||mm==11)){
+      n_mm=30+n_mm;
+    }
+    else if ((mm==1||mm==3||mm==5||mm==7||mm==8||mm==10||mm==12)){
+      n_mm=31+n_mm;
+    }
+    else if (( mm==2)){
+      n_mm=28+n_mm;
+    }
+}
   var number_days = n_yyyy+n_dd+n_mm;
   return(number_days);
 
@@ -586,7 +611,9 @@ function add_duration_to_dates(start_date,end_date,duration){
   
 }
 //////////////////////////////////////////////////////////////////////////////
-$(document).on('change','#start_date_input_box', function(){
+///Checks for Errors between the start date and end date box once the start date box is populated
+
+$(document).on('change','.start_date_input_box', function(){
   var start_date = this.value;
   var end_date_tag = document.getElementById("end_date_input_box");
   console.log(start_date)
@@ -594,13 +621,18 @@ $(document).on('change','#start_date_input_box', function(){
   if (end_date_tag.value==""){
     end_date_tag.value=start_date;
   }
-
+  date = sdate_greater_edate(start_date,end_date_tag.value);
+  if (date.length>1){
+    document.getElementById("end_date_input_box").value=date[0];
+  }
   var duration_tag = document.getElementById("duration");
   duration_tag.value = number_of_days_from_date(end_date_tag.value)-number_of_days_from_date(start_date);
 })
 
 //////////////////////////////////////////////////////////////////////////////
-$(document).on('change','#end_date_input_box', function(){
+
+///Checks for Errors between the start date and end date box once the end date box is populated
+$(document).on('change','.end_date_input_box', function(){
   var end_date = this.value;
   var start_date_tag = document.getElementById("start_date_input_box");
 
@@ -608,18 +640,47 @@ $(document).on('change','#end_date_input_box', function(){
     start_date_tag.value=end_date;
   }
 
+  date = sdate_greater_edate(start_date_tag.value,end_date);
+
+  if (date.length>1){
+    console.log("running")
+    document.getElementById("start_date_input_box").value=date[1];
+  }
   var duration_tag = document.getElementById("duration");
   duration_tag.value = number_of_days_from_date(end_date)-number_of_days_from_date(start_date_tag.value);
 })
 
+//////////////////////////////////////////////////////////////////////////////
 $(document).on('change','#duration', function(){
   var duration_value = this.value;
 
 })
 //////////////////////////////////////////////////////////////////////////////
-/*  if (parent_div,children[0].tagName=="form"){
-    var warning = document.createElement("h4")
-    warning.style.color = "red";
-    warning.innerHTML = "You Must Create the Mani Activity Above First";
-    parent_div.appendChild(warning);
-  }*/
+function form_to_schedule(this_tag){
+
+var parent_element = this_tag.parentElement.parentElement;
+console.log(parent_element);
+var id = document.getElementById("main_id").innerHTML;
+var activity_title = document.getElementById("activity_title_input").value;
+var start_date = document.getElementById("start_date_input_box").value;
+var start_date_format = start_date.split("-")[1]+"/"+start_date.split("-")[2];
+var end_date = document.getElementById("end_date_input_box").value;
+var end_date_format = end_date.split("-")[1]+"/"+end_date.split("-")[2];
+var duration = document.getElementById("duration").value;
+var party_involved = document.getElementById("party_involved_box").value;
+////Need to add section for Relationships once relationships are figured out///
+
+
+//Adds the Main Activity Title
+document.getElementById("name_"+id).innerHTML=activity_title;
+document.getElementById("sdate_"+id).innerHTML=start_date_format;
+document.getElementById("edate_"+id).innerHTML=end_date_format;
+document.getElementById("contractor_"+id).innerHTML=party_involved;
+
+removeAllChildNodes(parent_element);
+$('#main_page').removeAttr('style');
+}
+
+
+
+

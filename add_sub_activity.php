@@ -1,4 +1,25 @@
+<?php
+$user = 'root';
+$password = 'root';
+$db = 'coursera';
+$host = 'localhost';
+$port = 3307;
 
+$link = mysqli_init();
+$conn = mysqli_real_connect(
+   $link, 
+   $host, 
+   $user, 
+   $password, 
+   $db,
+   $port
+);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+?>
     <div id="box">
         <div id = "main_id"></div>
         <div id="activity_title" class = "activity_title">

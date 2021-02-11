@@ -261,7 +261,7 @@ function three_week_ahead(this_tag){
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
   document.getElementById("main_page").style.blur = "10px";
-    $('#content').load("add_sub_activity.html");
+    $('#content').load("add_sub_activity.php");
     $("#main_page").css({
       "-webkit-filter": "blur(3px)", 
       "-moz-filter": "blur(3px)", 

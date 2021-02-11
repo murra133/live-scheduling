@@ -62,27 +62,16 @@ function parseHTML(fileName) {
     var mm = today.getMonth()+1;
     document.getElementById("start_date").innerHTML= mm+"/"+dd;
   })
-  //////////////////////////////////////////////////////////////////////////////
-/*Checks for updated start date on the input box and updates the start date div*/
-  $(document).on('change', '#start_date_input', function(){
-    console.log("running")
-    var new_date= document.getElementById("start_date_input").value;
-    var dd= new_date.split("-")[2];
-    var mm = new_date.split("-")[1];
-    document.getElementById("start_date").innerHTML=(mm+"/"+dd);
-
-    /*Updates all existing date cells and their id's*/
-    var cell_dates = document.getElementsByClassName("cell_dates");
-    for (i=0;i<cell_dates.length;i++){
-      var parent_node = cell_dates[i].parentElement;
-      cell_dates[i].removeAllChildNodes();
-      three_week_ahead(cell_dates[i]);
-      parent_node.appendChild(cell_dates[i]);
-    }
-
-
-  })
-  //////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  function date_transform(date){
+    ///takes input mm/dd and outputs yy-mm-dd (Only works if date is part of the current year)///
+    var today = new Date();
+    var dd = date.split("/")[1];
+    var mm = date.split("/")[0];
+    var yyyy = today.getFullYear();
+    return(yyyy+"-"+mm+"-"+dd);
+  }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /* Creates the dates to go on the three week ahead using the existing start date*/
 function three_week_ahead(this_tag){
@@ -127,6 +116,7 @@ function three_week_ahead(this_tag){
 //////////////////////////////////////////////////////////////////////////////
   /*Takes the start date and end date inputs and fills the respective cells*/
   function date_filler(sdate,edate){
+    console.log(sdate+"   "+edate)
     var ndd;
     var nmm;
     var sdate_split = sdate.split("-");
@@ -135,7 +125,6 @@ function three_week_ahead(this_tag){
     var mm = parseInt(sdate_split[1]); 
     var edd = parseInt(edate_split[2]);
     var emm = parseInt(edate_split[1]);
-    console.log(edd);
     var n =0;
     var date = Array();
     while((ndd!=edd) || (nmm!=emm)) {
@@ -163,7 +152,6 @@ function three_week_ahead(this_tag){
       {
           nmm='0'+nmm;
       } 
-        console.log(ndd);
         date[n] = nmm+'/'+ndd;
         dd=dd+1;
         n=n+1;
@@ -184,6 +172,56 @@ function three_week_ahead(this_tag){
     }
     return (this_tag);
   };
+
+    //////////////////////////////////////////////////////////////////////////////
+/*Checks for updated start date on the input box and updates the start date div*/
+$(document).on('change', '#start_date_input', function(){
+  console.log("running")
+  var new_date= this.value;
+  var dd= new_date.split("-")[2];
+  var mm = new_date.split("-")[1];
+  document.getElementById("start_date").innerHTML=(mm+"/"+dd);
+
+  /*Updates all existing date cells and their id's*/
+  var cell_dates = document.getElementsByClassName("cell_dates");
+  for (i=0;i<cell_dates.length;i++){
+    removeAllChildNodes(cell_dates[i]);
+    three_week_ahead(cell_dates[i]);
+  }
+
+  ///Updates the filler once a date is updated///
+  var sub_id=document.getElementsByClassName("sub_id");
+  var id_array = new Array();
+  for (i=0;i<sub_id.length;i++){
+    id_array[i] = sub_id[i].id;
+  }
+  for (n=0;n<id_array.length;n++){
+    start_date = document.getElementById("sdate_"+id_array[n]).innerHTML;
+    end_date = document.getElementById("edate_"+id_array[n]).innerHTML;
+    start_date_transformed = date_transform(start_date);
+    end_date_transformed = date_transform(end_date);
+    var box_date = document.getElementById("bdate_"+id_array[n]);
+    removeAllChildNodes(box_date);
+    date_box(box_date,id_array[n],cell_dates[0]);
+    var date_all = box_date.children;
+    for (var j = 0; j<date_all.length; j++){
+      var date_j = date_all[j];
+      date_j.style.backgroundColor = "white";
+    }
+    var date_array = date_filler(start_date_transformed, end_date_transformed);
+    var i;
+    console.log(date_array);
+    for(i = 0; i<date_array.length; i++){
+      if( document.getElementById(id_array[n]+"_"+date_array[i])===null){
+        continue;
+      }
+      else {document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="green";
+      }
+    }
+  }
+
+  })
+//////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
 /* Adds the Main Activity Line */
   function add_main_activity(){
@@ -448,59 +486,6 @@ function add_sub_activity(this_tag){
 }
 
 //////////////////////////////////////////////////////////////////////////////
-/* Fills in cells once start date is inputted */
-$(document).on('change', '.sub_sdate', function(){
-  console.log("runnig")
-  var id=this.id;
-  var value = this.value;
-  console.log(value);
-  var sdate_id_array= id.split("_");
-  var edate_id = "edate_"+sdate_id_array[sdate_id_array.length-1];
-  var id = sdate_id_array[sdate_id_array.length-1];
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-  }
-  console.log(edate_id);
-  console.log(sdate_id_array);
-  var edate = document.getElementById(edate_id);
-  if (edate.value==""){
-    edate.value=this.value;
-  }
-
-  //fix sdate>edate scenario
-  var sdate_part = value.split("-");
-  var edate_part = edate.value.split("-");
-  if(sdate_part[0]>edate_part[0]){
-    edate.value=this.value;
-  }
-  if(sdate_part[0]==edate_part[0]){
-    if(sdate_part[1]>edate_part[1]){
-      edate.value=this.value;
-    }
-    if(sdate_part[1]==edate_part[1]){
-      if(sdate_part[2]>edate_part[2]){
-        edate.value=this.value;
-      }
-    }
-  }
-  
-  console.log("Sdate="+value+" Edate="+edate.value);
-  var date_array = date_filler(value,edate.value);
-  console.log(date_array);
-  var i;
-  for(i = 0; i<date_array.length; i++){
-    if( document.getElementById(id+"_"+date_array[i])===null){
-      continue;
-    }
-    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
-    }
-  }
-
-
-}
-)
 
 function sdate_greater_edate(sdate, edate){
   //fix sdate>edate scenario
@@ -525,59 +510,6 @@ function sdate_greater_edate(sdate, edate){
   return [];
 }
 //////////////////////////////////////////////////////////////////////////////
-/* Fills in cells once end date is inputted */
-$(document).on('change', '.sub_edate', function(){
-  console.log("runnig")
-  var id=this.id;
-  var value = this.value;
-  var edate_id_array= id.split("_");
-  var sdate_id = "sdate_"+edate_id_array[edate_id_array.length-1];
-  var id = edate_id_array[edate_id_array.length-1];
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-  }
-  console.log(sdate_id);
-  console.log(edate_id_array);
-  var sdate = document.getElementById(sdate_id);
-  if (sdate.value==""){
-    sdate.value=this.value;
-  }
-
-  //fix sdate>edate scenario
-  var sdate_part = sdate.value.split("-");
-  var edate_part = value.split("-");
-  if(sdate_part[0]<edate_part[0]){
-    this.value=sdate.value;
-  }
-  if(sdate_part[0]==edate_part[0]){
-    if(sdate_part[1]<edate_part[1]){
-      this.value=sdate.value;
-    }
-    if(sdate_part[1]==edate_part[1]){
-      if(sdate_part[2]<edate_part[2]){
-        this.value=sdate.value;
-      }
-    }
-  }
-
-  console.log("edate="+value+" sdate="+sdate.value);
-  var date_array = date_filler(sdate.value,value);
-  console.log(date_array);
-  var i;
-  for(i = 0; i<date_array.length; i++){
-    if( document.getElementById(id+"_"+date_array[i])===null){
-      continue;
-    }
-    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
-    }
-  }
-
-
-}
-)
-
 //For Add Sub Activity HTML//
 
 //////////////////////////////////////////////////////////////////////////////
@@ -627,6 +559,23 @@ $(document).on('change','.start_date_input_box', function(){
   }
   var duration_tag = document.getElementById("duration");
   duration_tag.value = number_of_days_from_date(end_date_tag.value)-number_of_days_from_date(start_date);
+
+  var id=document.getElementById("main_id").innerHTML;
+  var date_all = document.getElementById("bdate_"+id).children;
+  for (var j = 0; j<date_all.length; j++){
+    var date_j = date_all[j];
+    date_j.style.backgroundColor = "white";
+  }
+  var date_array = date_filler(start_date,end_date_tag.value);
+  var i;
+  for(i = 0; i<date_array.length; i++){
+    if( document.getElementById(id+"_"+date_array[i])===null){
+      continue;
+    }
+    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    }
+  }
+
 })
 
 //////////////////////////////////////////////////////////////////////////////
@@ -648,6 +597,22 @@ $(document).on('change','.end_date_input_box', function(){
   }
   var duration_tag = document.getElementById("duration");
   duration_tag.value = number_of_days_from_date(end_date)-number_of_days_from_date(start_date_tag.value);
+  //Fills In Cells corresponding to dates
+  var id=document.getElementById("main_id").innerHTML;
+  var date_all = document.getElementById("bdate_"+id).children;
+  for (var j = 0; j<date_all.length; j++){
+    var date_j = date_all[j];
+    date_j.style.backgroundColor = "white";
+  }
+  var date_array = date_filler(start_date_tag.value,end_date);
+  var i;
+  for(i = 0; i<date_array.length; i++){
+    if( document.getElementById(id+"_"+date_array[i])===null){
+      continue;
+    }
+    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    }
+  }
 })
 
 //////////////////////////////////////////////////////////////////////////////

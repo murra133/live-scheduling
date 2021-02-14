@@ -1,20 +1,5 @@
 <?php
-$user = 'root';
-$password = 'root';
-$db = 'coursera';
-$host = 'localhost';
-$port = 3307;
-
-$link = mysqli_init();
-$conn = $link -> real_connect($host, $user, $password, $db, $port);
-echo($conn);
-if ($result = $link -> query("SELECT * FROM ages")) {
-    echo "Returned rows are: " . $result -> num_rows;
-    // Free result set
-    $result -> free_result();
-  }
-$link -> close();
-
+require_once('db_link.php');
 ?>
     <div id="box">
         <div id = "main_id"></div>

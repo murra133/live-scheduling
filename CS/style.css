@@ -213,12 +213,16 @@ overflow: hidden;
 
 }
 .sub_activity_sdate{
-    width:6.5%;
+    width:5.5%;
 
 }
 .sub_activity_edate{
-    width:6.5%;
+    width:5.5%;
 
+}
+
+.sub_activity_duration{
+    width: 5.5%;
 }
 .sub_activity_contractor{
     width:7.5%;
@@ -243,6 +247,14 @@ overflow: hidden;
 height:120%;
 width:95%;
 margin-bottom: .92rem;
+}
+.edit_icon{
+    margin-bottom: 7.5vh;
+}
+
+.fa-edit{
+    display:block !important;
+    padding-bottom: 100%;
 }
 
 .date{
@@ -273,7 +285,7 @@ margin-bottom: .92rem;
 }
 
 .sub_activity_bdate{
-    width:55%;
+    width:49%;
     white-space: nowrap;
     overflow: auto;
     position: relative;

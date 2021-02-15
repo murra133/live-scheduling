@@ -13,7 +13,6 @@ if ($conn == 1){
         // Free result set
         $result -> free_result();
       }
-    $link -> close();
 }
 else{
     $password = 'root';
@@ -25,7 +24,6 @@ if ($result = $link -> query("SELECT * FROM ages")) {
     // Free result set
     $result -> free_result();
   }
-$link -> close();
 }
 
 ?>

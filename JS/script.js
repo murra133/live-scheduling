@@ -228,7 +228,6 @@ $(document).on('change', '#start_date_input', function(){
     var add_cell = document.getElementById('added_cell');
     var n =add_cell.children.length;
     n=n+1;
-    console.log(n);
     var div = document.createElement('div');
     div.setAttribute("id",n);
     div.setAttribute("class","main_activity");
@@ -263,6 +262,8 @@ $(document).on('change', '#start_date_input', function(){
   function change_input_to_title(this_element){
     var input_parent= this_element.parentElement.parentElement;
     var input_value= input_parent.children[0].value;
+    var id = input_parent.parentElement.id;
+    console.log(id);
     if(input_value!=""){
       var main_div=input_parent.parentElement;
       var subadd=document.createElement('div');
@@ -283,15 +284,18 @@ $(document).on('change', '#start_date_input', function(){
     divtitle.appendChild(title)
     main_div.appendChild(divtitle);
     main_div.appendChild(subadd);
-    
+    $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value} );
 
     }
   };
 
 //////////////////////////////////////////////////////////////////////////////
 
-  function add_id_to_box(id){
-      document.getElementById("main_id").innerHTML=id;
+  function add_id_to_box(id_array){
+    ///Input is an array of IDs Input[0] must be sub activity ID Input[1] must be main Activity ID
+    console.log(id_array)  
+    document.getElementById("main_id").innerHTML=id_array[0];
+      document.getElementById("main_id").setAttribute("name",id_array[1]+"_"+(parseInt(id_array[0])-parseInt(id_array[1])*1000));
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -301,7 +305,7 @@ $(document).on('change', '#start_date_input', function(){
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
   document.getElementById("main_page").style.blur = "10px";
-    $('#content').load("add_sub_activity.php");
+    $('#content').load("../HTML/add_sub_activity.html");
     $("#main_page").css({
       "-webkit-filter": "blur(3px)", 
       "-moz-filter": "blur(3px)", 
@@ -415,9 +419,10 @@ function add_sub_activity(this_tag){
     activity_div.appendChild(bdate);
     parent_div.appendChild(activity_div);
     parent_div.appendChild(this_tag);
+    var id_array = [id,parent_id]
 
 
-    setTimeout(add_id_to_box,150,id);
+    setTimeout(add_id_to_box,150,id_array);
     
     return;
   }
@@ -479,8 +484,8 @@ function add_sub_activity(this_tag){
    dates=bdate_parent.getElementsByClassName("cell_dates")[0];
    date_box(bdate_box,id,dates);
    bdate_parent.appendChild(bdate_box);
-
-   setTimeout(add_id_to_box,150,id);
+   var id_array = [id,parent_id]
+   setTimeout(add_id_to_box,150,id_array);
 
 
 }
@@ -588,6 +593,7 @@ $(document).on('change','.end_date_input_box', function(){
   if (start_date_tag.value==""){
     start_date_tag.value=end_date;
   }
+  console.log("This is start date:"+start_date_tag.value+"  "+"This is end Date: "+end_date)
 
   date = sdate_greater_edate(start_date_tag.value,end_date);
 
@@ -634,13 +640,18 @@ var end_date_format = end_date.split("-")[1]+"/"+end_date.split("-")[2];
 var duration = document.getElementById("duration").value;
 var party_involved = document.getElementById("party_involved_box").value;
 ////Need to add section for Relationships once relationships are figured out///
-
+var id_array= document.getElementById("main_id").getAttribute("name");
+var main_id = id_array.split("_")[0];
+var sub_id = id_array.split("_")[1];
 
 //Adds the Main Activity Title
 document.getElementById("name_"+id).innerHTML=activity_title;
 document.getElementById("sdate_"+id).innerHTML=start_date_format;
 document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("contractor_"+id).innerHTML=party_involved;
+
+$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date,end_date:end_date,duration:duration,party_involved:party_involved} );
+
 
 removeAllChildNodes(parent_element);
 $('#main_page').removeAttr('style');

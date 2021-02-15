@@ -628,7 +628,6 @@ $(document).on('change','#duration', function(){
 })
 //////////////////////////////////////////////////////////////////////////////
 function form_to_schedule(this_tag){
-
 var parent_element = this_tag.parentElement.parentElement;
 console.log(parent_element);
 var id = document.getElementById("main_id").innerHTML;
@@ -642,7 +641,6 @@ var party_involved = document.getElementById("party_involved_box").value;
 ////Need to add section for Relationships once relationships are figured out///
 var id_array= document.getElementById("main_id").getAttribute("name");
 var main_id = id_array.split("_")[0];
-var sub_id = id_array.split("_")[1];
 
 //Adds the Main Activity Title
 document.getElementById("name_"+id).innerHTML=activity_title;
@@ -650,11 +648,11 @@ document.getElementById("sdate_"+id).innerHTML=start_date_format;
 document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("contractor_"+id).innerHTML=party_involved;
 
-$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:duration, party_involved:party_involved} );
-
+$.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
 
 removeAllChildNodes(parent_element);
 $('#main_page').removeAttr('style');
+return false;
 }
 
 

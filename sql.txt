@@ -1,0 +1,7 @@
+///Creates the Main Activity Table
+
+CREATE TABLE Main_Activities (
+    Main_ID int NOT NULL,
+    Main_Activity varchar(255) NOT NULL,
+    PRIMARY KEY (Main_ID)
+);

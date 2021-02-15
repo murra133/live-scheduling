@@ -28,6 +28,18 @@ function parseHTML(fileName) {
       }
     }
   };
+////////////////////////////////////////////////////////////////////////////
+//fetch main activity
+  $( document ).ready(function() {
+    $.ajax({
+      url : '../PHP/pull_main_activity.php',
+      type : 'POST',     
+      success:function(data){
+        var js_data = JSON.parse(data);
+          alert(js_data[0][0]);
+      }
+  });
+  });
 //////////////////////////////////////////////////////////////////////////////
   function removeAllChildNodes(parent) {
     while (parent.firstChild) {
@@ -650,7 +662,7 @@ document.getElementById("sdate_"+id).innerHTML=start_date_format;
 document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("contractor_"+id).innerHTML=party_involved;
 
-$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:duration, party_involved:party_involved} );
+$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date,end_date:end_date,duration:duration,party_involved:party_involved} );
 
 
 removeAllChildNodes(parent_element);

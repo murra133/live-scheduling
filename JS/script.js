@@ -650,7 +650,7 @@ document.getElementById("sdate_"+id).innerHTML=start_date_format;
 document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("contractor_"+id).innerHTML=party_involved;
 
-$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date,end_date:end_date,duration:duration,party_involved:party_involved} );
+$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:duration, party_involved:party_involved} );
 
 
 removeAllChildNodes(parent_element);

@@ -360,6 +360,15 @@ function add_sub_activity(this_tag){
     edate_title.setAttribute("class","edate_title");
     edate_title.innerHTML="End Date";
     edate_div.appendChild(edate_title);
+
+    /* Add Duration */
+    var duration_div = document.createElement('div');
+    duration_div.setAttribute("class","sub_activity_duration sub")
+    var duration_title = document.createElement("h3");
+    duration_title.setAttribute("class","duration_title");
+    duration_title.innerHTML="Duration";
+    duration_div.appendChild(duration_title);
+
     /* Add Party Invloved */
     var contractor_div = document.createElement('div');
     contractor_div.setAttribute("class","sub_activity_contractor sub")
@@ -375,6 +384,13 @@ function add_sub_activity(this_tag){
     bdate_dates.setAttribute("class","cell_dates");
     three_week_ahead(bdate_dates);
     bdate.appendChild(bdate_dates);
+
+    /* Add Dates to the Activity Location */
+    var edit_div = document.createElement('div');
+    edit_div.setAttribute("class","sub_activity_edit sub")
+    var edit_empty_title = document.createElement("div");
+    edit_empty_title.setAttribute("class","edit_icon");
+    edit_div.appendChild(edit_empty_title);
 
 
 
@@ -407,6 +423,13 @@ function add_sub_activity(this_tag){
    input_edate.setAttribute("id","edate_"+id);
    edate_div.appendChild(input_edate);
 
+  /* Create Duration Header Empty Div**/
+  var duration_parent= parent_div.getElementsByClassName("sub_activity_duration")[0];
+  var input_duration = document.createElement("h5");
+  input_duration.setAttribute("class","sub_duration");
+  input_duration.setAttribute("id","duration_"+id);
+  duration_div.appendChild(input_duration);
+
      /* Create Contartcor Option Header Empty Div* */
    var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
    var input_contractor = document.createElement("h5");
@@ -422,12 +445,23 @@ function add_sub_activity(this_tag){
    bdate_box.setAttribute("id","bdate_"+id);
    date_box(bdate_box,id,bdate);
    bdate.appendChild(bdate_box);
+  /* Create Date Box Div Header Empty Div* */
+
+  var _parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
+  var edit = document.createElement("i");
+  edit.setAttribute("class","fas fa-edit");
+  edit.setAttribute("id","edit_"+id);
+  edit_div.appendChild(edit);
+
+
 
     activity_div.appendChild(id_div);
     activity_div.appendChild(name_div);
     activity_div.appendChild(sdate_div);
     activity_div.appendChild(edate_div);
+    activity_div.appendChild(duration_div);
     activity_div.appendChild(contractor_div);
+    activity_div.appendChild(edit_div);
     activity_div.appendChild(bdate);
     parent_div.appendChild(activity_div);
     parent_div.appendChild(this_tag);
@@ -481,12 +515,25 @@ function add_sub_activity(this_tag){
    input_edate.setAttribute("id","edate_"+id.toString());
    edate_parent.appendChild(input_edate);
 
+   //Create Duration//
+   var duration_parent= parent_div.getElementsByClassName("sub_activity_duration")[0];
+   var input_duration = document.createElement("h5");
+   input_duration.setAttribute("class","sub_duration");
+   input_duration.setAttribute("id","duration_"+id.toString());
+   duration_parent.appendChild(input_duration);
+
      /* Create Contartcor Option */
    var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
    var input_contractor = document.createElement("h5");
    input_contractor.setAttribute("class","sub_contractor");
    input_contractor.setAttribute("id","contractor_"+id.toString());;
    contractor_parent.appendChild(input_contractor);
+
+   var edit_parent= parent_div.getElementsByClassName("sub_activity_edit")[0];
+   var edit = document.createElement("i");
+   edit.setAttribute("class","fas fa-edit");
+   edit.setAttribute("id","edit_"+id);
+   edit_parent.appendChild(edit);
 
    /* Create Date Box */
    var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
@@ -640,7 +687,6 @@ $(document).on('change','#duration', function(){
 })
 //////////////////////////////////////////////////////////////////////////////
 function form_to_schedule(this_tag){
-
 var parent_element = this_tag.parentElement.parentElement;
 console.log(parent_element);
 var id = document.getElementById("main_id").innerHTML;
@@ -654,21 +700,26 @@ var party_involved = document.getElementById("party_involved_box").value;
 ////Need to add section for Relationships once relationships are figured out///
 var id_array= document.getElementById("main_id").getAttribute("name");
 var main_id = id_array.split("_")[0];
-var sub_id = id_array.split("_")[1];
 
 //Adds the Main Activity Title
 document.getElementById("name_"+id).innerHTML=activity_title;
 document.getElementById("sdate_"+id).innerHTML=start_date_format;
 document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("contractor_"+id).innerHTML=party_involved;
+document.getElementById("duration_"+id).innerHTML=duration;
 
+<<<<<<< HEAD
 $.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date,end_date:end_date,duration:duration,party_involved:party_involved} );
 
+=======
+$.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
+>>>>>>> d9ed746e5e97d820e13f2f9bd6aa77a6497e2a03
 
 removeAllChildNodes(parent_element);
 $('#main_page').removeAttr('style');
+return false;
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////
 
 

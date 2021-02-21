@@ -30,16 +30,17 @@ function parseHTML(fileName) {
   };
 ////////////////////////////////////////////////////////////////////////////
 //fetch main activity
-  $( document ).ready(function() {
-    $.ajax({
-      url : '../PHP/pull_main_activity.php',
-      type : 'POST',     
-      success:function(data){
-        var js_data = JSON.parse(data);
-          alert(js_data[0][0]);
-      }
-  });
-  });
+$( document ).ready(function() {
+  $.ajax({
+    url : '../PHP/pull_activity.php',
+    type : 'POST',     
+    success:function(data){
+      var js_data = JSON.parse(data);
+        //alert(js_data[0][0]);
+        console.log(js_data);
+    }
+});
+});
 //////////////////////////////////////////////////////////////////////////////
   function removeAllChildNodes(parent) {
     while (parent.firstChild) {
@@ -708,12 +709,7 @@ document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("contractor_"+id).innerHTML=party_involved;
 document.getElementById("duration_"+id).innerHTML=duration;
 
-<<<<<<< HEAD
-$.post( "../PHP/add_sub_activity.php", { sub_id: sub_id, main_id: main_id, sub_activity:activity_title , start_date:start_date,end_date:end_date,duration:duration,party_involved:party_involved} );
-
-=======
 $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
->>>>>>> d9ed746e5e97d820e13f2f9bd6aa77a6497e2a03
 
 removeAllChildNodes(parent_element);
 $('#main_page').removeAttr('style');

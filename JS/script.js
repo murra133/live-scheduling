@@ -34,7 +34,7 @@ $( document ).ready(function() {
           console.log(divadd);
           var sub_activities_array = js_data[main_id]['sub_activity'];
           ////////////////////////////// Create all the Empty Divs/////
-          empty_divs = create_all_sub_activity_divs();
+          var empty_divs = create_all_sub_activity_divs();
           var id_div = empty_divs[0];
           var name_div = empty_divs[1];
           var sdate_div = empty_divs[2];

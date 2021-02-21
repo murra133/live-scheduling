@@ -4,6 +4,10 @@ html, body{
     margin:0;
     height: 100%;
 }
+h3{
+    text-align: center;
+
+}
 #main_title{
     text-align: center;
     display:block;
@@ -229,24 +233,24 @@ overflow: hidden;
 
 }
 .sub_id{
-
+    margin-bottom: 22%;
 }
 .sub_name{
     width:98%;
-    margin-bottom: .6rem;
+
 }
 .sub_sdate{
     width:95%;
-    margin-bottom: .6rem;
+
 }
 .sub_edate{
     width:95%;
-    margin-bottom: .6rem;
+
 }
 .sub_contractor{
 height:120%;
 width:95%;
-margin-bottom: .92rem;
+
 }
 .edit_icon{
     margin-bottom: 206%;
@@ -254,7 +258,18 @@ margin-bottom: .92rem;
 
 .fa-edit{
     display:block !important;
-    padding-bottom: 100%;
+    padding-bottom: 88%;
+}
+
+.delete_icon{
+    margin-bottom: 247%;
+}
+
+.fa-minus-square{
+    display:block !important;
+    padding-bottom: 96%;
+    padding-left: 40%;
+    font-size: 110%;
 }
 
 .date{
@@ -273,7 +288,7 @@ margin-bottom: .92rem;
     display:inline-block;
     border-style: solid;
     border-width: 1px;
-    padding:.822vw 1.451vw;
+    padding:1.4%;
     font-size:small;
     position: relative;
     width:4vw;
@@ -307,13 +322,16 @@ margin-bottom: .92rem;
 #activity_title> input{
     width:90%;
 }
-#box{
-    width:auto;
+.box{
+    width:max-content;
     border: black 1px solid;
     border-radius: 5px;
-    padding:1%;
+    padding:5%;
     background-color: beige;
 
+}
+#main_id{
+    display: none;
 }
 #start_date_box{
     display:inline-block;
@@ -367,6 +385,10 @@ margin-bottom: .92rem;
     padding:1%;
     height:20vh;
     margin-bottom: 5%;
+}
+
+#buttons_box{
+    text-align: center;
 }
 /* Response Tablet */
 

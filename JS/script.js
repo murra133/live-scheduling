@@ -44,6 +44,7 @@ $( document ).ready(function() {
           var bdate = empty_divs[6];
           var edit_div = empty_divs[7];
           var activity_div = empty_divs[8];
+          var delete_div = empty_divs[9];
 
 
           ///Gets dates from bdate////
@@ -71,6 +72,19 @@ $( document ).ready(function() {
             var sub_contractor_div = filled_divs[5];
             var sub_edit_div = filled_divs[6];
             var sub_bdate_div = filled_divs[7];
+            var sub_delete_div = filled_divs[8];
+            console.log("This is Child 0 "+sub_bdate_div.children[1].id);
+
+            var date_array = date_filler(sub_start_date, sub_end_date);
+            for (var z=0; z <sub_bdate_div.children.length;z++){
+            
+            var n;
+            for(n = 0; n<date_array.length; n++){
+              if(sub_bdate_div.children[z].id===(sub_id+"_"+date_array[n])){
+                sub_bdate_div.children[z].style.backgroundColor="green";
+              }
+            }
+          }
 
             id_div.appendChild(sub_id_div);
             name_div.appendChild(sub_name_div);
@@ -80,6 +94,7 @@ $( document ).ready(function() {
             contractor_div.appendChild(sub_contractor_div);
             bdate.appendChild(sub_bdate_div);
             edit_div.appendChild(sub_edit_div);
+            delete_div.appendChild(sub_delete_div);
             console.log(id_div);
             activity_div.appendChild(id_div);
             activity_div.appendChild(name_div);
@@ -88,12 +103,22 @@ $( document ).ready(function() {
             activity_div.appendChild(duration_div);
             activity_div.appendChild(contractor_div);
             activity_div.appendChild(edit_div);
+            activity_div.appendChild(delete_div);
             activity_div.appendChild(bdate);
             divadd.appendChild(activity_div);
 
+            
+
           }
-          console.log(divadd);
-          main_parent.appendChild(divadd);
+          var subadd=document.createElement('div');
+          subadd.setAttribute("class","sub_activity_add");
+          subadd.setAttribute("onclick","add_sub_activity(this)");
+          var subaddtwo=document.createElement("i");
+          subaddtwo.setAttribute("class","far fa-plus-square");
+          subadd.appendChild(subaddtwo);
+          divadd.appendChild(subadd);
+          main_parent.appendChild(divadd)
+          
       
 
           /*  Adds Div for Dates for Main Activity */
@@ -274,8 +299,8 @@ $(document).on('change', '#start_date_input', function(){
   for (n=0;n<id_array.length;n++){
     start_date = document.getElementById("sdate_"+id_array[n]).innerHTML;
     end_date = document.getElementById("edate_"+id_array[n]).innerHTML;
-    start_date_transformed = date_transform(start_date);
-    end_date_transformed = date_transform(end_date);
+    start_date_transformed = document.getElementById("sdate_"+id_array[n]).getAttribute("name")
+    end_date_transformed = document.getElementById("edate_"+id_array[n]).getAttribute("name");
     var box_date = document.getElementById("bdate_"+id_array[n]);
     removeAllChildNodes(box_date);
     date_box(box_date,id_array[n],cell_dates[0]);
@@ -378,7 +403,7 @@ function date_format_changer(date){
     console.log(id_array)  
     document.getElementById("main_id").innerHTML=id_array[0];
       document.getElementById("main_id").setAttribute("name",id_array[1]+"_"+(parseInt(id_array[0])-parseInt(id_array[1])*1000));
-      document.getElementById("box").setAttribute("name",id_array[2]);
+      document.getElementsByClassName("box")[0].setAttribute("name",id_array[2]);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -446,7 +471,14 @@ function date_format_changer(date){
     edit_empty_title.setAttribute("class","edit_icon");
     edit_div.appendChild(edit_empty_title);
 
-    return [id_div, name_div, sdate_div, edate_div, duration_div,contractor_div, bdate, edit_div, activity_div];
+    // Adds Delete Icon ///
+    var delete_div = document.createElement('div');
+    delete_div.setAttribute("class","sub_activity_delete sub")
+    var delete_empty_title = document.createElement("div");
+    delete_empty_title.setAttribute("class","delete_icon");
+    delete_div.appendChild(delete_empty_title);
+
+    return [id_div, name_div, sdate_div, edate_div, duration_div,contractor_div, bdate, edit_div, activity_div, delete_div];
 
   }
 ////////////////////////////////////////////////////////////////////
@@ -477,12 +509,14 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
    var input_sdate = document.createElement("h5");
    input_sdate.setAttribute("class","sub_sdate");
    input_sdate.setAttribute("id","sdate_"+id.toString());
+   input_sdate.setAttribute("name",start_date);
    input_sdate.innerHTML = date_format_changer(start_date);
 
    /* Create End Date */
    var input_edate = document.createElement("h5");
    input_edate.setAttribute("class","sub_edate");
    input_edate.setAttribute("id","edate_"+id.toString());
+   input_edate.setAttribute("name",end_date)
    input_edate.innerHTML = date_format_changer(end_date);
 
    //Create Duration//
@@ -501,6 +535,11 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
    edit.setAttribute("class","fas fa-edit");
    edit.setAttribute("id","edit_"+id);
    edit.setAttribute("onclick","update_sub_activity(this)")
+   
+   var delete_button= document.createElement("i");
+   delete_button.setAttribute("class","far fa-minus-square");
+   delete_button.setAttribute("id","delete_"+id);
+   delete_button.setAttribute("onclick","delete_sub_activity_box(this)")
 
    /* Create Date Box */
    var bdate_box = document.createElement("div");
@@ -508,7 +547,7 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
    bdate_box.setAttribute("id","bdate_"+id);
    date_box(bdate_box,id,dates);
 
-   var filled_divs = [p_id, input_activity,input_sdate,input_edate,input_duration,input_contractor, edit,bdate_box];
+   var filled_divs = [p_id, input_activity,input_sdate,input_edate,input_duration,input_contractor, edit,bdate_box, delete_button];
     return filled_divs;
   }
 
@@ -907,4 +946,60 @@ function update_sub_activity(this_tag){
   setTimeout(place_values_in_subactivity_box,150,values_array);
 }
 
+/////////////////////////////////////////////////////////////////
+function add_box_blur_background(url){
+  //////Submit URL for page to load as if you were pulling it from the javascript Ex. "../HTML/add_sub_activity.html"////
+  document.getElementById("main_page").style.blur = "10px";
+  $('#content').load(url);
+  $("#main_page").css({
+    "-webkit-filter": "blur(3px)", 
+    "-moz-filter": "blur(3px)", 
+    "-o-filter": "blur(3px)", 
+    "-ms-filter": "blur(3px)", 
+    "filter": "blur(3px)", 
+  }
+);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function get_all_sub_tags_with_id(sub_id){
+  //////This function gets all the sub tags with the sub id provided////
+  id_tag = document.getElementById(sub_id);
+  activity_tag = document.getElementById("name_"+sub_id);
+  sdate_tag = document.getElementById("sdate_"+sub_id);
+  edate_tag = document.getElementById("edate_"+sub_id);
+  duration_tag = document.getElementById("duration_"+sub_id);
+  party_involved_tag = document.getElementById("contractor_"+sub_id);
+  edit_tag = document.getElementById("edit_"+sub_id);
+  delete_tag = document.getElementById("delete_"+sub_id)
+  return [id_tag,activity_tag,sdate_tag,edate_tag,duration_tag,party_involved_tag,edit_tag,delete_tag]
+}
+
+function add_value_to_message_box(message){
+  document.getElementById("message").innerHTML = message;
+}
+//////////////////////////////////////////////////////////////////////////////
+function delete_sub_activity_box(delete_icon_tag){
+  var sub_id= delete_icon_tag.id.split("_")[1];
+  var sub_tags_array = get_all_sub_tags_with_id(sub_id);
+  console.log(sub_tags_array);
+  var sub_activity_title = sub_tags_array[1].innerHTML;
+  var url = "../HTML/delete_confirm.html";
+  add_box_blur_background(url);
+  var parent_id = delete_icon_tag.parentElement.parentElement.parentElement.id;
+  var action = "delete_sub_activity";
+  var id_array = [sub_id,parent_id,action];
+  var message = "You sure you want to delete:<br>"+sub_activity_title;
+  setTimeout(add_id_to_box,150,id_array);
+  setTimeout(add_value_to_message_box,150,message)
+}
+
+function delete_selected_items(delete_button_tag){
+  ////This function deletes any item that needs to be deleted. Input is the delete button. Use If statements to add other items to be deleted/////
+  var action = document.getElementsByClassName("box").getAttribute("name");
+  var id = document.getElementById("main_id"); ////this should be in the respective format ex id = 1001 for sub_id id=1 for main id/////
+  ////Delete Activity/////
+  $.post( "../PHP/update_sub_activity.php",{ id: parseInt(id), action:action} );
+
+}
 

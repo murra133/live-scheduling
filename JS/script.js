@@ -715,11 +715,6 @@ document.getElementById("edate_"+id).innerHTML=end_date_format;
 document.getElementById("edate_"+id).setAttribute("name",end_date);
 document.getElementById("contractor_"+id).innerHTML=party_involved;
 document.getElementById("duration_"+id).innerHTML=duration;
-<<<<<<< HEAD
-
-$.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
-
-=======
 var action = document.getElementById("box").getAttribute("name");
 if ( action == "new"){
 $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
@@ -727,7 +722,6 @@ $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(
 else{
   $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
 }
->>>>>>> ef94711c87fff54641650ad99d34306850bf3ec7
 removeAllChildNodes(parent_element);
 $('#main_page').removeAttr('style');
 return false;

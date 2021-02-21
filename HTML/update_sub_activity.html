@@ -1,0 +1,34 @@
+<div id="box">
+    <div id = "main_id"></div>
+    <div id="activity_title" class = "activity_title">
+        <h3>Sub Activity Title</h3>
+        <input id="activity_title_input" type="text">
+    </div>
+    <div id="start_date_box" class = "start_date_box">
+        <h3>Start Date:</h3>
+        <input type="date" class = "start_date_input_box" id = "start_date_input_box">
+    </div>
+    <div id="end_date_box" class = "end_date_box">
+        <h3>End Date:</h3>
+        <input class = "end_date_input_box" id ="end_date_input_box" type="date">
+    </div>
+    <div id="duration_box">
+        <h3 class = "duration">Duration:</h3>
+        <input id="duration" type="interger">
+    </div>
+    <div  class = "party_involved_box">
+        <h3>Party Involved</h3>
+        <select id="party_involved_box">
+            <option value = "none">Choose an Option</option>
+            <option value="Carpet_USA">Carpet USA</option>
+            <option value ="Helix">Helix</option>
+            <option value = "Southland">Southland</option>
+        </select>
+    </div>
+    <div id="relationship" class = "relationship">
+        <h3>Relationship</h3>
+        <div id="relationship_div"></div> 
+        <button>Input Relationships</button>
+    </div>
+    <button type="submit" onclick="update_sub_activit(this)">Submit Button</button>
+</div>

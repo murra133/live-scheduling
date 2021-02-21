@@ -305,10 +305,11 @@ $(document).on('change', '#start_date_input', function(){
 //////////////////////////////////////////////////////////////////////////////
 
   function add_id_to_box(id_array){
-    ///Input is an array of IDs Input[0] must be sub activity ID Input[1] must be main Activity ID
+    ///Input is an array of IDs Input[0] must be sub activity ID Input[1] must be main Activity ID Input[2] must be the action
     console.log(id_array)  
     document.getElementById("main_id").innerHTML=id_array[0];
       document.getElementById("main_id").setAttribute("name",id_array[1]+"_"+(parseInt(id_array[0])-parseInt(id_array[1])*1000));
+      document.getElementById("box").setAttribute("name",id_array[2]);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -452,6 +453,7 @@ function add_sub_activity(this_tag){
   var edit = document.createElement("i");
   edit.setAttribute("class","fas fa-edit");
   edit.setAttribute("id","edit_"+id);
+  edit.setAttribute("onclick","update_sub_activity(this)")
   edit_div.appendChild(edit);
 
 
@@ -466,7 +468,8 @@ function add_sub_activity(this_tag){
     activity_div.appendChild(bdate);
     parent_div.appendChild(activity_div);
     parent_div.appendChild(this_tag);
-    var id_array = [id,parent_id]
+    var action = "new";
+    var id_array = [id,parent_id, action]
 
 
     setTimeout(add_id_to_box,150,id_array);
@@ -534,6 +537,7 @@ function add_sub_activity(this_tag){
    var edit = document.createElement("i");
    edit.setAttribute("class","fas fa-edit");
    edit.setAttribute("id","edit_"+id);
+   edit.setAttribute("onclick","update_sub_activity(this)")
    edit_parent.appendChild(edit);
 
    /* Create Date Box */
@@ -544,7 +548,8 @@ function add_sub_activity(this_tag){
    dates=bdate_parent.getElementsByClassName("cell_dates")[0];
    date_box(bdate_box,id,dates);
    bdate_parent.appendChild(bdate_box);
-   var id_array = [id,parent_id]
+   var action = "new";
+   var id_array = [id,parent_id, action]
    setTimeout(add_id_to_box,150,id_array);
 
 
@@ -705,17 +710,64 @@ var main_id = id_array.split("_")[0];
 //Adds the Main Activity Title
 document.getElementById("name_"+id).innerHTML=activity_title;
 document.getElementById("sdate_"+id).innerHTML=start_date_format;
+document.getElementById("sdate_"+id).setAttribute("name",start_date);
 document.getElementById("edate_"+id).innerHTML=end_date_format;
+document.getElementById("edate_"+id).setAttribute("name",end_date);
 document.getElementById("contractor_"+id).innerHTML=party_involved;
 document.getElementById("duration_"+id).innerHTML=duration;
+<<<<<<< HEAD
 
 $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
 
+=======
+var action = document.getElementById("box").getAttribute("name");
+if ( action == "new"){
+$.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
+}
+else{
+  $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved} );
+}
+>>>>>>> ef94711c87fff54641650ad99d34306850bf3ec7
 removeAllChildNodes(parent_element);
 $('#main_page').removeAttr('style');
 return false;
 }
-
 //////////////////////////////////////////////////////////////////////////////////
+function place_values_in_subactivity_box(values_array){
+  ////////value_array = [activity_title,start_date,end_date,duration,party_involved] format for dates is yyyy-mm-dd;
+  document.getElementById("activity_title_input").value = values_array[0];
+  document.getElementById("start_date_input_box").value=values_array[1];
+  document.getElementById("end_date_input_box").value = values_array[2];
+  document.getElementById("duration").value=values_array[3];
+  document.getElementById("party_involved_box").value=values_array[4];
+}
+
+////
+function update_sub_activity(this_tag){
+  ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
+  document.getElementById("main_page").style.blur = "10px";
+    $('#content').load("../HTML/add_sub_activity.html");
+    $("#main_page").css({
+      "-webkit-filter": "blur(3px)", 
+      "-moz-filter": "blur(3px)", 
+      "-o-filter": "blur(3px)", 
+      "-ms-filter": "blur(3px)", 
+      "filter": "blur(3px)", 
+    }
+  );
+  console.log(this_tag.id.split("_"));
+  var sub_id = this_tag.id.split("_")[1];
+  var parent_id = this_tag.parentElement.parentElement.parentElement.id;
+  var action = "update"
+  var id_array = [sub_id,parent_id,action]
+  var activity_title = document.getElementById("name_"+sub_id).innerHTML;
+  var start_date = document.getElementById("sdate_"+sub_id).getAttribute("name");
+  var end_date = document.getElementById("edate_"+sub_id).getAttribute("name");
+  var duration = document.getElementById("duration_"+sub_id).innerHTML;
+  var party_involved = document.getElementById("contractor_"+sub_id).innerHTML;
+  var values_array = [activity_title,start_date,end_date,duration,party_involved];
+  setTimeout(add_id_to_box,150,id_array);
+  setTimeout(place_values_in_subactivity_box,150,values_array);
+}
 
 

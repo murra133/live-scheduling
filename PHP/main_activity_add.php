@@ -11,7 +11,7 @@ $stmt->execute();
 
 
 $stmt = $link->prepare("INSERT INTO main_activities (Main_ID, Main_Activity) VALUES(?,?)");
-$stmt->bind_param("ss",$main_id,$main_activity);
+$stmt->bind_param("is",$main_id,$main_activity);
 $stmt->execute();
 require_once("db_link_close.php")
 ?>

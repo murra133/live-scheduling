@@ -1,21 +1,19 @@
 <?php
 require_once('db_link.php');
 
-$id = 1001;///$_POST['id'];
-$action = 'delete_sub_activity';//$_POST['action'];
+$id = $_POST['id'];
+$action = $_POST['action'];
 
 if($action == 'delete_sub_activity'){
-    $table = "sub_activities";
-    $id_title = "Sub_ID";
-    echo("running");
+    $stmt = $link->prepare("DELETE FROM sub_activities WHERE Sub_ID = ?");
+    $stmt->bind_param("i",$id);
+    $stmt->execute();
 }
-echo ($id);
-echo ($table);
-echo ($id_title);
-$stmt = $link->prepare("DELETE FROM (?) WHERE (?) = (?)");
 
-$stmt->bind_param("ssi",$table,$id_title,$id);
-$stmt->execute();
-echo ($stmt);
+elseif($action == 'delete_main_activity'){
+    $stmt = $link->prepare("DELETE FROM main_activities WHERE Main_ID = ?");
+    $stmt->bind_param("i",$id);
+    $stmt->execute();
+}
 require_once('db_link_close.php')
 ?>

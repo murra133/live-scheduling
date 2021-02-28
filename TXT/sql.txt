@@ -20,3 +20,24 @@ CREATE TABLE Sub_Activities (
     FOREIGN KEY (Main_ID) REFERENCES main_activities(Main_ID)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+//Creates the Party Table
+CREATE TABLE Parties (
+    PARTY_ID int NOT NULL,
+    PARTY_NAME varchar(255) NOT NULL,
+    PRIMARY KEY (Main_ID)
+);
+
+//Creates the Personel Table
+
+CREATE TABLE Personel (
+    PERSON_ID int NOT NULL,
+    PARTY_ID int NOT NULL,
+    PERSON_FNAME varchar(255) NOT NULL,
+    PERSON_LNAME varchar(255) Not NULL,
+    TITLE varchar(255) Not NULL,
+    EMAIL varchar(255) Not NULL,
+    PRIMARY KEY (PERSON_ID),
+    FOREIGN KEY (PARTY_ID) REFERENCES Parties(PARTY_ID)
+    ON UPDATE CASCADE ON DELETE CASCADE
+);

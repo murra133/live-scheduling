@@ -5,3 +5,28 @@ CREATE TABLE Main_Activities (
     Main_Activity varchar(255) NOT NULL,
     PRIMARY KEY (Main_ID)
 );
+
+
+// Create Registry Database 
+
+CREATE TABLE User_Registry (
+    Register_id NOT NULL AUTO_INCREMENT,
+    FirstName varchar(255) NOT NULL,
+    LastName varchar(255) NOT NULL,
+    Email varchar(255) NOT NULL,
+    Company varchar(255) NOT NULL,
+    Title varchar(255) NOT NULL,
+    Username varchar(255) NOT NULL,
+    Password varchar(255) NOT NULL,
+    PRIMARY KEY (Register_id),
+);
+
+CREATE TABLE Project_Database (
+    Project_id NOT NULL AUTO_INCREMENT,
+    ProjectName varchar(255) NOT NULL,
+    PRIMARY KEY (Project_id),
+);
+
+CREATE TABLE Project_User_Merge(
+    
+)

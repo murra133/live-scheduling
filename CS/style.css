@@ -4,9 +4,8 @@ html, body{
     margin:0;
     height: 100%;
 }
-h3{
+#message>h3{
     text-align: center;
-
 }
 #main_title{
     text-align: center;
@@ -108,7 +107,7 @@ h3{
 }
 
 .main_activity_title{
-    width:49%;
+    width:55%;
     position:relative;
     left:2%;
  
@@ -120,12 +119,27 @@ font-size: 100%;
 padding:.8vh;
 color:white;
 background-color: gray;
-width:98%;
+width:90%;
 border-style: solid;
 border:black;
 border-radius: 5px;
+}
+.title{
+    display: inline-block!important;
+}
+
+.main_edit{
+    padding-left: 1%;
+    float: right;
 
 }
+
+.main_delete{
+    padding-left: 1%;
+    float: right;
+    font-size: 108%;
+}
+
 
 /* ------ Buttons ------*/
 
@@ -256,7 +270,7 @@ width:95%;
     margin-bottom: 206%;
 }
 
-.fa-edit{
+.edit_sub_icon{
     display:block !important;
     padding-bottom: 88%;
 }
@@ -265,7 +279,7 @@ width:95%;
     margin-bottom: 247%;
 }
 
-.fa-minus-square{
+.delete_sub_icon{
     display:block !important;
     padding-bottom: 96%;
     padding-left: 40%;
@@ -304,7 +318,7 @@ width:95%;
     white-space: nowrap;
     overflow: auto;
     position: relative;
-    left: 4.5vw;
+    left: 2%;
 }
 
 
@@ -312,6 +326,9 @@ width:95%;
 
 /*  Add Sub Activity HTML CSS */
 
+.add_sub_activity_button{
+    margin-left: 4%;
+}
 
 #activity_title {
     display:block;

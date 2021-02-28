@@ -17,3 +17,36 @@
 		<link rel="stylesheet" href="../CS/register_form.css">
         <link rel="stylesheet" href="../CS/style.css">
 	</head>
+
+    <body>
+
+        <!-- CHECKS to See if User is connected-->
+        <script>
+            var all_cookies = ReadCookie();
+            var cookies_variable_array = Array();
+            for(var n=0; n<all_cookies.length;n++){
+                cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
+            }
+            if (cookies_variable_array.includes('login_status')){
+                var index = cookies_variable_array.indexOf('login_status');
+                if(all_cookies[index].split("=")[1]==1){
+            }
+            else{
+                window.location.replace("../HTML/index.html");
+                    }
+                }
+                    else{
+                        window.location.replace("../HTML/index.html");
+                    }
+            </script>
+        <!---->
+        <p>It Worked</p>
+        <a href = "header.html">
+        <button>
+        Click ME
+        </button>
+        </a>
+
+    </body>
+    </html>
+

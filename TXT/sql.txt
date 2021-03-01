@@ -21,7 +21,6 @@ CREATE TABLE Sub_Activities (
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-<<<<<<< HEAD
 //Creates the Party Table
 CREATE TABLE Parties (
     PARTY_ID int NOT NULL,
@@ -40,7 +39,6 @@ CREATE TABLE Personel (
     EMAIL varchar(255) Not NULL,
     PRIMARY KEY (PERSON_ID),
     FOREIGN KEY (PARTY_ID) REFERENCES Parties(PARTY_ID)
-=======
 // Create Registry Database 
 
 CREATE TABLE User_Registry (
@@ -71,6 +69,5 @@ CREATE TABLE Project_User_Merge(
     FOREIGN KEY (Register_id) REFERENCES User_Registry(Register_id)
     ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (Project_id) REFERENCES Project_Database(Project_id)
->>>>>>> 31705c661fab0467ebf108373e0935ba2500dcfc
     ON UPDATE CASCADE ON DELETE CASCADE
 );

@@ -1,0 +1,36 @@
+.project_link{
+    display: inline-block;
+    width:80%;
+    border: 1px solid gray;
+    border-radius: 15px;
+    background-color: RGB(250,249,246);
+    padding-top: .5%;
+    padding-bottom: .5%;
+}
+.project_link > h3{
+    color:gray;
+    font-weight: bold;
+    padding-left: 5%;
+    font-size: 150%;
+}
+
+.schedule_line{
+    display: block;
+}
+
+#schedule_box{
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 1%;
+    height: 99%;
+    width: 98%;
+}
+#schedule_box > h1{
+    text-align: center;
+    padding-bottom: 3%;
+}
+
+#add_project{
+    margin-top: 2%;
+    font-size: 125%;
+}

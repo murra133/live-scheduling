@@ -332,8 +332,8 @@ function date_format_changer(date){
 /* Adds the Main Activity Line */
   function add_main_activity(){
     var add_cell = document.getElementById('added_cell');
-    var n =add_cell.children.length;
-    n=n+1;
+    var n =add_cell.lastChild.id;
+    n=parseInt(n)+1;
     var div = document.createElement('div');
     div.setAttribute("id",n);
     div.setAttribute("class","main_activity");

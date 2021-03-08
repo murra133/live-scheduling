@@ -16,36 +16,75 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<link rel="stylesheet" href="../CS/register_form.css">
         <link rel="stylesheet" href="../CS/style.css">
+        <link rel="stylesheet" href="../CS/project_view.css">
+
 	</head>
 
     <body>
-
-        <!-- CHECKS to See if User is connected-->
-        <script>
-            var all_cookies = ReadCookie();
-            var cookies_variable_array = Array();
-            for(var n=0; n<all_cookies.length;n++){
-                cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
-            }
-            if (cookies_variable_array.includes('login_status')){
-                var index = cookies_variable_array.indexOf('login_status');
-                if(all_cookies[index].split("=")[1]==1){
-            }
-            else{
-                window.location.replace("../HTML/index.html");
-                    }
+            <div id="main_page">
+            <!-- CHECKS to See if User is connected-->
+            <script>
+                var all_cookies = ReadCookie();
+                var cookies_variable_array = Array();
+                for(var n=0; n<all_cookies.length;n++){
+                    cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
                 }
-                    else{
-                        window.location.replace("../HTML/index.html");
+                if (cookies_variable_array.includes('login_status')){
+                    var index = cookies_variable_array.indexOf('login_status');
+                    if(all_cookies[index].split("=")[1]==1){
+                        if(!cookies_variable_array.includes('fname')){
+                            
+                            var register_id = all_cookies[cookies_variable_array.indexOf('Registry_ID')].split("=")[1];
+                            $.ajax({
+                                url : '../PHP/pull_user.php?register_id='+register_id,
+                                type : 'GET',     
+                                success:function(data){
+                                if (JSON.parse(data)==null){
+                                    window.location.replace("../HTML/index.html");
+                                }
+                                else{
+                                    var js_data = JSON.parse(data);
+                                    var cookie ="fname="+js_data['FirstName']+";lname="+js_data['LastName']+";email="+js_data['Email']+";company="+js_data['Company']+";title="+js_data['Title'];
+                                    WriteCookie(cookie);
+                                    }
+                                }
+
+                             })
+                        }
+        }
+                else{
+                    window.location.replace("../HTML/index.html");
+                        }
                     }
-            </script>
-        <!---->
-        <p>It Worked</p>
-        <a href = "header.html">
-        <button>
-        Click ME
-        </button>
-        </a>
+                        else{
+                            window.location.replace("../HTML/index.html");
+                        }
+
+                
+                </script>
+            <!---->
+
+            <div id="header">
+
+            </div>
+            <div id = "schedule_box">
+                <h1>Your Schedules</h1>
+                <div class = "schedule_line">
+                    <a href = "header.html">
+                        <div class = "project_link">
+                            <h3>Company Schedule</h3>
+                        </div>
+                    </a>
+                </div>
+                <div id = "add_project">
+                    <i class="far fa-plus-square" aria-hidden="true" onclick="open_add_project_box()">  Add New Project</i>
+
+                </div>
+            </div>
+    </div>
+        <div id = "content">
+
+        </div>
 
     </body>
     </html>

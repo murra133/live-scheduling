@@ -4,6 +4,9 @@ html, body{
     margin:0;
     height: 100%;
 }
+h1{
+    text-align: center;
+}
 #message>h3{
     text-align: center;
 }
@@ -126,7 +129,11 @@ border-radius: 5px;
 }
 .title{
     display: inline-block!important;
+    
 }
+
+
+
 
 .main_edit{
     padding-left: 1%;
@@ -343,9 +350,14 @@ width:95%;
     width:max-content;
     border: black 1px solid;
     border-radius: 5px;
-    padding:5%;
+    padding:2%;
     background-color: beige;
 
+}
+.box_title{
+    display: block;
+    text-align: center;
+    margin-bottom: 2%;
 }
 #main_id{
     display: none;
@@ -407,6 +419,39 @@ width:95%;
 #buttons_box{
     text-align: center;
 }
+
+
+
+
+/* Styles for Adding Project Box*/
+#add_project_input{
+    width:98%;
+}
+#user_titles h6{
+        width: 24%;
+}
+.user_admin{
+    margin-bottom: 2%;
+}
+#add_project{
+    margin-bottom: 3%;
+}
+.user_admin_input{
+    margin-bottom: 2%;
+}
+.admin_input{
+    width: 23%;
+}
+.user_admin h7{
+    width: 24%;
+    display: inline-block;
+}
+
+#box h3{
+    font-size: 125%;
+
+}
+
 /* Response Tablet */
 
 

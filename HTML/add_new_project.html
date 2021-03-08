@@ -1,0 +1,49 @@
+
+    <div id="box" class = "box">
+        <div class = "box_title">
+            <h1>Create New Project</h1>
+        </div>
+        <div id = "add_project">
+            <h3> Project Name:</h3>
+            <input id = "add_project_input" type="text">
+        </div>
+        <div id="admin">
+            <h3>Administrators</h3>
+            <div id="user_titles">
+                <h6 class = "title">First Name:</h6>
+                <h6 class = "title">Last Name:</h6>
+                <h6 class = "title">Email:</h6>
+                <h6 class = "title">Admin Level:</h6>
+            </div>
+            <div class = "user_admin">
+                <h7 class="firstname"></h7>
+                <h7 class="lastname"></h7>
+                <h7 class="email"></h7>
+                <h7 class="admin_level">Administrator</h7>
+            </div>
+            <div class = "user_admin_input" id="sample_input" style="display:none;">
+                <input class = "admin_input firstname" type="text" placeholder="First Name:">
+                <input class = "admin_input lastname" type="text" placeholder="Last Name:">
+                <input class = "admin_input email" type="text" placeholder="Email:">
+                <select class = "admin_input admin_level">
+                    <option value="1">Administrator</option>
+                    <option value="2">Scheduler</option>
+                    <option value="3">Viewer</option>
+                    </select>
+                    <i class="far fa-trash-alt" onclick="delete_user_admin_input(this)"></i>
+            </div>
+            <div class = "user_admin_input">
+                <input class = "admin_input firstname" type="text" placeholder="First Name:">
+                <input class = "admin_input lastname" type="text" placeholder="Last Name:">
+                <input class = "admin_input email" type="text" placeholder="Email:">
+                <select class = "admin_input admin_level">
+                    <option value="1">Administrator</option>
+                    <option value="2">Scheduler</option>
+                    <option value="3">Viewer</option>
+                    </select>
+                    <i class="far fa-trash-alt" onclick="delete_user_admin_input(this)"></i>
+            </div>
+            <i class="far fa-plus-square" aria-hidden="true" onclick="add_admin_input(this)"> Add User</i>
+        </div>
+        <button type="submit" onclick="create_project(this)">Submit Button</button>
+    </div>

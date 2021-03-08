@@ -17,7 +17,7 @@ function WriteCookie(Cookie_Value_Str) {
     
     return cookiearray;
  }
-
+//////////////////////////////////////////////////////////////////
 function ValidateEmail(mail) 
 {
  if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
@@ -26,7 +26,7 @@ function ValidateEmail(mail)
   }
     return (false)
 }
-
+//////////////////////////////////////////////////////////////////////
 function pull_user_write_cookie(username_password){
     $.ajax({
         url : '../PHP/pull_user.php?username='+username_password[0]+'&password='+username_password[1],
@@ -45,7 +45,7 @@ function pull_user_write_cookie(username_password){
         }
     })
 }
-
+//////////////////////////////////////////////////////////////////////////////
 function submit_register(action){
 
     var username=document.getElementById("username").value;
@@ -99,5 +99,64 @@ function submit_register(action){
     input_array=[username,password];
     setInterval(pull_user_write_cookie,300,input_array)
     
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+function add_admin_input(admin_add_tag){
+    var user_admin_tag = document.getElementById("sample_input");
+    console.log(user_admin_tag);
+    var cloned_input_tag = user_admin_tag.cloneNode(true);
+    cloned_input_tag.removeAttribute('id');
+    cloned_input_tag.removeAttribute('style');
+    admin_add_tag.parentNode.insertBefore(cloned_input_tag, admin_add_tag);
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
+function delete_user_admin_input(delete_tag){
+    var parent_node = delete_tag.parentNode;
+    removeAllChildNodes(parent_node);
+
+}
+
+//////////////////////////////////////////////////////////////////////////////
+function add_user_to_project_box(user_array){
+    ///// var user_array = [first_name, last_name, email];
+    document.getElementsByClassName('firstname')[0].innerHTML = user_array[0];
+    document.getElementsByClassName('lastname')[0].innerHTML = user_array[1];
+    document.getElementsByClassName('email')[0].innerHTML = user_array[2];
+
+}
+
+///////////////////////////////////////////////////////////
+function open_add_project_box(){
+    document.getElementById("main_page").style.blur = "10px";
+    $('#content').load("../HTML/add_new_project.html");
+    $("#main_page").css({
+      "-webkit-filter": "blur(3px)", 
+      "-moz-filter": "blur(3px)", 
+      "-o-filter": "blur(3px)", 
+      "-ms-filter": "blur(3px)", 
+      "filter": "blur(3px)", 
+    }
+  );
+  var cookiearray = ReadCookie();
+  for(var n=0; n<cookiearray.length;n++){
+    cookies_variable_array[n]=cookiearray[n].split("=")[0].trim();
+}
+var first_name = cookiearray[cookies_variable_array.indexOf('fname')].split("=")[1];
+var last_name = cookiearray[cookies_variable_array.indexOf('lname')].split("=")[1];
+var email = cookiearray[cookies_variable_array.indexOf('email')].split("=")[1];
+
+user_array = [first_name,last_name,email];
+
+
+
+
 
 }

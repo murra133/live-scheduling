@@ -96,7 +96,8 @@ function submit_register(action){
         document.getElementById("message").innerHTML = "";
         $.post( "../PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
     }
-    input_array=[username,password];
+    var input_array=[username,password];
+    console.log(input_array);
     setInterval(pull_user_write_cookie,300,input_array)
     
 
@@ -154,9 +155,7 @@ var last_name = cookiearray[cookies_variable_array.indexOf('lname')].split("=")[
 var email = cookiearray[cookies_variable_array.indexOf('email')].split("=")[1];
 
 user_array = [first_name,last_name,email];
-
-
-
-
-
+setTimeout(add_user_to_project_box,150,user_array);
 }
+
+///////////////////////////////////////////////////////////////////////////

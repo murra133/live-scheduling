@@ -1,7 +1,9 @@
 <?php
 require_once("db_link.php");
-if (isset($_GET['username']) && isset($_POST['password'])){
-
+if (isset($_GET['username']) && isset($_GET['password'])){
+    $username = $_GET['username'];
+    $password = $_GET['password'];
+    
     
         $stmt = $link->prepare("SELECT Register_id FROM user_registry WHERE (Username,Password) = (?,?)");
         $stmt->bind_param("ss",$username,$password);

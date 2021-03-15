@@ -11,13 +11,15 @@ if($query_sub->num_rows > 0){
         $data_sub[$row["Sub_ID"]] = $row;
     }
 }*/
-//return main activities as assiciative arrays with corresponding sub activity nested inside
-$query_main = $link->query("SELECT * FROM main_activities");
+//return main activities as assiciative arrays with corresponding sub activ
+$project_id = $_POST['project_id'];
+
+$query_main = $link->query("SELECT * FROM main_activities_".$project_id);
 $data_main = array();
 if($query_main->num_rows > 0){
     while($row_main = $query_main->fetch_assoc()){
         $num = $row_main["Main_ID"];
-        $query_sub = $link->query("SELECT * FROM sub_activities WHERE Main_ID = $num");
+        $query_sub = $link->query("SELECT * FROM sub_activities_".$project_id." WHERE Main_ID = $num");
         $data_sub = array();
         if($query_sub->num_rows > 0){
             while($row = $query_sub->fetch_assoc()){

@@ -69,13 +69,29 @@
             </div>
             <div id = "schedule_box">
                 <h1>Your Schedules</h1>
-                <div class = "schedule_line">
-                    <a href = "header.html">
+                <div class = "schedule_line" id="sample_line" style="display:none;">
+                    <span  onclick="Write_id_Cookie(this)">
                         <div class = "project_link">
-                            <h3>Company Schedule</h3>
+                            <h3 id="schedule"></h3>
+                            <h3 id="administrator" class = "administrator"></h3>
+                        </div>
+                    </span>
+                    <div>
+                        <i class = "far fa-minus-square schedule_delete" id="delete_1" aria-hidden="true"></i>
+                     </div>
+                </div>
+                <div class = "schedule_line">
+                    <a href = "header.html" id ="1">
+                        <div class = "project_link">
+                            <h3 id="schedule_1">Company Schedule</h3>
+                            <h3 id="administrator_1" class = "administrator">Brian Murray</h3>
                         </div>
                     </a>
+                    <div>
+                        <i class = "far fa-minus-square schedule_delete" id="delete_1" aria-hidden="true"></i>
+                     </div>
                 </div>
+
                 <div id = "add_project">
                     <i class="far fa-plus-square" aria-hidden="true" onclick="open_add_project_box()">  Add New Project</i>
 
@@ -86,6 +102,9 @@
 
         </div>
 
+        <script>
+            pull_all_schedules();
+        </script>
     </body>
     </html>
 

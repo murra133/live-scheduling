@@ -7,8 +7,10 @@ html, body{
 h1{
     text-align: center;
 }
-#message>h3{
+#message{
     text-align: center;
+    color: red;
+    font-weight: bolder;
 }
 #main_title{
     text-align: center;

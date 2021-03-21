@@ -1,25 +1,41 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Firebase</title>
     <link rel="stylesheet" href="../CS/style.css">
+    <link rel="stylesheet" href="../CS/side_bar_style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="../JS/party.js"></script>
+    <!--script src="../JS/party.js"></script-->
+    <script src="../JS/party_ready.js"></script>
+    <script src="../JS/side_bar.js"></script>   
+    <script src="../JS/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<div id="box">
+    </head>
+
+    <body>
+    <div>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class = "active" onclick="toggle_side_bar()" >
+            
+    </nav>
+    <div id = "content">
     <div id="main_page">
-        <div id="header">
-            <h1 id="main_title">Party Involved</h1>
-        </div>
+        <div id = "search_navbar"></div>
+            <!--nav class="navbar navbar-light bg-light justify-content-between" >
+                    <h5 class="navbar-brand">Party Involved</h5>
+                    <form class="form-inline">
+                      <input id="searchbar" class="form-control mr-sm-2" type="search" placeholder="Search for keywords" aria-label="Search">
+                    </form>
+                  </nav-->
     <!-- Scedule Headers-->
     <div id="cell">
         <div id="cell_header">
@@ -45,7 +61,34 @@
     </div> 
 </div>
 </div>
+<!--/div>-->
 
-<div id ="content">
+<div id ="content_box">
 
 </div>
+
+
+
+<div id="person_submitted" style="display: none">
+		<h5 id="person_fname">33</h5>
+		<h5 id="person_lname">33</h5>
+		<h5 id="person_title">33</h5>
+		<h5 id="person_email">33</h5>
+		<h5 class="person_bottom"></h5>
+    </div>
+    
+    <div id="person_list" style="display: none">
+			<ul class="list-group list-group-flush">
+                <span  = "person_list_bottom"></span>
+			</ul>
+        </div>
+        </body>
+<footer>
+    <script>
+        $('#sidebar').load('../HTML/side_bar_nav.html');
+        $('#search_navbar').load('../HTML/search_bar_nav.html');
+
+        setTimeout(add_function_to_search,300,'search_party()');
+    </script>
+</footer>
+

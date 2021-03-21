@@ -177,7 +177,7 @@ function add_user_to_project_box(user_array){
 ///////////////////////////////////////////////////////////
 function open_add_project_box(){
     document.getElementById("main_page").style.blur = "10px";
-    $('content_box').load("../HTML/add_new_project.html");
+    $('#content_box').load("../HTML/add_new_project.html");
     $("#main_page").css({
       "-webkit-filter": "blur(3px)", 
       "-moz-filter": "blur(3px)", 
@@ -276,6 +276,7 @@ function create_project(submit_button_tag){
             add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
         }
      });
+     var content = document.getElementById('content_box');
      removeAllChildNodes(content);
      $('#main_page').removeAttr('style');
      return false;

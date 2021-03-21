@@ -1,6 +1,6 @@
 <?php
 require_once("db_link.php");
-
+$project_id=$_POST['project_id'];
 $PERSON_ID = $_POST['personel_id'];
 $PARTY_ID=$_POST['party_id'];
 $PERSON_FNAME =$_POST['personel_fname'];
@@ -13,7 +13,7 @@ $stmt->bind_param("i",$sub_id);
 $stmt->execute();*/
 
 
-$stmt = $link->prepare("INSERT INTO personel (PERSON_ID, PARTY_ID, PERSON_FNAME, PERSON_LNAME, EMAIL, TITLE) VALUES(?,?,?,?,?,?)");
+$stmt = $link->prepare("INSERT INTO personel_".$project_id." (PERSON_ID, PARTY_ID, PERSON_FNAME, PERSON_LNAME, EMAIL, TITLE) VALUES(?,?,?,?,?,?)");
 $stmt->bind_param("iissss",$PERSON_ID,$PARTY_ID,$PERSON_FNAME,$PERSON_LNAME,$EMAIL,$TITLE);
 $stmt->execute();
 

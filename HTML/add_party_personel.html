@@ -1,81 +1,71 @@
-<script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="../CS/style.css">
-<script src="../JS/party.js"></script>
-<script type="text/javascript">
-
-	function init() {
-		//document.getElementById('moreFields').onclick = moreFields;
-		moreFields();
-	}
-	function init2(party_id) {
-		//document.getElementById('moreFields').onclick = moreFields;
-		morePerson(party_id);
-	}
-	
-
-
-
-	window.onload = init();
-	
-	// -->
-	</script>
-	<div id="party_submitted" style="display: none">
-		<h3 class="party_name">33</h3>
-		<span class="person_field"></span>
-		<div id="person_add">
-				<div id="moreFields" onclick = "init2(this.parentNode.parentNode.id)" value="Give me more fields!">
-					<i class="far fa-plus-square"> Add Personel</i>
-				</div>
-			</div>
-	</div>
-
-
-	<div id="person_submitted" style="display: none">
-		<span id="person_fname">33</span>
-		<span id="person_lname">33</span>
-		<span id="person_title">33</span>
-		<span id="person_email">33</span>
-		<span class="person_bottom"></span>
-	</div>
-
-
-	<div id="readroot" style="display: none">
-	
-		<input name="party_involved" value="name" />
-
-		<div id="submit_party" style="display:inline-block" onclick="submit_party(this.parentNode.id);" >
-			<i class="fa fa-check-square"></i>
-		</div>
-
-		<div id="delete_party" style="display:inline-block" onclick="cancel_party_form();" >
-			<i class="fa fa-times-circle-o"></i>
-		</div>
-
-	</div>
-
-</div>
-
-
-
-
-	<div id="personroot" style="display: none">
-
-		<input name="person_fname" value="First Name" />
-		<input name="person_lname" value="Last Name" />
-		<input name="person_title" value="Title" />
-		<input name="person_email" value="Email" />
-
-		<div id="delete_party" style="display:inline-block" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" >
-			<i class="fa fa-times-circle-o"></i>
-		</div>
-
-	</div>	
-	
-	<div>
+<script src="../JS/sub_activity_script.js"></script>
+<div class = "box">
+	<script>
+		function init() {
+			//document.getElementById('moreFields').onclick = moreFields;
+			moreFields();
+		}
+		function init2(party_id) {
+			//document.getElementById('moreFields').onclick = moreFields;
+			morePerson(party_id);
+		}
 		
-		<span id="writeparty"></span>
-	
-		<span id="writeroot"></span>
-		<input type="submit" value="Send form" onclick = "submit_person(this);"/>
-	
-	</div>
+
+
+
+		window.onload = init();
+		
+		// -->
+		</script>
+		<div id="party_submitted" style="display: none">
+			<h2 class="party_name">33</h2>
+			<span class="person_field"></span>
+			<div id="person_add">
+					<div id="moreFields" onclick = "init2(this.parentNode.parentNode.id)" value="Give me more fields!">
+						<i class="far fa-plus-square"> Add Personel</i>
+					</div>
+				</div>
+		</div>
+
+
+
+		<div id="readroot" style="display: none">
+		
+			<input name="party_involved" value="name" />
+
+			<div id="submit_party" style="display:inline-block" onclick="submit_party(this.parentNode.id);" >
+				<i class="fa fa-check-square"></i>
+			</div>
+
+			<div id="delete_party" style="display:inline-block" onclick="cancel_party_form();" >
+				<i class="fa fa-times-circle-o"></i>
+			</div>
+
+		</div>
+
+
+
+
+
+		<div id="personroot" style="display: none">
+
+			<input name="person_fname" value="First Name" />
+			<input name="person_lname" value="Last Name" />
+			<input name="person_title" value="Title" />
+			<input name="person_email" value="Email" />
+
+			<div id="delete_party" style="display:inline-block" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" >
+				<i class="fa fa-times-circle-o"></i>
+			</div>
+
+		</div>	
+		
+		<div>
+			
+			<span id="writeparty"></span>
+		
+			<span id="writeroot"></span>
+			<input type="submit" value="Send form" onclick = "submit_person(this);"/>
+		
+		</div>
+</div>

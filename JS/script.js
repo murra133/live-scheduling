@@ -380,7 +380,7 @@ function date_format_changer(date){
     }
     else{
       n=parseInt(n)+1;
-    }
+    };
     
     var div = document.createElement('div');
     div.setAttribute("id",n);

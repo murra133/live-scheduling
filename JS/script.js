@@ -373,22 +373,13 @@ function date_format_changer(date){
   function add_main_activity(){
     var add_cell = document.getElementById('added_cell');
     var n =add_cell.lastChild.id;
-<<<<<<< HEAD
-    
-    if(n==null){
-=======
     if(n == null){
->>>>>>> 83f7c90e1b860edf852e6eb1cc1b00549c6b7639
       n=1;
     }
     else{
       n=parseInt(n)+1;
-    }
-<<<<<<< HEAD
-    console.log(n);
-=======
+    };
     
->>>>>>> 83f7c90e1b860edf852e6eb1cc1b00549c6b7639
     var div = document.createElement('div');
     div.setAttribute("id",n);
     div.setAttribute("class","main_activity");

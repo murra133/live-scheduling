@@ -1,6 +1,12 @@
 <?php
 require_once("db_link.php");
 
+/*$project_name =$_GET['project_name'];
+$first_name_array = explode(',',$_GET['first_name']);
+$last_name_array =explode(',',$_GET['last_name']);
+$email_array = explode(',',$_GET['email']);
+$admin_level_array= explode(',',$_GET['admin_level']);*/
+
 $project_name =$_POST['project_name'];
 $first_name_array = explode(',',$_POST['first_name']);
 $last_name_array =explode(',',$_POST['last_name']);
@@ -10,7 +16,7 @@ $admin_level_array= explode(',',$_POST['admin_level']);
 $stmt = $link->prepare("INSERT INTO project_database (ProjectName) VALUE (?)");
 $stmt->bind_param("s",$project_name);
 $stmt->execute();
-sleep(3);
+sleep(1);
 $stmt = $link->prepare("SELECT Project_id FROM project_database WHERE ProjectName = ?");
 $stmt->bind_param("s",$project_name);
 $stmt->execute();
@@ -24,13 +30,11 @@ for($i =0; $i<sizeof($email_array); $i++){
     $last_name = $last_name_array[$i];
     $admin_level = intval($admin_level_array[$i]);
 
-
     $stmt = $link->prepare("SELECT Register_id FROM user_registry WHERE Email = ?");
     $stmt->bind_param("s",$email);
     $stmt->execute();
     $result = $stmt -> get_result();
     $register_id = $result -> fetch_assoc();
-    
 
     if(isset($register_id['Register_id'])){
         $stmt = $link->prepare("INSERT INTO project_user_merge (Register_id,Project_id,admin_level) VALUES (?,?,?)");

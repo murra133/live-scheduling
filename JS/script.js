@@ -333,7 +333,14 @@ function date_format_changer(date){
   function add_main_activity(){
     var add_cell = document.getElementById('added_cell');
     var n =add_cell.lastChild.id;
-    n=parseInt(n)+1;
+    
+    if(n==null){
+      n=1;
+    }
+    else{
+      n=parseInt(n)+1;
+    }
+    console.log(n);
     var div = document.createElement('div');
     div.setAttribute("id",n);
     div.setAttribute("class","main_activity");

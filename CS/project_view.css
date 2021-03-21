@@ -1,6 +1,6 @@
 .project_link{
     display: inline-block;
-    width:80%;
+    width:90%;
     border: 1px solid gray;
     border-radius: 15px;
     background-color: RGB(250,249,246);
@@ -10,12 +10,31 @@
 .project_link > h3{
     color:gray;
     font-weight: bold;
-    padding-left: 5%;
+    padding-left: 3%;
     font-size: 150%;
+    display: inline-block;
+}
+
+.schedule_delete{
+    font-size: 250%;
+    
+
+}
+
+.administrator{
+    float:right;
+    padding-right: 2%;
 }
 
 .schedule_line{
     display: block;
+    position: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.schedule_line >div{
+    display: inline-block;
 }
 
 #schedule_box{

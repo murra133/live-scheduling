@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Firebase</title>
     <link rel="stylesheet" href="../CS/style.css">
+    <link rel="stylesheet" href="../CS/side_bar_style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
@@ -15,9 +16,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../JS/script.js"></script>
     <script src="../JS/server_script.js"></script>
+    <script src="../JS/side_bar.js"></script>
+    <script src="../JS/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-</header>
+</head>
 <body>
         <!-- CHECKS to See if User is connected-->
         <script>
@@ -39,46 +41,58 @@
                     }
             </script>
         <!---->
-    <div id="main_page">
-        <div id="header">
-            <h1 id="main_title">Company Schedule</h1>
-            <div>
-                <div id="start_date_div">
-                    <a class="btn" data-toggle="collapse" href="#start_date_input" role="button" aria-expanded="false" aria-controls="multiCollapseExample1" onclick="start_date_block_style()">
-                        <i class="far fa-caret-square-down" class="start_date"></i>
-                        <h3 class="start_date">Start Date:</h3>
-                        <h3 class="start_date" id="start_date"></h3>
-                    </a>
-                    <input id="start_date_input" name="yes" type="date" class="collapse">
+        <div class="wrapper d-flex align-items-stretch">
+            <nav id="sidebar" class = "active" onclick="toggle_side_bar()">
+
+        </nav>
+        <div id = "content">
+        <div id="main_page">
+            
+            <div id="header">
+                <h1 id="main_title">Company Schedule</h1>
+                <div>
+                    <div id="start_date_div">
+                        <a class="btn" data-toggle="collapse" href="#start_date_input" role="button" aria-expanded="false" aria-controls="multiCollapseExample1" onclick="start_date_block_style()">
+                            <i class="far fa-caret-square-down" class="start_date"></i>
+                            <h3 class="start_date">Start Date:</h3>
+                            <h3 class="start_date" id="start_date"></h3>
+                        </a>
+                        <input id="start_date_input" name="yes" type="date" class="collapse">
+                    </div>
+                    <div id="upload_button">
+                        <button class="btn btn-primary submit_button" type="submit">Push to All</button>
+                        <button class="btn btn-primary submit_button" type="submit">Push to Team</button>
+                    </div>
+            </div>
+            </div>
+        <!-- Scedule Headers-->
+        <div id="cell">
+            <div id="cell_header">
+                <br>
+            </div>
+                <div id="added_cell">
+
                 </div>
-                <div id="upload_button">
-                    <button class="btn btn-primary submit_button" type="submit">Push to All</button>
-                    <button class="btn btn-primary submit_button" type="submit">Push to Team</button>
-                </div>
-        </div>
-        </div>
-    <!-- Scedule Headers-->
-    <div id="cell">
-        <div id="cell_header">
-            <br>
-        </div>
-            <div id="added_cell">
+
+                <div id="activity_add">
+                    <div id="main_activity_add" onclick="add_main_activity()">
+                        <i class="far fa-plus-square">  Add Main Activity</i>
+                    </div>
+                    </div>
 
             </div>
 
-            <div id="activity_add">
-                <div id="main_activity_add" onclick="add_main_activity()">
-                    <i class="far fa-plus-square">  Add Main Activity</i>
-                </div>
-                </div>
 
+            </div>
+        </div> 
         </div>
 
 
-        </div> 
-
-    </div> 
-</div>
-
-<div id="content"></div>
+<div id="content_box"></div>
 </body>
+<footer>
+    <script>
+        $('#sidebar').load('side_bar_nav.html');
+    </script>
+</footer>
+</html>

@@ -1,13 +1,45 @@
 // ------ Brian's JavaScript------//
+
+// --------- Cookie Script ---------//
+function ReadCookie() {
+  //// Np Input, Returns Array with all Cookies
+ var allcookies = document.cookie;
+ 
+ // Get all the cookies pairs in an array
+ var cookiearray = allcookies.split(';');
+ 
+ return cookiearray;
+}
+function WriteCookie(Cookie_Value_Str) {
+  ///// Input is Cookie value as a string ex. input = "Cookie1=24;Cookie2=12"
+  var  cookiearray = Cookie_Value_Str.split(';');
+
+  for(var i=0;i<cookiearray.length;i++){
+      document.cookie = cookiearray[i];
+
+  }
+}
+
+function cookie_value(input_cookie){
+var all_cookies = ReadCookie();
+var cookies_variable_array = Array();
+for(var n=0; n<all_cookies.length;n++){
+  cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
+}
+if (cookies_variable_array.includes(input_cookie)){
+  var index = cookies_variable_array.indexOf(input_cookie);
+  var result_value = all_cookies[index].split("=")[1].trim();
+  return result_value;
+}
+else{
+return false;
+}
+};
+
 ////////////////////////////////////////////////////////////////////////////
 //fetch main activity
 $( document ).ready(function() {
-  var all_cookies = ReadCookie();
-                var cookies_variable_array = Array();
-                for(var n=0; n<all_cookies.length;n++){
-                    cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
-                }
-  window.project_id = all_cookies[cookies_variable_array.indexOf('project_id')].split('=')[1];
+  window.project_id = cookie_value('project_id');
   var admin_level = 1;
   $.ajax({
     url : '../PHP/pull_activity.php',
@@ -639,7 +671,7 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
   document.getElementById("main_page").style.blur = "10px";
-    $('#content').load("../HTML/add_sub_activity.html");
+    $('#content_box').load("../HTML/add_sub_activity.html");
     $("#main_page").css({
       "-webkit-filter": "blur(3px)", 
       "-moz-filter": "blur(3px)", 
@@ -945,7 +977,7 @@ function place_values_in_subactivity_box(values_array){
 function update_sub_activity(this_tag){
   ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
   document.getElementById("main_page").style.blur = "10px";
-    $('#content').load("../HTML/add_sub_activity.html");
+    $('#content_box').load("../HTML/add_sub_activity.html");
     $("#main_page").css({
       "-webkit-filter": "blur(3px)", 
       "-moz-filter": "blur(3px)", 
@@ -972,7 +1004,7 @@ function update_sub_activity(this_tag){
 function add_box_blur_background(url){
   //////Submit URL for page to load as if you were pulling it from the javascript Ex. "../HTML/add_sub_activity.html"////
   document.getElementById("main_page").style.blur = "10px";
-  $('#content').load(url);
+  $('#content_box').load(url);
   $("#main_page").css({
     "-webkit-filter": "blur(3px)", 
     "-moz-filter": "blur(3px)", 

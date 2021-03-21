@@ -177,7 +177,7 @@ function add_user_to_project_box(user_array){
 ///////////////////////////////////////////////////////////
 function open_add_project_box(){
     document.getElementById("main_page").style.blur = "10px";
-    $('#content').load("../HTML/add_new_project.html");
+    $('content_box').load("../HTML/add_new_project.html");
     $("#main_page").css({
       "-webkit-filter": "blur(3px)", 
       "-moz-filter": "blur(3px)", 
@@ -284,7 +284,8 @@ function create_project(submit_button_tag){
 
 function Write_id_Cookie(tag_with_id){
     var id = tag_with_id.id;
-    var cookie = 'project_id='+id;
+    var name = document.getElementById('schedule_'+id).innerHTML;
+    var cookie = 'project_id='+id+';project_name='+name;
     WriteCookie(cookie);
     var url = "../HTML/header.html"
     window.location.href = url;

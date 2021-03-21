@@ -189,7 +189,7 @@ border-radius: 5px;
 
 /*-------Sub Activity CSS -----*/
 
-#content{
+#content_box{
     display: block;
     position:fixed;
     top: 50%;

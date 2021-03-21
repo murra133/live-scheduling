@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Register</title>
+    <title>Project View</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
@@ -69,14 +69,19 @@
             </div>
             <div id = "schedule_box">
                 <h1>Your Schedules</h1>
+                <div  id="schedule_titles">
+                        <div class = "project_titles">
+                            <h3 id="schedule"> Project Name:</h3>
+                            <h3 id="administrator" class = "administrator">Administrator:</h3>
+                        </div>
                 <div class = "schedule_line" id="sample_line" style="display:none;">
-                    <span  onclick="Write_id_Cookie(this)">
+                    <span class = "clickable" onclick="Write_id_Cookie(this)">
                         <div class = "project_link">
                             <h3 id="schedule"></h3>
                             <h3 id="administrator" class = "administrator"></h3>
                         </div>
                     </span>
-                    <div>
+                    <div class="project_delete_div">
                         <i class = "far fa-minus-square schedule_delete" id="delete_1" aria-hidden="true"></i>
                      </div>
                 </div>
@@ -87,13 +92,13 @@
                             <h3 id="administrator_1" class = "administrator">Brian Murray</h3>
                         </div>
                     </a>
-                    <div>
+                    <div class="project_delete_div"> 
                         <i class = "far fa-minus-square schedule_delete" id="delete_1" aria-hidden="true"></i>
                      </div>
                 </div>
 
                 <div id = "add_project">
-                    <i class="far fa-plus-square" aria-hidden="true" onclick="open_add_project_box()">  Add New Project</i>
+                    <i class="far fa-plus-square clickable" aria-hidden="true" onclick="open_add_project_box()">  Add New Project</i>
 
                 </div>
             </div>

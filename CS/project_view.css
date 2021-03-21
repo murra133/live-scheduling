@@ -1,11 +1,25 @@
-.project_link{
+.schedule_line{
     display: inline-block;
-    width:90%;
+    width:98%;
     border: 1px solid gray;
     border-radius: 15px;
     background-color: RGB(250,249,246);
     padding-top: .5%;
     padding-bottom: .5%;
+    margin-top: 1%;
+}
+
+.project_titles{
+    width: 90%;
+}
+.project_titles>h3{
+display:inline-block;
+padding-left: 3%;
+}
+
+.project_link{
+    display: inline-block;
+    width:90%;
 }
 .project_link > h3{
     color:gray;
@@ -15,8 +29,14 @@
     display: inline-block;
 }
 
+.project_delete_div{
+    display: inline-block;
+    float:right;
+    padding-right: 2%;
+}
 .schedule_delete{
-    font-size: 250%;
+    font-size: 200%;
+
     
 
 }
@@ -24,13 +44,6 @@
 .administrator{
     float:right;
     padding-right: 2%;
-}
-
-.schedule_line{
-    display: block;
-    position: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .schedule_line >div{

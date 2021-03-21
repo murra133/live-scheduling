@@ -293,4 +293,15 @@ function Write_id_Cookie(tag_with_id){
 
 }
 
+function login_check(){
+    var status = cookie_value('login_status');
+    if (status == 1){
+        return;
+    }
+    else{
+        window.location.replace("../HTML/index.html");
+
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////

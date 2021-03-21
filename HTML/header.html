@@ -23,22 +23,7 @@
 <body>
         <!-- CHECKS to See if User is connected-->
         <script>
-            var all_cookies = ReadCookie();
-            var cookies_variable_array = Array();
-            for(var n=0; n<all_cookies.length;n++){
-                cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
-            }
-            if (cookies_variable_array.includes('login_status')){
-                var index = cookies_variable_array.indexOf('login_status');
-                if(all_cookies[index].split("=")[1]==1){
-            }
-            else{
-                window.location.replace("../HTML/index.html");
-                    }
-                }
-                    else{
-                        window.location.replace("../HTML/index.html");
-                    }
+                    login_check();
             </script>
         <!---->
         <div class="wrapper d-flex align-items-stretch">
@@ -75,7 +60,7 @@
                 </div>
 
                 <div id="activity_add">
-                    <div id="main_activity_add" onclick="add_main_activity()">
+                    <div id="main_activity_add" class = "clickable" onclick="add_main_activity()">
                         <i class="far fa-plus-square">  Add Main Activity</i>
                     </div>
                     </div>

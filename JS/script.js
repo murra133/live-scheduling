@@ -67,12 +67,12 @@ $( document ).ready(function() {
           title.innerHTML = main_title;
           title.setAttribute('class','title');
           var edit = document.createElement("i");
-          edit.setAttribute("class","fas fa-edit main_edit title");
+          edit.setAttribute("class","fas fa-edit main_edit title clickable");
           edit.setAttribute("id","edit_"+main_id);
           edit.setAttribute("onclick","update_main_activity(this)")
           
           var delete_button= document.createElement("i");
-          delete_button.setAttribute("class","far fa-minus-square main_delete title");
+          delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
           delete_button.setAttribute("id","delete_"+main_id);
           delete_button.setAttribute("onclick","delete_main_activity_box(this)")
           divtitle.appendChild(title);
@@ -153,7 +153,7 @@ $( document ).ready(function() {
 
           }
           var subadd=document.createElement('div');
-          subadd.setAttribute("class","sub_activity_add");
+          subadd.setAttribute("class","sub_activity_add clickable");
           subadd.setAttribute("onclick","add_sub_activity(this)");
           var subaddtwo=document.createElement("i");
           subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button");
@@ -171,6 +171,8 @@ $( document ).ready(function() {
 
 
 });
+var project_name = cookie_value('project_name');
+document.getElementById('main_title').innerHTML = project_name+" Schedule";
 });
 //////////////////////////////////////////////////////////////////////////////
   function removeAllChildNodes(parent) {
@@ -392,7 +394,7 @@ function date_format_changer(date){
     var submit = document.createElement("div");
     submit.setAttribute("type","submit");
     submitchild = document.createElement("i");
-    submitchild.setAttribute("class","fa fa-check-square")
+    submitchild.setAttribute("class","fa fa-check-square clickable")
     submitchild.setAttribute("onclick","change_input_to_title(this)")
     rejectchild = document.createElement("i");
     rejectchild.setAttribute("class","fa fa-times-circle-o")
@@ -423,7 +425,7 @@ function update_main_activity(edit_tag){
     var submit = document.createElement("div");
     submit.setAttribute("type","submit");
     submitchild = document.createElement("i");
-    submitchild.setAttribute("class","fa fa-check-square")
+    submitchild.setAttribute("class","fa fa-check-square clickable")
     submitchild.setAttribute("onclick","change_input_to_title(this)")
     rejectchild = document.createElement("i");
     rejectchild.setAttribute("class","fa fa-times-circle-o")
@@ -451,7 +453,7 @@ function update_main_activity(edit_tag){
       var action = 'add_main_activity'
       var main_div=input_parent.parentElement;
       var subadd=document.createElement('div');
-      subadd.setAttribute("class","sub_activity_add");
+      subadd.setAttribute("class","sub_activity_add clickable");
       subadd.setAttribute("onclick","add_sub_activity(this)");
       var subaddtwo=document.createElement("i");
       subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button");
@@ -464,12 +466,12 @@ function update_main_activity(edit_tag){
       divtitle.setAttribute("class","main_activity_title")
       title.innerHTML=input_value;
       var edit = document.createElement("i");
-      edit.setAttribute("class","fas fa-edit main_edit title");
+      edit.setAttribute("class","fas fa-edit main_edit title clickable");
       edit.setAttribute("id","edit_"+id);
       edit.setAttribute("onclick","update_main_activity(this)")
       
       var delete_button= document.createElement("i");
-      delete_button.setAttribute("class","far fa-minus-square main_delete title");
+      delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
       delete_button.setAttribute("id","delete_"+id);
       delete_button.setAttribute("onclick","delete_main_activity_box(this)")
       for (i=0;i<main_div.children.length;i++) {
@@ -494,12 +496,12 @@ function update_main_activity(edit_tag){
       divtitle.setAttribute("class","main_activity_title")
       title.innerHTML=input_value;
       var edit = document.createElement("i");
-      edit.setAttribute("class","fas fa-edit main_edit title");
+      edit.setAttribute("class","fas fa-edit main_edit title clickable");
       edit.setAttribute("id","edit_"+id);
       edit.setAttribute("onclick","update_main_activity(this)")
       
       var delete_button= document.createElement("i");
-      delete_button.setAttribute("class","far fa-minus-square main_delete title");
+      delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
       delete_button.setAttribute("id","delete_"+id);
       delete_button.setAttribute("onclick","delete_main_activity_box(this)")
       title.appendChild(delete_button);
@@ -601,7 +603,7 @@ function update_main_activity(edit_tag){
 function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date,duration,party_involved, dates){
   var parent_id = main_id;
   var id = sub_id;
-  var p_id = document.createElement("p");
+  var p_id = document.createElement("h5");
   p_id.setAttribute("class","sub_id");
   p_id.setAttribute("id",id)
   if(id-Number(parent_id)*1000 < 10){
@@ -648,12 +650,12 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
    input_contractor.innerHTML = party_involved
 
    var edit = document.createElement("i");
-   edit.setAttribute("class","fas fa-edit edit_sub_icon");
+   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable");
    edit.setAttribute("id","edit_"+id);
    edit.setAttribute("onclick","update_sub_activity(this)")
    
    var delete_button= document.createElement("i");
-   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon");
+   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable");
    delete_button.setAttribute("id","delete_"+id);
    delete_button.setAttribute("onclick","delete_sub_activity_box(this)")
 
@@ -718,7 +720,7 @@ function add_sub_activity(this_tag){
   }
   /*  Create ID */
   var id_parent= parent_div.getElementsByClassName("sub_activity_id")[0];
-  var p_id = document.createElement("p");
+  var p_id = document.h5;
   p_id.setAttribute("class","sub_id");
   p_id.setAttribute("id",id)
   if(parseInt(id)-Number(parent_id)*1000 < 10){
@@ -770,7 +772,7 @@ function add_sub_activity(this_tag){
   //// Create Edit Button////
    var edit_parent= parent_div.getElementsByClassName("sub_activity_edit")[0];
    var edit = document.createElement("i");
-   edit.setAttribute("class","fas fa-edit edit_sub_icon");
+   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable");
    edit.setAttribute("id","edit_"+id);
    edit.setAttribute("onclick","update_sub_activity(this)")
    edit_parent.appendChild(edit);
@@ -778,7 +780,7 @@ function add_sub_activity(this_tag){
    ////Create Delete Button/////
    var delete_parent_div = parent_div.getElementsByClassName('sub_activity_delete')[0];
    var delete_button= document.createElement("i");
-   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon");
+   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable");
    delete_button.setAttribute("id","delete_"+id);
    delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
    delete_parent_div.appendChild(delete_button);

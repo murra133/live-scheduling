@@ -112,7 +112,7 @@ h1{
 }
 
 .main_activity_title{
-    width:55%;
+    width:56.5%;
     position:relative;
     left:2%;
  
@@ -200,6 +200,15 @@ border-radius: 5px;
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
 }
+
+.clickable:hover{
+    cursor: pointer;
+    opacity: 50%;
+}
+.clickable:active{
+    opacity: 150%;
+    cursor: pointer;
+}
 .sub_activity_add{
     display: block;
     float:left;
@@ -231,6 +240,17 @@ overflow: hidden;
 .sub h3{
     font-size: 1vw;
 }
+
+.sub h5{
+    font-size: .85vw;
+    margin-bottom: 1vh;
+}
+
+.sub i{
+    font-size: .85vw;
+    margin-bottom: 1vh;
+}
+
 
 .sub_activity_id{
     width:2%;
@@ -276,21 +296,21 @@ width:95%;
 
 }
 .edit_icon{
-    margin-bottom: 206%;
+    margin-bottom: 3.399vh;
 }
 
 .edit_sub_icon{
     display:block !important;
-    padding-bottom: 88%;
+    padding-bottom: 0.3295vh;
 }
 
 .delete_icon{
-    margin-bottom: 247%;
+    margin-bottom: 3.399vh;
 }
 
 .delete_sub_icon{
     display:block !important;
-    padding-bottom: 96%;
+    padding-bottom: 0.3295vh;
     padding-left: 40%;
     font-size: 110%;
 }
@@ -311,14 +331,14 @@ width:95%;
     display:inline-block;
     border-style: solid;
     border-width: 1px;
-    padding:1.4%;
+    padding:1.2vh;
     font-size:small;
     position: relative;
     width:4vw;
 }
 
 .sub_bdate{
-
+height: 3.087vh;
 
 }
 

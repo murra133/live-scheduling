@@ -6,7 +6,7 @@ $project_id=$_POST['project_id'];
 $party_id=$_POST['party_id'];
 $party_name = $_POST['party_name'];
 
-$stmt = $link->prepare("DELETE FROM parties WHERE PARTY_ID = (?)");
+$stmt = $link->prepare("DELETE FROM parties_".$project_id." WHERE PARTY_ID = (?)");
 $stmt->bind_param("i",$main_id);
 $stmt->execute(); 
 

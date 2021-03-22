@@ -1,7 +1,46 @@
+// --------- Cookie Script ---------//
+function ReadCookie() {
+  //// Np Input, Returns Array with all Cookies
+ var allcookies = document.cookie;
+ 
+ // Get all the cookies pairs in an array
+ var cookiearray = allcookies.split(';');
+ 
+ return cookiearray;
+}
+function WriteCookie(Cookie_Value_Str) {
+  ///// Input is Cookie value as a string ex. input = "Cookie1=24;Cookie2=12"
+  var  cookiearray = Cookie_Value_Str.split(';');
+
+  for(var i=0;i<cookiearray.length;i++){
+      document.cookie = cookiearray[i];
+
+  }
+}
+
+function cookie_value(input_cookie){
+var all_cookies = ReadCookie();
+var cookies_variable_array = Array();
+for(var n=0; n<all_cookies.length;n++){
+  cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
+}
+if (cookies_variable_array.includes(input_cookie)){
+  var index = cookies_variable_array.indexOf(input_cookie);
+  var result_value = all_cookies[index].split("=")[1].trim();
+  return result_value;
+}
+else{
+return false;
+}
+};
+
+////////////////////////////////////////////////////////////////////////////
+
 $( document ).ready(function() {
     $.ajax({
       url : '../PHP/pull_parties.php',
-      type : 'POST',     
+      type : 'POST', 
+      data : 'project_id='+window.project_id,  
       success:function(data){
         var js_data = JSON.parse(data);
           console.log(js_data);

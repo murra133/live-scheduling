@@ -1132,57 +1132,58 @@ function search_activity() {
     }
     for (var m = 0; m < y.length; m++){
         y[m].parentElement.parentElement.parentElement.style.display="inline-block";
-        var row = document.querySelectorAll("[class^='sub_activity_']");
-        console.log(row);
-        for(var n=0;n<row.length;n++){
-          row[n].style.display = "";
+        var split = y[m].id.split("_")[1];
+        console.log(split);
+        var row = document.getElementsByClassName("sub_activity_"+split);
+        for (var k3=0;k3<row.length;k3++){
+          row[k3].style.display = "";
         }
     }
   }
-
-
-  for (var i = 0; i < x.length; i++) {  
-    console.log(x[i].childNodes[0].textContent.toLowerCase());
-    console.log(input);
-    if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
-      console.log(x[i].childNodes[0].textContent);
-        x[i].parentElement.style.display="none"; 
-        for (var j = 0; j < y.length; j++){
-          if (y[j].textContent.toLowerCase().includes(input)||
-              sdate[j].textContent.includes(input)||
-              edate[j].textContent.includes(input)||
-              contractor[j].textContent.toLowerCase().includes(input)){
-            var split = y[j].id.split("_")[1];
-            y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
-            var row = document.getElementsByClassName("sub_activity_"+split);
-            for (var p=0;p<row.length;p++){
-              row[p].style.display = "";
-            }
-          }
-          else{
-            if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
+  else{
+    for (var i = 0; i < x.length; i++) {  
+      console.log(x[i].childNodes[0].textContent.toLowerCase());
+      console.log(input);
+      if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
+        console.log(x[i].childNodes[0].textContent);
+          x[i].parentElement.style.display="none"; 
+          for (var j = 0; j < y.length; j++){
+            if (y[j].textContent.toLowerCase().includes(input)||
+                sdate[j].textContent.includes(input)||
+                edate[j].textContent.includes(input)||
+                contractor[j].textContent.toLowerCase().includes(input)){
               var split = y[j].id.split("_")[1];
-              console.log(split);
-              var row = document.getElementsByClassName("sub_activity_"+split);
-              for (var k=0;k<row.length;k++){
-                row[k].style.display = "none";
+              y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
+              var row = document.getElementsByClassName(" sub_activity_"+split);
+              for (var p=0;p<row.length;p++){
+                row[p].style.display = "";
               }
             }
             else{
-              var split = y[j].id.split("_")[1];
-              console.log(split);
-              var row = document.getElementsByClassName("sub_activity_"+split);
-              for (var k2=0;k2<row.length;k2++){
-                row[k2].style.display = "";
+              if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
+                var split = y[j].id.split("_")[1];
+                console.log(split);
+                var row = document.getElementsByClassName("sub_activity_"+split);
+                for (var k=0;k<row.length;k++){
+                  row[k].style.display = "none";
+                }
+              }
+              else{
+                var split = y[j].id.split("_")[1];
+                console.log(split);
+                var row = document.getElementsByClassName("sub_activity_"+split);
+                for (var k2=0;k2<row.length;k2++){
+                  row[k2].style.display = "";
+                }
               }
             }
           }
-        }
+      } 
+      else { 
+          x[i].parentElement.style.display="inline-block";                  
+      } 
     } 
-    else { 
-        x[i].parentElement.style.display="inline-block";                  
-    } 
-  } 
+  }
 
 } 
 

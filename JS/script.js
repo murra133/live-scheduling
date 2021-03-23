@@ -720,13 +720,8 @@ function add_sub_activity(this_tag){
   }
   /*  Create ID */
   var id_parent= parent_div.getElementsByClassName("sub_activity_id")[0];
-<<<<<<< HEAD
-  var p_id = document.createElement("h5");
-  p_id.setAttribute("class","sub_id");
-=======
   var p_id = document.createElement('h5');
   p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
->>>>>>> 3b10e81d404e8a9b3c5efd38d8ccdb7e5443a685
   p_id.setAttribute("id",id)
   if(parseInt(id)-Number(parent_id)*1000 < 10){
     var attribute_id="00"+(id-Number(parent_id)*1000).toString();
@@ -1131,22 +1126,25 @@ function search_activity() {
   /*for (i = 0; i < x.length; i++) {  
       console.log(x[i].childNodes[0].childNodes[0]);
   } */
+  if(input==""){
+    for(var l=0;l<x.length;l++){
+      x[l].parentElement.style.display="inline-block";
+    }
+    for (var m = 0; m < y.length; m++){
+        y[m].parentElement.parentElement.parentElement.style.display="inline-block";
+        var row = document.querySelectorAll("[class^='sub_activity_']");
+        console.log(row);
+        for(var n=0;n<row.length;n++){
+          row[n].style.display = "";
+        }
+    }
+  }
+
 
   for (var i = 0; i < x.length; i++) {  
-    if(input==""){
-      x[i].parentElement.style.display="inline-block";
-      for (var m = 0; m < y.length; m++){
-          y[m].parentElement.parentElement.parentElement.style.display="inline-block";
-          var split = y[m].id.split("_")[1];
-          var id = split.substr(split.length-3);
-          var row = document.querySelectorAll("[id$='"+(i+1).toString()+id.toString()+"']");
-          console.log(row);
-          for(var n=0;n<row.length;n++){
-            row[n].style.display = "";
-          }
-      }
-    }
-    else if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
+    console.log(x[i].childNodes[0].textContent.toLowerCase());
+    console.log(input);
+    if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
       console.log(x[i].childNodes[0].textContent);
         x[i].parentElement.style.display="none"; 
         for (var j = 0; j < y.length; j++){
@@ -1154,17 +1152,29 @@ function search_activity() {
               sdate[j].textContent.includes(input)||
               edate[j].textContent.includes(input)||
               contractor[j].textContent.toLowerCase().includes(input)){
-            y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
-          }
-          else if (!y[j].textContent.toLowerCase().includes(input)&&
-          !sdate[j].textContent.includes(input)&&
-          !edate[j].textContent.includes(input)&&
-          !contractor[j].textContent.toLowerCase().includes(input)){
             var split = y[j].id.split("_")[1];
-            var id = split.substr(split.length-3);
-            var row = document.querySelectorAll("[id$='"+(i+1).toString()+id.toString()+"']");
-            for(var k=0;k<row.length;k++){
-              row[k].style.display = "none";
+            y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
+            var row = document.getElementsByClassName("sub_activity_"+split);
+            for (var p=0;p<row.length;p++){
+              row[p].style.display = "";
+            }
+          }
+          else{
+            if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
+              var split = y[j].id.split("_")[1];
+              console.log(split);
+              var row = document.getElementsByClassName("sub_activity_"+split);
+              for (var k=0;k<row.length;k++){
+                row[k].style.display = "none";
+              }
+            }
+            else{
+              var split = y[j].id.split("_")[1];
+              console.log(split);
+              var row = document.getElementsByClassName("sub_activity_"+split);
+              for (var k2=0;k2<row.length;k2++){
+                row[k2].style.display = "";
+              }
             }
           }
         }

@@ -720,7 +720,7 @@ function add_sub_activity(this_tag){
   }
   /*  Create ID */
   var id_parent= parent_div.getElementsByClassName("sub_activity_id")[0];
-  var p_id = document.h5;
+  var p_id = document.createElement("h5");
   p_id.setAttribute("class","sub_id");
   p_id.setAttribute("id",id)
   if(parseInt(id)-Number(parent_id)*1000 < 10){
@@ -1110,4 +1110,72 @@ return false;
 
 }
 
+function add_title(){
+  document.getElementById("search_bar_title").innerHTML += " Schedule";
+}
 
+function search_activity() { 
+  let input = document.getElementById('searchbar').value;
+  input=input.toLowerCase(); 
+  let x = document.getElementsByClassName('main_activity_title'); 
+  let y = document.getElementsByClassName('sub_name'); 
+  let sdate = document.getElementsByClassName('sub_sdate'); 
+  let edate = document.getElementsByClassName('sub_edate'); 
+  let contractor = document.getElementsByClassName('sub_contractor');
+  /*for (i = 0; i < x.length; i++) {  
+      console.log(x[i].childNodes[0].childNodes[0]);
+  } */
+
+  for (var i = 0; i < x.length; i++) {  
+    if(input==""){
+      x[i].parentElement.style.display="inline-block";
+      for (var m = 0; m < y.length; m++){
+          y[m].parentElement.parentElement.parentElement.style.display="inline-block";
+          var split = y[m].id.split("_")[1];
+          var id = split.substr(split.length-3);
+          var row = document.querySelectorAll("[id$='"+(i+1).toString()+id.toString()+"']");
+          console.log(row);
+          for(var n=0;n<row.length;n++){
+            row[n].style.display = "";
+          }
+      }
+    }
+    else if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
+      console.log(x[i].childNodes[0].textContent);
+        x[i].parentElement.style.display="none"; 
+        for (var j = 0; j < y.length; j++){
+          if (y[j].textContent.toLowerCase().includes(input)||
+              sdate[j].textContent.includes(input)||
+              edate[j].textContent.includes(input)||
+              contractor[j].textContent.toLowerCase().includes(input)){
+            y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
+          }
+          else if (!y[j].textContent.toLowerCase().includes(input)&&
+          !sdate[j].textContent.includes(input)&&
+          !edate[j].textContent.includes(input)&&
+          !contractor[j].textContent.toLowerCase().includes(input)){
+            var split = y[j].id.split("_")[1];
+            var id = split.substr(split.length-3);
+            var row = document.querySelectorAll("[id$='"+(i+1).toString()+id.toString()+"']");
+            for(var k=0;k<row.length;k++){
+              row[k].style.display = "none";
+            }
+          }
+        }
+    } 
+    else { 
+        x[i].parentElement.style.display="inline-block";                  
+    } 
+  } 
+
+} 
+
+
+
+function add_function_to_search(function_call){
+  console.log('runningkjkjk');
+  var search_tag =document.getElementById('searchbar');
+  search_tag.setAttribute('onkeyup',function_call);
+  var search_title = document.getElementById("search_bar_title");
+  search_title.innerHTML += " title";
+};

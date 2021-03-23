@@ -32,7 +32,7 @@
         </nav>
         <div id = "content">
         <div id="main_page">
-            
+            <div id = "search_navbar"></div>
             <div id="header">
                 <h1 id="main_title">Company Schedule</h1>
                 <div>
@@ -77,7 +77,12 @@
 </body>
 <footer>
     <script>
+        $('#search_navbar').load('../HTML/search_bar_nav.html'); 
         $('#sidebar').load('side_bar_nav.html');
+        setTimeout(add_function_to_search,300,"search_activity()");
+        //setTimeout(add_function_to_search,300,'search_party()');
+        //document.getElementById("search_bar_title").innerHTML += " Schedule";
+        //setTimeout(add_function_to_search,300,'search_party()');
     </script>
 </footer>
 </html>

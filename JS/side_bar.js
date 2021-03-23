@@ -38,6 +38,7 @@ function update_project_name(){
 	var project_name = cookie_value('project_name');
 	console.log (project_name);
 	document.getElementById("project_name").firstChild.innerHTML = project_name;  
+	document.getElementById("search_bar_title").innerHTML = project_name;  
 };
 
 (function($) {

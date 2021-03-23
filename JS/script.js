@@ -518,7 +518,7 @@ function update_main_activity(edit_tag){
 //////////////////////////////////////////////////////////////////////////////
 
   function add_id_to_box(id_array){
-    ///Input is an array of IDs Input[0] must be sub activity ID Input[1] must be main Activity ID Input[2] must be the action
+    console.log(id_array);///Input is an array of IDs Input[0] must be sub activity ID Input[1] must be main Activity ID Input[2] must be the action
     document.getElementById("main_id").innerHTML=id_array[0];
       document.getElementById("main_id").setAttribute("name",id_array[1]+"_"+(parseInt(id_array[0])-parseInt(id_array[1])*1000));
       document.getElementsByClassName("box")[0].setAttribute("name",id_array[2]);
@@ -604,7 +604,7 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
   var parent_id = main_id;
   var id = sub_id;
   var p_id = document.createElement("h5");
-  p_id.setAttribute("class","sub_id");
+  p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
   p_id.setAttribute("id",id)
   if(id-Number(parent_id)*1000 < 10){
     var attribute_id="00"+(id-Number(parent_id)*1000).toString();
@@ -619,49 +619,49 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
 
   /* Create Activity */
   var input_activity = document.createElement("h5");
-  input_activity.setAttribute("class","sub_name");
+  input_activity.setAttribute("class"," sub_name sub_activity_"+id.toString());
   input_activity.setAttribute("id","name_"+id.toString());
   input_activity.innerHTML=activity_title;
 
    /* Create Start Date */
    var input_sdate = document.createElement("h5");
-   input_sdate.setAttribute("class","sub_sdate");
+   input_sdate.setAttribute("class","sub_sdate sub_activity_"+id.toString());
    input_sdate.setAttribute("id","sdate_"+id.toString());
    input_sdate.setAttribute("name",start_date);
    input_sdate.innerHTML = date_format_changer(start_date);
 
    /* Create End Date */
    var input_edate = document.createElement("h5");
-   input_edate.setAttribute("class","sub_edate");
+   input_edate.setAttribute("class","sub_edate sub_activity_"+id.toString());
    input_edate.setAttribute("id","edate_"+id.toString());
    input_edate.setAttribute("name",end_date)
    input_edate.innerHTML = date_format_changer(end_date);
 
    //Create Duration//
    var input_duration = document.createElement("h5");
-   input_duration.setAttribute("class","sub_duration");
+   input_duration.setAttribute("class","sub_duration sub_activity_"+id.toString());
    input_duration.setAttribute("id","duration_"+id.toString());
    input_duration.innerHTML = duration;
 
      /* Create Contartcor Option */
    var input_contractor = document.createElement("h5");
-   input_contractor.setAttribute("class","sub_contractor");
+   input_contractor.setAttribute("class","sub_contractor sub_activity_"+id.toString());
    input_contractor.setAttribute("id","contractor_"+id.toString());
    input_contractor.innerHTML = party_involved
 
    var edit = document.createElement("i");
-   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable");
+   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable sub_activity_"+id.toString());
    edit.setAttribute("id","edit_"+id);
    edit.setAttribute("onclick","update_sub_activity(this)")
    
    var delete_button= document.createElement("i");
-   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable");
+   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable sub_activity_"+id.toString());
    delete_button.setAttribute("id","delete_"+id);
    delete_button.setAttribute("onclick","delete_sub_activity_box(this)")
 
    /* Create Date Box */
    var bdate_box = document.createElement("div");
-   bdate_box.setAttribute("class","sub_bdate");
+   bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
    bdate_box.setAttribute("id","bdate_"+id);
    date_box(bdate_box,id,dates);
 
@@ -720,8 +720,13 @@ function add_sub_activity(this_tag){
   }
   /*  Create ID */
   var id_parent= parent_div.getElementsByClassName("sub_activity_id")[0];
+<<<<<<< HEAD
   var p_id = document.createElement("h5");
   p_id.setAttribute("class","sub_id");
+=======
+  var p_id = document.createElement('h5');
+  p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
+>>>>>>> 3b10e81d404e8a9b3c5efd38d8ccdb7e5443a685
   p_id.setAttribute("id",id)
   if(parseInt(id)-Number(parent_id)*1000 < 10){
     var attribute_id="00"+(id-Number(parent_id)*1000).toString();
@@ -738,41 +743,41 @@ function add_sub_activity(this_tag){
   /* Create Activity */
   var activity_parent= parent_div.getElementsByClassName("sub_activity_name")[0];
   var input_activity = document.createElement("h5");
-  input_activity.setAttribute("class","sub_name");
+  input_activity.setAttribute("class","sub_name sub_activity_"+id.toString());
   input_activity.setAttribute("id","name_"+id.toString());
   activity_parent.appendChild(input_activity);
 
    /* Create Start Date */
    var sdate_parent= parent_div.getElementsByClassName("sub_activity_sdate")[0];
    var input_sdate = document.createElement("h5");
-   input_sdate.setAttribute("class","sub_sdate");
+   input_sdate.setAttribute("class","sub_sdate sub_activity_"+id.toString());
    input_sdate.setAttribute("id","sdate_"+id.toString());
    sdate_parent.appendChild(input_sdate);
 
    /* Create End Date */
    var edate_parent= parent_div.getElementsByClassName("sub_activity_edate")[0];
    var input_edate = document.createElement("h5");
-   input_edate.setAttribute("class","sub_edate");
+   input_edate.setAttribute("class","sub_edate sub_activity_"+id.toString());
    input_edate.setAttribute("id","edate_"+id.toString());
    edate_parent.appendChild(input_edate);
 
    //Create Duration//
    var duration_parent= parent_div.getElementsByClassName("sub_activity_duration")[0];
    var input_duration = document.createElement("h5");
-   input_duration.setAttribute("class","sub_duration");
+   input_duration.setAttribute("class","sub_duration sub_activity_"+id.toString());
    input_duration.setAttribute("id","duration_"+id.toString());
    duration_parent.appendChild(input_duration);
 
      /* Create Contartcor Option */
    var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
    var input_contractor = document.createElement("h5");
-   input_contractor.setAttribute("class","sub_contractor");
+   input_contractor.setAttribute("class","sub_contractor sub_activity_"+id.toString());
    input_contractor.setAttribute("id","contractor_"+id.toString());;
    contractor_parent.appendChild(input_contractor);
   //// Create Edit Button////
    var edit_parent= parent_div.getElementsByClassName("sub_activity_edit")[0];
    var edit = document.createElement("i");
-   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable");
+   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable sub_activity_"+id.toString());
    edit.setAttribute("id","edit_"+id);
    edit.setAttribute("onclick","update_sub_activity(this)")
    edit_parent.appendChild(edit);
@@ -780,7 +785,7 @@ function add_sub_activity(this_tag){
    ////Create Delete Button/////
    var delete_parent_div = parent_div.getElementsByClassName('sub_activity_delete')[0];
    var delete_button= document.createElement("i");
-   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable");
+   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable sub_activity_"+id.toString());
    delete_button.setAttribute("id","delete_"+id);
    delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
    delete_parent_div.appendChild(delete_button);
@@ -788,7 +793,7 @@ function add_sub_activity(this_tag){
    /* Create Date Box */
    var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
    var bdate_box = document.createElement("div");
-   bdate_box.setAttribute("class","sub_bdate");
+   bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
    bdate_box.setAttribute("id","bdate_"+id);
    dates=bdate_parent.getElementsByClassName("cell_dates")[0];
    date_box(bdate_box,id,dates);
@@ -943,6 +948,7 @@ var duration = document.getElementById("duration").value;
 var party_involved = document.getElementById("party_involved_box").value;
 ////Need to add section for Relationships once relationships are figured out///
 var id_array= document.getElementById("main_id").getAttribute("name");
+console.log(id_array)
 var main_id = id_array.split("_")[0];
 
 //Adds the Main Activity Title

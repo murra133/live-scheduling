@@ -7,6 +7,23 @@ html, body{
 h1{
     text-align: center;
 }
+
+.website_button {
+    border: none;
+    width: 7vw;
+    height: 5vh;
+    margin: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: #333;
+    font-size: .8vw!important;
+    color: #fff;
+    vertical-align: middle;
+ }
+
 #message{
     text-align: center;
     color: red;
@@ -19,8 +36,14 @@ h1{
 #upload_button{
     
     float: right;
-    display:block;
-    padding-left: 85%;
+    display:inline-block;
+    width: 45%;
+    margin-right:3% ;
+}
+
+#upload_button button{
+    float: right;
+    margin-right: .5vw;
 }
 
 .submit_button{
@@ -29,9 +52,11 @@ h1{
 
 .start_date{
     display:inline-block;
+    font-size: 1.5vw;
 }
-.start_date_div>h3{
-    font-size: 2vh;
+#start_date_div{
+    display:inline-block;
+    width: 50%;
 }
 
 #main_page{
@@ -96,7 +121,7 @@ h1{
     float:left;
     position: relative;
     left:1vw;
-    font-size: 150%;
+    font-size: 1.2vw;
     color: rgb(128,128,128);
     padding-top:-6%;
 
@@ -120,7 +145,7 @@ h1{
 }
 .main_activity_title > h2{
 text-align: left;
-font-size: 100%;
+font-size: 1vw;
 padding:.8vh;
 color:white;
 background-color: gray;
@@ -217,7 +242,7 @@ border-radius: 5px;
     text-align: left;
     position: relative;
     width:50%;
-    font-size: 120%;
+    font-size: 1vw;
     color: rgb(128,128,128);
 }
 .sub_activity{

@@ -1,0 +1,26 @@
+#user_account{
+    font-size: 2vw;
+    margin-right: 3vw;
+}
+
+#user_account i{
+    font-size: 2vw;
+
+}
+
+.dropdown-menu{
+    margin-right: 2vw;
+    left: -50px!important;
+
+}
+.navbar{
+    padding:0rem 1rem!important;
+}
+
+#searchbar{
+    width:400%;
+}
+.form-inline{
+    display: inline-block!important;
+    align-self: center;
+}

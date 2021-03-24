@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relationship</title>
+    <link rel="stylesheet" href="../CS/style.css">
+    <link rel="stylesheet" href="../CS/side_bar_style.css">
+    <link rel="stylesheet" href="../CS/relationship_styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="../JS/relationship_script.js"></script>
+    <script src="../JS/server_script.js"></script>
+    <script src="../JS/side_bar.js"></script>
+    <script src="../JS/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+        <!-- CHECKS to See if User is connected-->
+        <script>
+                    login_check();
+            </script>
+        <!---->
+        <div class="wrapper d-flex align-items-stretch">
+            <nav id="sidebar" class = "active" onclick="toggle_side_bar()">
+
+        </nav>
+        <div id = "content">
+        <div id="main_page">
+            
+            <div id="header">
+                <h1 id="main_title">Relationships</h1>
+            </div>
+        <!-- Scedule Headers-->
+        <div id="cell">
+            <div id="cell_header">
+                <br>
+            </div>
+            <div id="left_box">
+                <div id="added_cell"></div>
+            </div>
+            <div id="right_box">
+                <h1 id = "activity_title">PlaceHolder</h1>
+                <h3> Start Date:</h3>
+                <h3>End Date:</h3>
+                <h3>Duration:</h3>
+                <h3 id="sdate_relationship"> 03/01</h3>
+                <h3 id="edate_relationship">05/06</h3>
+                <h3 id="duration_relationship">8</h3>
+                
+                
+
+            </div>
+        </div>    
+
+            </div>
+
+
+            </div>
+        </div> 
+        </div>
+
+
+<div id="content_box"></div>
+</body>
+<footer>
+    <script>
+        $('#sidebar').load('side_bar_nav.html');
+    </script>
+</footer>
+</html>

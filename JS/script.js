@@ -1111,4 +1111,88 @@ return false;
 
 }
 
+function add_title(){
+  document.getElementById("search_bar_title").innerHTML += " Schedule";
+}
 
+function search_activity() { 
+  let input = document.getElementById('searchbar').value;
+  input=input.toLowerCase(); 
+  let x = document.getElementsByClassName('main_activity_title'); 
+  let y = document.getElementsByClassName('sub_name'); 
+  let sdate = document.getElementsByClassName('sub_sdate'); 
+  let edate = document.getElementsByClassName('sub_edate'); 
+  let contractor = document.getElementsByClassName('sub_contractor');
+  /*for (i = 0; i < x.length; i++) {  
+      console.log(x[i].childNodes[0].childNodes[0]);
+  } */
+  if(input==""){
+    for(var l=0;l<x.length;l++){
+      x[l].parentElement.style.display="inline-block";
+    }
+    for (var m = 0; m < y.length; m++){
+        y[m].parentElement.parentElement.parentElement.style.display="inline-block";
+        var split = y[m].id.split("_")[1];
+        console.log(split);
+        var row = document.getElementsByClassName("sub_activity_"+split);
+        for (var k3=0;k3<row.length;k3++){
+          row[k3].style.display = "";
+        }
+    }
+  }
+  else{
+    for (var i = 0; i < x.length; i++) {  
+      console.log(x[i].childNodes[0].textContent.toLowerCase());
+      console.log(input);
+      if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
+        console.log(x[i].childNodes[0].textContent);
+          x[i].parentElement.style.display="none"; 
+          for (var j = 0; j < y.length; j++){
+            if (y[j].textContent.toLowerCase().includes(input)||
+                sdate[j].textContent.includes(input)||
+                edate[j].textContent.includes(input)||
+                contractor[j].textContent.toLowerCase().includes(input)){
+              var split = y[j].id.split("_")[1];
+              y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
+              var row = document.getElementsByClassName(" sub_activity_"+split);
+              for (var p=0;p<row.length;p++){
+                row[p].style.display = "";
+              }
+            }
+            else{
+              if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
+                var split = y[j].id.split("_")[1];
+                console.log(split);
+                var row = document.getElementsByClassName("sub_activity_"+split);
+                for (var k=0;k<row.length;k++){
+                  row[k].style.display = "none";
+                }
+              }
+              else{
+                var split = y[j].id.split("_")[1];
+                console.log(split);
+                var row = document.getElementsByClassName("sub_activity_"+split);
+                for (var k2=0;k2<row.length;k2++){
+                  row[k2].style.display = "";
+                }
+              }
+            }
+          }
+      } 
+      else { 
+          x[i].parentElement.style.display="inline-block";                  
+      } 
+    } 
+  }
+
+} 
+
+
+
+function add_function_to_search(function_call){
+  console.log('runningkjkjk');
+  var search_tag =document.getElementById('searchbar');
+  search_tag.setAttribute('onkeyup',function_call);
+  var search_title = document.getElementById("search_bar_title");
+  search_title.innerHTML += " title";
+};

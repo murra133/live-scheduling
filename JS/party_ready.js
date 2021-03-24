@@ -272,4 +272,6 @@ function add_function_to_search(function_call){
   console.log('runningkjkjk');
   var search_tag =document.getElementById('searchbar');
   search_tag.setAttribute('onkeyup',function_call);
+  var search_title = document.getElementById("search_bar_title");
+  search_title.innerHTML += " Party";
 };

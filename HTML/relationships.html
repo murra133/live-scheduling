@@ -52,8 +52,31 @@
                 <h3 id="sdate_relationship"> 03/01</h3>
                 <h3 id="edate_relationship">05/06</h3>
                 <h3 id="duration_relationship">8</h3>
+                <h4 id = "relationship">Relationship</h4>
+                <h4 id="lag">Lag</h4>
+                <h4 id="activity">Activity</h4>
+                <div id="relationship_sample" class="relationship">
+                  
+                        <select name="relationship" class="relationship_type">
+                            <option value="FS">Finish Start</option>
+                            <option value="SF">Start Finish</option>
+                            <option value="SS">Start Start</option>
+                            <option value="FF">Finish Finish</option>
+                        </select>
+
+                    <input type="int" class="lag" placeholder="0">
+                    <span class = "rel_activity">
+
+                    </span>
+
+
+                </div>
                 
                 
+                    <div id="relationship_add" class = "clickable" onclick="add_relationship()">
+                        <i class="far fa-plus-square">  Add a Relationships</i>
+                    </div>
+                      
 
             </div>
         </div>    
@@ -63,7 +86,6 @@
 
             </div>
         </div> 
-        </div>
 
 
 <div id="content_box"></div>

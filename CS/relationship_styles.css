@@ -30,6 +30,43 @@
     text-align: center;
 }
 
+#relationship{
+    display: inline-block;
+    width: 7vw;
+    margin-left: 1vw;
+    padding-left: 0%;
+}
+
+.relationship_type{
+    display: inline-block;
+    margin-left: 1vw;
+    width: 7vw;
+
+}
+
+#lag{
+    width:10%;
+    display: inline-block;
+    margin-left: 1.25vw;
+}
+
+.lag{
+    margin-left: 1.25vw;
+    display: inline-block;
+    width: 2vw;
+}
+#activity{
+    width:15vw;
+    display: inline-block;
+}
+.rel_activity{
+    margin-left: 2.5vw;
+    display: inline-block;
+    width: 30vw;
+    border: 1px black solid;
+
+}
+
 .main_activity_title{
     width: 100%!important;
     left:0%;
@@ -57,3 +94,5 @@
 .sub_activity_contractor{
     width: 15%!important;
 }
+
+

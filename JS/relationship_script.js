@@ -409,3 +409,11 @@ function three_week_ahead(this_tag){
 
 
     }
+
+    function add_relationship(){
+      var sample = document.getElementById('relationship_sample');
+      var cloned_relationship = sample.cloneNode(true);
+      cloned_relationship.removeAttribute('id');
+      var add_relationship_button = document.getElementById("relationship_add");
+            add_relationship_button.parentNode.insertBefore(cloned_relationship,add_relationship_button);
+    }

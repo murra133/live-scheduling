@@ -78,8 +78,6 @@ function ReadCookie() {
             var duration_div = empty_divs[4];
             var contractor_div = empty_divs[5];
             var activity_div = empty_divs[6];
-
-  
   
             ///Gets dates from bdate////
   

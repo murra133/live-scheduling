@@ -71,3 +71,17 @@ CREATE TABLE Project_User_Merge(
     FOREIGN KEY (Project_id) REFERENCES Project_Database(Project_id)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+
+CREATE TABLE Relationship (
+    Relationship_ID int NOT NULL AUTO_INCREMENT,
+    Parent_ID int NOT NULL,
+    Child_ID int NOT NULL,
+    Relationship varchar(255) NOT NULL,
+    Lag int NOT NULL,
+    PRIMARY KEY (Relationship_ID),
+    FOREIGN KEY (Parent_ID) REFERENCES sub_activities_61(Sub_ID)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (Child_ID) REFERENCES sub_activities_61(Sub_ID)
+    ON UPDATE CASCADE ON DELETE CASCADE
+);

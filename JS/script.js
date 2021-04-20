@@ -367,7 +367,7 @@ $(document).on('change', '#start_date_input', function(){
 
 function date_format_changer(date){
   ///input date yyyy-mm-dd output mm/dd////////
-  var formatted_date = date.split("-")[1]+"/"+date.split("-")[2];
+  var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0];
   return formatted_date;
 }
   //////////////////////////////////////////////////////////////////////////////
@@ -397,7 +397,8 @@ function date_format_changer(date){
     submitchild.setAttribute("class","fa fa-check-square clickable")
     submitchild.setAttribute("onclick","change_input_to_title(this)")
     rejectchild = document.createElement("i");
-    rejectchild.setAttribute("class","fa fa-times-circle-o")
+    rejectchild.setAttribute("class","fa fa-times-circle-o");
+    rejectchild.setAttribute("onclick","cancel_main_activity(this)")
     /*  Adds Div for Dates for Main Activity */
     var div_date_id = document.createElement("div");
     div_date_id.setAttribute("id","date_"+n)
@@ -416,19 +417,23 @@ function date_format_changer(date){
 function update_main_activity(edit_tag){
   var div = edit_tag.parentElement.parentElement.parentElement;
   var old_child = edit_tag.parentElement.parentElement;
+  var title = old_child.firstChild.getAttribute("name");
     var form=document.createElement('form')
     form.setAttribute("method","post");
     var inp = document.createElement('input');
     inp.setAttribute("type","text");
+    inp.setAttribute("value",title);
     inp.setAttribute("class","main_activity_input");
-    inp.setAttribute("name","main_activity");
+    inp.setAttribute("name","main_activity_change");
     var submit = document.createElement("div");
     submit.setAttribute("type","submit");
     submitchild = document.createElement("i");
     submitchild.setAttribute("class","fa fa-check-square clickable")
     submitchild.setAttribute("onclick","change_input_to_title(this)")
     rejectchild = document.createElement("i");
-    rejectchild.setAttribute("class","fa fa-times-circle-o")
+    rejectchild.setAttribute("class","fa fa-times-circle-o");
+    rejectchild.setAttribute("onclick","cancel_main_activity(this)")
+    rejectchild.setAttribute("name",title);
     submit.appendChild(submitchild);
     submit.appendChild(rejectchild);
     form.appendChild(inp);
@@ -440,11 +445,21 @@ function update_main_activity(edit_tag){
 
 
 }
+
+///////////////////////////////////////////////////////////////////////////////
+function cancel_main_activity(cancel_tag){
+
+  if (cancel_tag.getAttribute("name")!==null){
+    var title = cancel_tag.getAttribute("name");
+
+  }
+
+}
 //////////////////////////////////////////////////////////////////////////////
 /* Creates the main activity title from an input format to a title*/
-  function change_input_to_title(this_element){
-    var main_parent_element = this_element.parentElement.parentElement.parentElement;
-    var input_parent= this_element.parentElement.parentElement;
+  function change_input_to_title(cancel_tag){
+    var main_parent_element = cancel_tag.parentElement.parentElement.parentElement;
+    var input_parent= cancel_tag.parentElement.parentElement;
     var input_value= input_parent.children[0].value;
     var id = input_parent.parentElement.id;
     if(input_value!=""){
@@ -936,9 +951,9 @@ var parent_element = this_tag.parentElement.parentElement;
 var id = document.getElementById("main_id").innerHTML;
 var activity_title = document.getElementById("activity_title_input").value;
 var start_date = document.getElementById("start_date_input_box").value;
-var start_date_format = start_date.split("-")[1]+"/"+start_date.split("-")[2];
+var start_date_format = date_format_changer(start_date);// start_date.split("-")[1]+"/"+start_date.split("-")[2];
 var end_date = document.getElementById("end_date_input_box").value;
-var end_date_format = end_date.split("-")[1]+"/"+end_date.split("-")[2];
+var end_date_format = date_format_changer(end_date); // end_date.split("-")[1]+"/"+end_date.split("-")[2];
 var duration = document.getElementById("duration").value;
 var party_involved = document.getElementById("party_involved_box").value;
 ////Need to add section for Relationships once relationships are figured out///
@@ -1196,3 +1211,13 @@ function add_function_to_search(function_call){
   var search_title = document.getElementById("search_bar_title");
   search_title.innerHTML += " title";
 };
+
+function cancel_box(cancel_button_tag){
+  var content_box = cancel_button_tag.parentElement.parentElement;
+  ///location.reload();
+
+  removeAllChildNodes(content_box);
+$('#main_page').removeAttr('style');
+return false;
+
+}

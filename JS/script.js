@@ -123,8 +123,14 @@ $( document ).ready(function() {
             
             var n;
             for(n = 0; n<date_array.length; n++){
+              if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
+                sub_bdate_div.children[z].style.backgroundColor="gray";
+              }
               if(sub_bdate_div.children[z].id===(sub_id+"_"+date_array[n])){
                 sub_bdate_div.children[z].style.backgroundColor="green";
+                if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
+                  sub_bdate_div.children[z].style.backgroundColor="gray";
+                }
               }
             }
           }
@@ -205,7 +211,8 @@ document.getElementById('main_title').innerHTML = project_name+" Schedule";
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1;
-    document.getElementById("start_date").innerHTML= mm+"/"+dd;
+    var yy = today.getFullYear();
+    document.getElementById("start_date").innerHTML= mm+"/"+dd+"/"+yy;
   })
 ////////////////////////////////////////////////////////////////////////
   function date_transform(date){
@@ -224,9 +231,15 @@ function three_week_ahead(this_tag){
   var date = document.getElementById("start_date").innerHTML;
   var dd = parseInt(date.split("/")[1]);
   var mm = parseInt(date.split("/")[0]); 
+  var yy = parseInt(date.split("/")[2]);
   for(n=0;n<21;n++) {
+    if (dd==32 && (mm==12)){
+      dd=1;
+      mm=1;
+      yy=yy+1;
+    }
 
-    if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
+    else if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
       dd=1;
       mm=mm+1;
     }
@@ -240,6 +253,7 @@ function three_week_ahead(this_tag){
     }
     ndd=dd;
     nmm=mm;
+    nyy=yy;
 
     if(ndd<10) 
     {
@@ -251,7 +265,7 @@ function three_week_ahead(this_tag){
     } 
       var date = document.createElement("h3");
       date.setAttribute("class","date");
-      date.innerHTML = nmm+'/'+ndd;
+      date.innerHTML = nmm+'/'+ndd+'/'+nyy;
       this_tag.appendChild(date);
       dd=dd+1;
   }
@@ -263,17 +277,25 @@ function three_week_ahead(this_tag){
   function date_filler(sdate,edate){
     var ndd;
     var nmm;
+    var nyy;
     var sdate_split = sdate.split("-");
     var edate_split = edate.split("-");
+    var yy=parseInt(sdate_split[0]);
     var dd = parseInt(sdate_split[2]);
     var mm = parseInt(sdate_split[1]); 
+    var eyy = parseInt(edate_split[0]);
     var edd = parseInt(edate_split[2]);
     var emm = parseInt(edate_split[1]);
     var n =0;
     var date = Array();
-    while((ndd!=edd) || (nmm!=emm)) {
+    while((ndd!=edd) || (nmm!=emm) || (nyy!=eyy)){
+      if (dd==32 && (mm==12)){
+        dd=1;
+        mm=1;
+        yy=yy+1;
+      }
   
-      if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
+      else if (dd==31 && (mm==4||mm==6||mm==9||mm==11)){
         dd=1;
         mm=mm+1;
       }
@@ -287,6 +309,8 @@ function three_week_ahead(this_tag){
       }
       ndd=''+dd;
       nmm=''+mm;
+      nyy=''+yy;
+      
   
       if(ndd<10) 
       {
@@ -296,13 +320,26 @@ function three_week_ahead(this_tag){
       {
           nmm='0'+nmm;
       } 
-        date[n] = nmm+'/'+ndd;
+        date[n] = nmm+'/'+ndd+'/'+nyy;
         dd=dd+1;
         n=n+1;
     }
     return (date);
-  
+
     };
+
+  /////////////////////////////////////////////////////////////////////////////
+  function check_if_no_work(date,work_days_in_week){
+    var dt = new Date(date);
+    var day = parseInt(dt.getDay());
+
+    if(day<=(parseInt(work_days_in_week)-1)){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 //////////////////////////////////////////////////////////////////////////////
     /* Creates the boxes using the respective dates of the Div above*/
   function date_box(this_tag,id,this_dates){
@@ -323,7 +360,8 @@ $(document).on('change', '#start_date_input', function(){
   var new_date= this.value;
   var dd= new_date.split("-")[2];
   var mm = new_date.split("-")[1];
-  document.getElementById("start_date").innerHTML=(mm+"/"+dd);
+  var yy = new_date.split("-")[0];
+  document.getElementById("start_date").innerHTML=(mm+"/"+dd+"/"+yy);
 
   /*Updates all existing date cells and their id's*/
   var cell_dates = document.getElementsByClassName("cell_dates");
@@ -350,14 +388,28 @@ $(document).on('change', '#start_date_input', function(){
     for (var j = 0; j<date_all.length; j++){
       var date_j = date_all[j];
       date_j.style.backgroundColor = "white";
+      console.log(date_j)
+      if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+        console.log('running Inside')
+        date_j.style.backgroundColor="gray";
+      }
     }
     var date_array = date_filler(start_date_transformed, end_date_transformed);
     var i;
     for(i = 0; i<date_array.length; i++){
+      ////Add functionality for day changes
+
       if( document.getElementById(id_array[n]+"_"+date_array[i])===null){
+        console.log(id_array[n]+"_"+date_array[i]);
+
         continue;
       }
-      else {document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="green";
+      else {
+        
+        document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="green";
+        if (check_if_no_work(date_array[i],5)==false){
+          document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
+        }
       }
     }
   }
@@ -464,7 +516,6 @@ function cancel_main_activity(cancel_tag){
     var id = input_parent.parentElement.id;
     if(input_value!=""){
       if (main_parent_element.children.length==1){
-        console.log('running')
       var action = 'add_main_activity'
       var main_div=input_parent.parentElement;
       var subadd=document.createElement('div');
@@ -533,7 +584,6 @@ function cancel_main_activity(cancel_tag){
 //////////////////////////////////////////////////////////////////////////////
 
   function add_id_to_box(id_array){
-    console.log(id_array);///Input is an array of IDs Input[0] must be sub activity ID Input[1] must be main Activity ID Input[2] must be the action
     document.getElementById("main_id").innerHTML=id_array[0];
       document.getElementById("main_id").setAttribute("name",id_array[1]+"_"+(parseInt(id_array[0])-parseInt(id_array[1])*1000));
       document.getElementsByClassName("box")[0].setAttribute("name",id_array[2]);
@@ -891,6 +941,10 @@ $(document).on('change','.start_date_input_box', function(){
   for (var j = 0; j<date_all.length; j++){
     var date_j = date_all[j];
     date_j.style.backgroundColor = "white";
+    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+      console.log('running Inside')
+      date_j.style.backgroundColor="gray";
+    }
   }
   var date_array = date_filler(start_date,end_date_tag.value);
   var i;
@@ -899,12 +953,38 @@ $(document).on('change','.start_date_input_box', function(){
       continue;
     }
     else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    if (check_if_no_work(date_array[i],5)==false){
+      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
+    }
     }
   }
 
 })
+/////////////////////////////////////////////////////////////////////////
+function addDays(date, add_days) {
+  ////Takes a date and the amount of days to add///
+ var date_val = new Date(date);
+ date_val.setDate(date_val.getDate() + add_days);
+ return date_val;
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
+function transform_duration(start_date,duration,days_off){
+  ///Add Holiday functionality later on **CHECK FUTUTRE**
+  ///Transform durations depending on the number of work week days. Ex duration is 5 days starting on wednesday. due to the 2 day weekend return transformed duration to 7. If 6 day week, duration is 6.
+  ///start_date in mm/dd/yyyy.
+  ///days_off is a number from 0-6, Sunday = 0, Monday =1, Tuesday = 2, ETC...
+  for(var n=0;n<=parseInt(duration);n++){
+    var date = addDays(start_date,n);
+    var day_week = (new Date(date)).getDay;
+    for (var i = 0; i<days_off.length;i++){
+      if(day_off[i]==day_week){
+        duration=duration+1;
+      } 
+  }
+  return duration;
+}
 
 ///Checks for Errors between the start date and end date box once the end date box is populated
 $(document).on('change','.end_date_input_box', function(){
@@ -928,6 +1008,10 @@ $(document).on('change','.end_date_input_box', function(){
   for (var j = 0; j<date_all.length; j++){
     var date_j = date_all[j];
     date_j.style.backgroundColor = "white";
+    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+      console.log('running Inside')
+      date_j.style.backgroundColor="gray";
+    }
   }
   var date_array = date_filler(start_date_tag.value,end_date);
   var i;
@@ -936,6 +1020,9 @@ $(document).on('change','.end_date_input_box', function(){
       continue;
     }
     else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    if (check_if_no_work(date_array[i],5)==false){
+      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
+    }
     }
   }
 })
@@ -958,7 +1045,6 @@ var duration = document.getElementById("duration").value;
 var party_involved = document.getElementById("party_involved_box").value;
 ////Need to add section for Relationships once relationships are figured out///
 var id_array= document.getElementById("main_id").getAttribute("name");
-console.log(id_array)
 var main_id = id_array.split("_")[0];
 
 //Adds the Main Activity Title
@@ -1139,7 +1225,6 @@ function search_activity() {
   let edate = document.getElementsByClassName('sub_edate'); 
   let contractor = document.getElementsByClassName('sub_contractor');
   /*for (i = 0; i < x.length; i++) {  
-      console.log(x[i].childNodes[0].childNodes[0]);
   } */
   if(input==""){
     for(var l=0;l<x.length;l++){
@@ -1148,7 +1233,6 @@ function search_activity() {
     for (var m = 0; m < y.length; m++){
         y[m].parentElement.parentElement.parentElement.style.display="inline-block";
         var split = y[m].id.split("_")[1];
-        console.log(split);
         var row = document.getElementsByClassName("sub_activity_"+split);
         for (var k3=0;k3<row.length;k3++){
           row[k3].style.display = "";
@@ -1157,10 +1241,7 @@ function search_activity() {
   }
   else{
     for (var i = 0; i < x.length; i++) {  
-      console.log(x[i].childNodes[0].textContent.toLowerCase());
-      console.log(input);
       if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
-        console.log(x[i].childNodes[0].textContent);
           x[i].parentElement.style.display="none"; 
           for (var j = 0; j < y.length; j++){
             if (y[j].textContent.toLowerCase().includes(input)||
@@ -1177,7 +1258,6 @@ function search_activity() {
             else{
               if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
                 var split = y[j].id.split("_")[1];
-                console.log(split);
                 var row = document.getElementsByClassName("sub_activity_"+split);
                 for (var k=0;k<row.length;k++){
                   row[k].style.display = "none";
@@ -1185,7 +1265,6 @@ function search_activity() {
               }
               else{
                 var split = y[j].id.split("_")[1];
-                console.log(split);
                 var row = document.getElementsByClassName("sub_activity_"+split);
                 for (var k2=0;k2<row.length;k2++){
                   row[k2].style.display = "";
@@ -1205,7 +1284,6 @@ function search_activity() {
 
 
 function add_function_to_search(function_call){
-  console.log('runningkjkjk');
   var search_tag =document.getElementById('searchbar');
   search_tag.setAttribute('onkeyup',function_call);
   var search_title = document.getElementById("search_bar_title");
@@ -1215,6 +1293,8 @@ function add_function_to_search(function_call){
 function cancel_box(cancel_button_tag){
   var content_box = cancel_button_tag.parentElement.parentElement;
   ///location.reload();
+
+}
 
   removeAllChildNodes(content_box);
 $('#main_page').removeAttr('style');

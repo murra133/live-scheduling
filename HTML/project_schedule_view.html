@@ -17,6 +17,7 @@
 		<link rel="stylesheet" href="../CS/register_form.css">
         <link rel="stylesheet" href="../CS/style.css">
         <link rel="stylesheet" href="../CS/project_view.css">
+        <link rel="stylesheet" href="../CS/general_styles.css">
 
 	</head>
 
@@ -32,9 +33,9 @@
                 if (cookies_variable_array.includes('login_status')){
                     var index = cookies_variable_array.indexOf('login_status');
                     if(all_cookies[index].split("=")[1]==1){
-                        if(!cookies_variable_array.includes('fname')){
                             
                             var register_id = all_cookies[cookies_variable_array.indexOf('Registry_ID')].split("=")[1];
+                            console.log(register_id);
                             $.ajax({
                                 url : '../PHP/pull_user.php?register_id='+register_id,
                                 type : 'GET',     
@@ -45,12 +46,13 @@
                                 else{
                                     var js_data = JSON.parse(data);
                                     var cookie ="fname="+js_data['FirstName']+";lname="+js_data['LastName']+";email="+js_data['Email']+";company="+js_data['Company']+";title="+js_data['Title'];
+                                    console.log(cookie);
                                     WriteCookie(cookie);
                                     }
                                 }
 
                              })
-                        }
+                        
         }
                 else{
                     window.location.replace("../HTML/index.html");

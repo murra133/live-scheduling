@@ -8,6 +8,13 @@ function ReadCookie() {
    return cookiearray;
 }
 
+function close_button(){
+    removeAllChildNodes(document.getElementById('content_box'));
+    $('#main_page').removeAttr('style');
+
+
+}
+
 function pull_all_schedules(){
     var all_cookies = ReadCookie();
     for(var n=0; n<all_cookies.length;n++){
@@ -205,7 +212,7 @@ function create_project(submit_button_tag){
         document.getElementById("message").innerHTML = "Please Input a Title for the Project";
         return false;
     }
-
+    console.log(project_name);
     ///Input arrays////
     var tag_fname_array = document.getElementsByClassName('firstname');
     //fname_array.splice(0,1);

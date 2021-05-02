@@ -8,6 +8,11 @@
 
 }
 
+.close_button{
+    float:right;
+    size:2.5vw;
+}
+
 .dropdown-menu{
     margin-right: 2vw;
     left: -50px!important;

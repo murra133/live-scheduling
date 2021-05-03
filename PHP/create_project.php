@@ -81,6 +81,24 @@ $stmt = ("CREATE TABLE Personel_".$project_id['Project_id']." (
                 ON UPDATE CASCADE ON DELETE CASCADE)");
                 mysqli_query($link,$stmt);
 
+$stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."_General(
+                Main_ID int NOT NULL,
+                Main_Activity varchar(255) NOT NULL,
+                PRIMARY KEY (Main_ID))");
+                mysqli_query($link,$stmt);
+
+ $stmt = ("CREATE TABLE Sub_Activities_".$project_id['Project_id']."_General (
+                Sub_ID int NOT NULL,
+                Main_ID int NOT NULL,
+                Sub_Activity varchar(255) NOT NULL,
+                Start_Date varchar(255) Not NULL,
+                End_Date varchar(255) Not NULL,
+                Duration int NOT NULL,
+                Party_Involved varchar(255) Not NULL,
+                PRIMARY KEY (Sub_ID),
+                FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
+                ON UPDATE CASCADE ON DELETE CASCADE)");
+                mysqli_query($link,$stmt);                
 
 echo $project_id['Project_id'];
 require_once("db_link_close.php");

@@ -26,9 +26,21 @@
 }
 #right_box h3{
     display: inline-block;
-    width: 33%;
+    width: 15vw;
     text-align: center;
+    font-size: 1.5vw;
 }
+
+#right_box h4{
+    /*Relationship Titles*/
+    font-size: 1.2vw;
+}
+
+#right_box h5{
+    /*Relationship Activities*/
+    font-size: 1vw;
+}
+
 
 #relationship{
     display: inline-block;
@@ -42,6 +54,10 @@
     margin-left: 1vw;
     width: 7vw;
 
+}
+
+.relationship{
+    margin-top: 2vh;
 }
 
 #lag{
@@ -59,14 +75,12 @@
     width:15vw;
     display: inline-block;
 }
-.rel_activity{
-    margin-left: 2.5vw;
-    display: inline-block;
-    width: 30vw;
-    border: 1px black solid;
 
+.relationship_main{
+    margin-left: 2.5vw !important;
+    display: inline-block!important;
+    width: 30vw !important;
 }
-
 .main_activity_title{
     width: 100%!important;
     left:0%;

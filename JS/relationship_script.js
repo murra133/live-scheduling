@@ -1,4 +1,58 @@
 // ------ Brian's JavaScript------//
+function html_move(arr, old_index, new_index) {
+
+  var old_html = arr[old_index];
+  var new_arr = new Array();
+  var k = 0;
+  for(var n=0;n<arr.length+1;n++){
+    if (n!==new_index){
+      new_arr[n] = arr[k];
+      k++;
+    }
+    else{
+      new_arr[n]=old_html;
+    }
+  }
+  return new_arr;
+
+};
+
+function removeElement(element) {
+ // Removes an element from the document
+ element.parentNode.removeChild(element);
+ return;
+ }
+
+ function addDays(date, add_days) {
+   ////Takes a date and the amount of days to add///
+  var date_val = new Date(date);
+  date_val.setDate(date_val.getDate() + add_days);
+  return date_val;
+}
+
+
+$( document ).ready(function() {
+  setTimeout(add_values_to_selectpicker,1000);
+});
+
+function update_dates(tag_element){
+  var parentNode = tag_element.parentNode;
+  var relationship_tag = parentNode[0];
+  var lag_tag = parentNode[3];
+  var activity_tag = parentNode.childNodes[5].childNodes[0];
+   if (activity_tag.value == "0"){
+     return;
+}
+else{
+  var id = activity_tag.value;
+  if(relationship_tag.value=="FS"){}
+
+}
+}
+
+
+
+
 
 // --------- Cookie Script ---------//
 function ReadCookie() {
@@ -125,12 +179,40 @@ function ReadCookie() {
           }
             
           }
+    })
+
+
+
+          $.ajax({
+            url : '../PHP/pull_relationship.php',
+            type : 'POST',
+            data : 'project_id='+window.project_id+'&action=child',     
+            success:function(relationship_data){
+              global_child_rdata = JSON.parse(relationship_data);
+              
+          }
+        })
+
+        $.ajax({
+          url : '../PHP/pull_relationship.php',
+          type : 'POST',
+          data : 'project_id='+window.project_id+'&action=parent',     
+          success:function(relationship_data){
+            global_parent_rdata = JSON.parse(relationship_data);
+
+        }
+      })
   
-  
+          var project_name = cookie_value('project_name');
+          document.getElementById('main_title').innerHTML = project_name+" Schedule";
+          change_array = new Array();
+
+          global_parent_rdata = new Object();
+          object.create(global_child_rdata)
+
   });
-  var project_name = cookie_value('project_name');
-  document.getElementById('main_title').innerHTML = project_name+" Schedule";
-  });
+
+
   function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -381,11 +463,16 @@ function three_week_ahead(this_tag){
 
     function date_format_changer(date){
         ///input date yyyy-mm-dd output mm/dd////////
-        var formatted_date = date.split("-")[1]+"/"+date.split("-")[2];
+        var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0];
         return formatted_date;
     };
 
     function write_activty(activity_name_tag){
+      var relationship_array=document.getElementsByClassName('relationship');
+      rel_lenght =relationship_array.length;
+      for (var j = 0; j<rel_lenght;j++){
+        removeElement(relationship_array[0]);
+      }
         id = activity_name_tag.id.split("_")[1];
         activity_title = activity_name_tag.innerHTML;
         sdate = document.getElementById("sdate_"+id);
@@ -403,16 +490,335 @@ function three_week_ahead(this_tag){
         document.getElementById('edate_relationship').innerHTML = edate_html;
         document.getElementById('edate_relationship').setAttribute('name',edate_calendar);
         document.getElementById('duration_relationship').innerHTML = duration;
+        document.getElementById('placeholder').setAttribute('style','display:none');
+        document.getElementById('right_content').removeAttribute('style');
+
+       
+
+        for(var k=0;k<Object.keys(global_parent_rdata[id]).length;k++){
+          var child_id = Object.keys(global_parent_rdata[id])[k];
+          var relationship_abbr = global_parent_rdata[id][child_id]['Relationship'];
+          var relationship = relationship_title(relationship_abbr);
+          var Lag = global_parent_rdata[id][child_id]['Lag'];
+          var child_title = document.getElementById('name_'+child_id).innerHTML;
+          var sample = document.getElementById('submitted_relationship_sample');
+          var cloned_sample = sample.cloneNode(true);
+          cloned_sample.removeAttribute('id');
+          cloned_sample.removeAttribute('style');
+          cloned_sample.setAttribute('class','relationship')
+          cloned_sample.getElementsByClassName('relationship_type')[0].innerHTML = relationship;
+          cloned_sample.getElementsByClassName('relationship_type')[0].id = id+'_'+child_id+'_relationship';
+          cloned_sample.getElementsByClassName('lag')[0].innerHTML = Lag;
+          cloned_sample.getElementsByClassName('lag')[0].id = id+'_'+child_id+'_lag';
+          cloned_sample.getElementsByClassName('relationship_main')[0].innerHTML = child_title;
+          cloned_sample.getElementsByClassName('relationship_main')[0].id = id+'_'+child_id+'_activity';
+          var add_relationship_button = document.getElementById("relationship_add");
+          add_relationship_button.parentNode.insertBefore(cloned_sample,add_relationship_button);
+
+
+        }
+
+
+    }
+
+    function relationship_title(relationship_abbr){
+      //provide relationship abbr ex. FS,SS,SF,FF returns full title
+      if (relationship_abbr=='FS'){
+        return 'Finish Start';
+      }
+      else if(relationship_abbr=='SS'){
+        return 'Start Start'
+      }
+      else if(relationship_abbr=='SF'){
+        return 'Start Finish'
+      }
+      else if(relationship_abbr=='FF'){
+        return 'Finish Finish'
+      }
+    }
+    
+    function add_values_to_selectpicker(){
+      var activity_array = document.getElementsByClassName('sub_name');
+      var selectpicker_tag = document.getElementsByClassName('rel_activity')[0];
+      for(var i=0;i<activity_array.length;i++){
+        var activity_html = activity_array[i].innerHTML;
+
+        var activity_id = activity_array[i].id.split('_')[1];
+        var option_tag = document.createElement('option');
+        option_tag.setAttribute('value',activity_id);
+        option_tag.innerHTML=activity_html;
+        selectpicker_tag.appendChild(option_tag);
+      }
+      
+    }
+
+    function add_relationship(){
+      var id = document.getElementById('activity_title').getAttribute('name');
+      var sample = document.getElementById('relationship_sample');
+      var cloned_relationship = sample.cloneNode(true);
+      cloned_relationship.removeAttribute('id');
+      cloned_relationship.removeAttribute('style');
+      cloned_relationship.setAttribute('class','relationship')
+      var select_tag = cloned_relationship.getElementsByClassName('rel_activity')[0];
+      var value_array = new Array();
+      var select_tag_children = select_tag.childNodes;
+      for (var v=0; v<select_tag_children.length;v++){
+        value_array[v]=select_tag_children[v].value;
+      }
+
+      select_tag_children[value_array.indexOf(id)].remove();
+      
+      if(typeof(global_child_rdata[id])!=="undefined"){
+        var child_relationships_array = Object.keys(global_child_rdata[id]);;  
+        for(var c=0;c<child_relationships_array.length;c++){
+  
+          if(value_array.indexOf(child_relationships_array[c])!==-1){
+        
+          select_tag_children[value_array.indexOf(child_relationships_array[c])].remove();
+          }
+        }
+        if(typeof(global_parent_rdata[id])!=="undefined"){
+          var parent_relationships_array = Object.keys(global_parent_rdata[id])
+          for(var p=0;c<parent_relationships_array.length;p++){
+    
+            if(value_array.indexOf(parent_relationships_array[p])!==-1){
+              
+            select_tag_children[value_array.indexOf(parent_relationships_array[p])].remove();
+          }
+          }
+        }
+
+      }
+
+      select_tag.className='selectpicker relationship_main rel_activity';
+      var add_relationship_button = document.getElementById("relationship_add");
+            add_relationship_button.parentNode.insertBefore(cloned_relationship,add_relationship_button);
+            $('.selectpicker').selectpicker('refresh');
+
+    }
+
+    function submit_relationship(add_tag){
+      var parent_node = add_tag.parentNode;
+      var parent_id = document.getElementById('activity_title').getAttribute('name');
+      var relationship_box = add_tag.parentNode;
+      var relationship = relationship_box.getElementsByClassName('relationship_type')[0].value;
+      var lag = relationship_box.getElementsByClassName('lag')[0].value;
+      var child_id = relationship_box.getElementsByClassName('relationship_main')[1].value;
+      var child_title = document.getElementById("name_"+child_id).innerHTML;
+
+    /* Adds added values to child object*/
+
+      var parent_content = new Object;
+      parent_content['Parent_ID'] =parent_id;
+      parent_content['Child_ID']=child_id;
+      parent_content['Relationship'] = relationship;
+      parent_content['Lag'] = lag;
+      var p_content_final = new Object;
+      p_content_final[parent_id]=parent_content;
+      var c_content_final = new Object;
+      c_content_final[child_id]=parent_content;
+
+      if (global_child_rdata[child_id]!==undefined){
+        Object.assign(global_child_rdata[child_id],p_content_final);
+      }
+      else{
+        var new_c_content = new Object;
+        new_c_content[child_id] = p_content_final;
+        Object.assign(global_child_rdata,new_c_content);
+      }
+
+      if (global_parent_rdata[parent_id]!==undefined){
+        Object.assign(global_parent_rdata[parent_id],p_content_final);
+      }
+      else{
+        var new_p_content = new Object;
+        new_p_content[parent_id] = c_content_final;
+        Object.assign(global_parent_rdata,new_p_content);
+      }
+
+
+      find_if_date_changed(child_id,parent_id);
+
+      $.post( "../PHP/add_relationship.PHP",{ project_id:window.project_id, relationship: relationship, parent_id:parseInt(parent_id),child_id:parseInt(child_id), lag:parseInt(lag)} );
+
+      var sample = document.getElementById('submitted_relationship_sample');
+      var cloned_sample = sample.cloneNode(true);
+      cloned_sample.removeAttribute('id');
+      cloned_sample.removeAttribute('style');
+      cloned_sample.setAttribute('class','relationship')
+      cloned_sample.getElementsByClassName('relationship_type')[0].innerHTML = relationship_title(relationship);
+      cloned_sample.getElementsByClassName('relationship_type')[0].id = parent_id+'_'+child_id+'_relationship';
+      cloned_sample.getElementsByClassName('lag')[0].innerHTML = lag;
+      cloned_sample.getElementsByClassName('lag')[0].id = parent_id+'_'+child_id+'_lag';
+      cloned_sample.getElementsByClassName('relationship_main')[0].innerHTML = child_title;
+      cloned_sample.getElementsByClassName('relationship_main')[0].id = parent_id+'_'+child_id+'_activity';
+      add_relationship_button = document.getElementById("relationship_add");
+      parent_node.parentNode.removeChild(parent_node);
+      add_relationship_button.parentNode.insertBefore(cloned_sample,add_relationship_button);
+
 
 
 
     }
 
-    function add_relationship(){
+    function date_format_MMDDYYYY(date_UTC){
+      var date = date_UTC.getMonth()+1+"/"+date_UTC.getDate()+"/"+date_UTC.getFullYear();
+      return date;
+    }
+
+    function date_format_YYYYMMDD(date_format_MMDDYYYY){
+      // input as MM/DD/YYYY output as YYYY-MM-DD
+      var date = date_format_MMDDYYYY.split("/")[1];
+      if (parseInt(date)<10){
+        date = "0"+date;
+      }
+      var month = date_format_MMDDYYYY.split("/")[0];
+      if (parseInt(month)<10){
+        month = "0"+month;
+      }
+      var year = date_format_MMDDYYYY.split("/")[2];
+
+      var new_format = year+"-"+month+"-"+date;
+      return new_format;
+
+    }
+
+    function convert_to_FS(relationship,lag,parent_sdate, parent_edate,child_duration){
+      ///relationship must equal FS,SF,SS,FF, lag must be numeric interger, dates to be inputted in mm/dd/yyyy.
+      var sdate = new Date(parent_sdate);
+      var edate = new Date(parent_edate);
+      var diff = sdate.getTime()-edate.getTime();
+      var date_diff = diff/(1000*3600*24)+1;
+      if (relationship == 'FS'){
+        return parseInt(lag)+1
+      }
+      else if (relationship == 'SS'){
+        new_lag = parseInt(lag)+date_diff;
+        return new_lag
+      }
+      else if (relationship == 'SF'){
+        new_lag = (parseInt(lag)-parseInt(child_duration)+date_diff);
+        return new_lag
+      }
+      else if (relationship == 'FF'){
+        new_lag = parseInt(lag)-parseInt(child_duration)+1;
+        return new_lag
+      }
+    }
+
+    function find_if_date_changed(child_activity_id,parent_activity_id){
+
+      var original_start_date = document.getElementById('sdate_'+child_activity_id).getAttribute('name');
+      //var parent_id_array = Object.keys(global_child_rdata[child_activity_id]);
+      //for(var k=0; k<parent_id_array.length;k++){
+        //var parent_id = parent_id_array[k];
+        var parent_id = parent_activity_id;
+        var relationship = global_child_rdata[child_activity_id][parent_id]['Relationship'];
+        var lag = global_child_rdata[child_activity_id][parent_id]['Lag'];
+
+      var p_sdate = document.getElementById('sdate_'+parent_id).getAttribute('name');
+      var p_edate = document.getElementById('edate_'+parent_id).getAttribute('name');
+      var c_duration = document.getElementById('duration_'+child_activity_id).innerHTML;
+      var FS_lag = convert_to_FS(relationship,lag,p_sdate,p_edate,c_duration);
+      var new_child_start =addDays(p_edate,parseInt(FS_lag));
+
+      if (new_child_start> new Date(original_start_date)){
+        change_array[change_array.length+1]=child_activity_id;
+        var new_child_start =date_format_MMDDYYYY(new_child_start);
+        var new_child_end = date_format_MMDDYYYY(addDays(new_child_start,parseInt(c_duration)));
+        var server_date_start = date_format_YYYYMMDD(new_child_start);
+        var server_date_end = date_format_YYYYMMDD(new_child_end);
+        document.getElementById('sdate_'+child_activity_id).innerHTML = new_child_start;
+        document.getElementById('edate_'+child_activity_id).innerHTML = new_child_end;
+        document.getElementById('sdate_'+child_activity_id).setAttribute('name',new_child_start);
+        document.getElementById('edate_'+child_activity_id).setAttribute('name',new_child_end);
+        if (typeof(global_parent_rdata[child_activity_id])!= "undefined"){
+          var changed_child_id_array = Object.keys(global_parent_rdata[child_activity_id]);
+          for (var n=0;n<changed_child_id_array.length;n++){
+            var changed_child_id = changed_child_id_array[n];
+            find_if_date_changed(changed_child_id,child_activity_id);
+          }
+        }
+        $.post( "../PHP/update_sub_activity.PHP",{ project_id:window.project_id,sub_id: child_activity_id, start_date:server_date_start,end_date:server_date_end} );
+        return;
+      }
+    }
+
+    function edit_relationship(edit_tag){
+
+      var parent_node = edit_tag.parentNode;
+      var relationship = parent_node.children[0].innerHTML;
+      var lag = parent_node.children[1].innerHTML;
+      var child_activity = parent_node.children[2].innerHTML;
+      var child_activity_id = parent_node.children[0].id.split("_")[1];
+      parent_node.parentNode.removeChild(parent_node);
+
+
+
+      var id = document.getElementById('activity_title').getAttribute('name');
       var sample = document.getElementById('relationship_sample');
       var cloned_relationship = sample.cloneNode(true);
       cloned_relationship.removeAttribute('id');
       cloned_relationship.removeAttribute('style');
+      cloned_relationship.setAttribute('class','relationship');
+      
+      var relationship_tag = cloned_relationship.getElementsByClassName('relationship_type')[0];
+
+      if (relationship == "Finish Start"){
+        var old_index = 'FS';
+      }
+      else if (relationship == "Start Finish"){
+        var old_index = "SF";
+      }
+      else if (relationship == "Start Start"){
+        var old_index = "SS";
+      }
+      else{
+        var old_index = "FF";
+      }
+      relationship_tag.value = old_index;
+
+      var lag_tag = cloned_relationship.getElementsByClassName('lag')[0];
+      lag_tag.value = lag;
+
+      var select_tag = cloned_relationship.getElementsByClassName('rel_activity')[0];
+      var value_array = new Array();
+      var select_tag_children = select_tag.childNodes;
+      for (var v=0; v<select_tag_children.length;v++){
+        value_array[v]=select_tag_children[v].value;
+      }
+
+      select_tag_children[value_array.indexOf(id)].remove();
+      
+      if(typeof(global_child_rdata[id])!=="undefined"){
+        var child_relationships_array = Object.keys(global_child_rdata[id]);;  
+        for(var c=0;c<child_relationships_array.length;c++){
+  
+          if(value_array.indexOf(child_relationships_array[c])!==-1){
+          select_tag_children[value_array.indexOf(child_relationships_array[c])].remove();
+          }
+        }
+        if(typeof(global_parent_rdata[id])!=="undefined"){
+          var parent_relationships_array = Object.keys(global_parent_rdata[id])
+          for(var p=0;c<parent_relationships_array.length;p++){
+    
+            if(value_array.indexOf(parent_relationships_array[p])!==-1){
+            select_tag_children[value_array.indexOf(parent_relationships_array[p])].remove();
+          }
+          }
+        }
+
+      }
+      var edit_option = document.createElement("option");
+      edit_option.innerHTML = child_activity;
+      edit_option.value = child_activity_id;
+      select_tag.appendChild(edit_option);
+      select_tag.value = child_activity_id;
+
+
+      select_tag.className='selectpicker relationship_main rel_activity';
       var add_relationship_button = document.getElementById("relationship_add");
             add_relationship_button.parentNode.insertBefore(cloned_relationship,add_relationship_button);
+            $('.selectpicker').selectpicker('refresh');
+
     }

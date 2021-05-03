@@ -226,14 +226,7 @@ border-radius: 5px;
     -ms-transform: translate(-50%, -50%);
 }
 
-.clickable:hover{
-    cursor: pointer;
-    opacity: 50%;
-}
-.clickable:active{
-    opacity: 150%;
-    cursor: pointer;
-}
+
 .sub_activity_add{
     display: block;
     float:left;
@@ -398,7 +391,7 @@ height: 3.087vh;
     border: black 1px solid;
     border-radius: 5px;
     padding:2%;
-    background-color: beige;
+    background-color:#7285C9;
 
 }
 .box_title{

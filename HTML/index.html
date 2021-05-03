@@ -29,6 +29,7 @@
             if (cookies_variable_array.includes('login_status')){
                 var index = cookies_variable_array.indexOf('login_status');
                 if(all_cookies[index].split("=")[1]==1){
+                    window.location.replace("../HTML/project_schedule_view.html");
             }
             else{
                         document.write('false');

@@ -8,6 +8,11 @@
 
 }
 
+.close_button{
+    float:right;
+    size:2.5vw;
+}
+
 .dropdown-menu{
     margin-right: 2vw;
     left: -50px!important;
@@ -23,4 +28,13 @@
 .form-inline{
     display: inline-block!important;
     align-self: center;
+}
+
+.clickable:hover{
+    cursor: pointer;
+    opacity: 50%;
+}
+.clickable:active{
+    opacity: 150%;
+    cursor: pointer;
 }

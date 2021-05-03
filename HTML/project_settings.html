@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com    @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <title>Profile settings - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="../JS/server_script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../CS/settings_styles.css">
+    <link rel="stylesheet" href="../CS/general_styles.css">
+
+
+</head>
+<body>
+<div class="container">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
+        </ol>
+      </nav>
+      <!-- /Breadcrumb -->
+
+      <div class="row gutters-sm">
+        <div class="col-md-4 d-none d-md-block">
+          <div class="card">
+            <div class="card-body">
+              <nav class="nav flex-column nav-pills nav-gap-y-1">
+                <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded active">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user mr-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Project Information
+                </a>
+                <a href="#administrator" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings mr-2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Administrator Settings
+                </a>
+                <a href="#projectsettings" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield mr-2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Project Settings
+                </a>
+                <a href="#notification" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell mr-2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>Notification
+                </a>
+                <a href="#billing" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Billing
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header border-bottom mb-3 d-flex d-md-none">
+              <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
+                <li class="nav-item">
+                  <a href="#profile" data-toggle="tab" class="nav-link has-icon active"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a>
+                </li>
+                <li class="nav-item">
+                  <a href="#administrator" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></a>
+                </li>
+                <li class="nav-item">
+                  <a href="#projectsettings" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></a>
+                </li>
+                <li class="nav-item">
+                  <a href="#notification" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+                </li>
+                <li class="nav-item">
+                  <a href="#billing" data-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body tab-content">
+              <div class="tab-pane" id="profile">
+                <h6>PROJECT INFORMATION</h6>
+                <hr>
+                <form>
+                  <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" class="form-control" id="projectname" aria-describedby="fullNameHelp" placeholder="Enter your fullname" value="Kenneth Valdez">
+                  </div>
+                  <div class="form-group">
+                    <label for="projectdesc">Project Description</label>
+                    <textarea class="form-control autosize" id="projectdesc" placeholder="Write something about you" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;">A front-end developer that focus more on user interface design, a web interface wizard, a connector of awesomeness.</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="projectsdate">Project Start Date</label>
+                    <input type="date" class="form-control" id="projectsdate">
+                  </div>
+                  <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter your location" value="Bay Area, San Francisco, CA">
+                  </div>
+                  <button type="button" class="btn btn-primary">Update Profile</button>
+                  <button type="reset" class="btn btn-light">Reset Changes</button>
+                </form>
+              </div>
+              <div class="tab-pane" id="administrator">
+                <h6>ADMINISTRATOR SETTINGS</h6>
+                <hr>
+                <form>
+                  <p class="text-muted font-size-sm">Update all administrator settings to the people within your team. All the people below will be able to see the latest changes to the schedule.</p>
+                  <div class = "user_admin form-group col-auto">
+                    <h7 class="firstname"></h7>
+                    <h7 class="lastname"></h7>
+                    <h7 class="email"></h7>
+                    <h7 value ="1" class="admin_level">Administrator</h7>
+                </div>
+                  <div class = "user_admin_input form-group col-auto">
+                    <input class = "admin_input firstname" type="text" placeholder="First Name:">
+                    <input class = "admin_input lastname" type="text" placeholder="Last Name:">
+                    <input class = "admin_input email" type="text" placeholder="Email:">
+                    <select class = "admin_input admin_level">
+                        <option value="2">Sub-Administrator</option>
+                        <option value="3">Scheduler</option>
+                        <option value="4">Viewer</option>
+                        </select>
+                        <i class="far fa-trash-alt clickable" onclick="delete_user_admin_input(this)"></i>
+                </div>
+                <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_admin_input(this)"> Add User</i>
+                    <button type="button" class="btn btn-primary">Update Administrators</button>
+                    <button type="reset" class="btn btn-light">Reset Changes</button>
+                 </form>
+              </div>
+              <div class="tab-pane active" id="projectsettings">
+                <h6>PROJECT SETTINGS</h6>
+                <hr>
+                <form>
+                  <div class="form-group">
+                    <label for="workweek">Work Week</label>
+                    <select class = "form-control" id = "workweek">
+                      <option value="1">5 Day Work Week (Saturday and Sunday off)</option>
+                      <option value="2">5 Day Work Week (Friday and Saturday off)</option>
+                      <option value="3">6 Day Work Week (Sunday off)</option>
+                      <option value="4">6 Day Work Week (Saturday off)</option>
+                      <option value="5">6 Day Work Week (Friday off)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label id="holiday_label">Add Days Off</label>
+                        <input style="width:49%; display:inline-block" class = "holiday_input holidayname form-control" type="text" placeholder="Holiday">
+                        <input style="width:49%; display:inline-block" type="date" class="form-control" >
+                      </div>
+                      <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_admin_input(this)"> Add Holiday</i>
+                  <button type="button" class="btn btn-primary">Update Settings</button>
+                  <button type="reset" class="btn btn-light">Reset Changes</button>
+                </form>
+              </div>
+              <div class="tab-pane" id="notification">
+                <h6>NOTIFICATION SETTINGS</h6>
+                <hr>
+                <form>
+                  <div class="form-group">
+                    <label class="d-block mb-0">Security Alerts</label>
+                    <div class="small text-muted mb-3">Receive security alert notifications via email</div>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
+                      <label class="custom-control-label" for="customCheck1">Email each time a vulnerability is found</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck2" checked="">
+                      <label class="custom-control-label" for="customCheck2">Email a digest summary of vulnerability</label>
+                    </div>
+                  </div>
+                  <div class="form-group mb-0">
+                    <label class="d-block">SMS Notifications</label>
+                    <ul class="list-group list-group-sm">
+                      <li class="list-group-item has-icon">
+                        Comments
+                        <div class="custom-control custom-control-nolabel custom-switch ml-auto">
+                          <input type="checkbox" class="custom-control-input" id="customSwitch1" checked="">
+                          <label class="custom-control-label" for="customSwitch1"></label>
+                        </div>
+                      </li>
+                      <li class="list-group-item has-icon">
+                        Updates From People
+                        <div class="custom-control custom-control-nolabel custom-switch ml-auto">
+                          <input type="checkbox" class="custom-control-input" id="customSwitch2">
+                          <label class="custom-control-label" for="customSwitch2"></label>
+                        </div>
+                      </li>
+                      <li class="list-group-item has-icon">
+                        Reminders
+                        <div class="custom-control custom-control-nolabel custom-switch ml-auto">
+                          <input type="checkbox" class="custom-control-input" id="customSwitch3" checked="">
+                          <label class="custom-control-label" for="customSwitch3"></label>
+                        </div>
+                      </li>
+                      <li class="list-group-item has-icon">
+                        Events
+                        <div class="custom-control custom-control-nolabel custom-switch ml-auto">
+                          <input type="checkbox" class="custom-control-input" id="customSwitch4" checked="">
+                          <label class="custom-control-label" for="customSwitch4"></label>
+                        </div>
+                      </li>
+                      <li class="list-group-item has-icon">
+                        Pages You Follow
+                        <div class="custom-control custom-control-nolabel custom-switch ml-auto">
+                          <input type="checkbox" class="custom-control-input" id="customSwitch5">
+                          <label class="custom-control-label" for="customSwitch5"></label>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </form>
+              </div>
+              <div class="tab-pane" id="billing">
+                <h6>BILLING SETTINGS</h6>
+                <hr>
+                <form>
+                  <div class="form-group">
+                    <label class="d-block mb-0">Payment Method</label>
+                    <div class="small text-muted mb-3">You have not added a payment method</div>
+                    <button class="btn btn-info" type="button">Add Payment Method</button>
+                  </div>
+                  <div class="form-group mb-0">
+                    <label class="d-block">Payment History</label>
+                    <div class="border border-gray-500 bg-gray-200 p-3 text-center font-size-sm">You have not made any payment.</div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>

@@ -8,10 +8,12 @@ $project_id=intval($_GET['project_id']);
 
 $stmt = ("DELETE FROM project_database WHERE Project_id = ".$project_id.";");
 
-$stmt .=("DROP TABLE sub_activities_".$project_id.";
+$stmt .=("DROP TABLE relationship_".$project_id.";
+        DROP TABLE sub_activities_".$project_id.";
         DROP TABLE main_activities_".$project_id.";
         DROP TABLE personel_".$project_id.";
-        DROP TABLE parties_".$project_id.";");
+        DROP TABLE parties_".$project_id.";
+        DROP TABLE _".$project_id.";");
 
         echo $stmt;
         $result = $link -> multi_query($stmt);

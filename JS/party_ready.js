@@ -1,4 +1,5 @@
 GLOBAL_COUNTER = 0;
+ALL_REGISTERED_USER = null;
 
 // --------- Cookie Script ---------//
 function ReadCookie() {
@@ -46,12 +47,12 @@ $( document ).ready(function() {
     data : 'project_id='+window.project_id,  
     success:function(data){
       var js_data = JSON.parse(data);
-        console.log(js_data.length);
+        //console.log(js_data.length);
         if(js_data.length!=0){
           for (var i = 0; i < Object.keys(js_data).length; i++){
             var location = Object.keys(js_data)[i];
             var main_id = js_data[location]["PARTY_ID"];
-            console.log(main_id);
+            //console.log(main_id);
             var main_title = js_data[main_id]['PARTY_NAME'];
             var div_grid = document.createElement('div');
             div_grid.className = "col-sm-2";
@@ -71,11 +72,11 @@ $( document ).ready(function() {
               item.className = "list-group-item";
               item.innerHTML = person_fname + " " + person_lname;
               newFields2.appendChild(item);
-              console.log(newFields2);
+              //console.log(newFields2);
               div_project.appendChild(newFields2);
               ///submit_form(newFields2);
             }
-            console.log(div_project);
+            //console.log(div_project);
             div_grid.appendChild(div_project);
             submit_form(div_grid);
   
@@ -117,7 +118,7 @@ function create_card_title(main_id, main_title){
   newFields.appendChild(delete_button);
   
   div_newFields.appendChild(newFields);
-  console.log(div_newFields);
+  //console.log(div_newFields);
   div_project.appendChild(div_newFields);
   return div_project;
 }
@@ -169,7 +170,7 @@ function moreFields() {
 
 
 function morePerson(party_id) {
-  console.log(party_id);
+  //console.log(party_id);
   var count = document.getElementById(party_id).childNodes.length-6;
   var newFields = document.getElementById('personroot').cloneNode(true);
   newFields.id = party_id*100+count;
@@ -204,39 +205,73 @@ function count_person(this_id){
   return length/2-1;
 }
 
+function containsKey(object, key) {
+  return !!Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase());
+}
+
 function submit_person(this_id){
-  console.log(GLOBAL_COUNTER)
-  var party_counter = GLOBAL_COUNTER+1;
-  var n = count_person(party_counter);
-  console.log(n);
-  var parent_element = this_id.parentElement;
-  var pname = parent_element.getElementsByTagName("h2")[0];
-  submit_form(pname);
-  for(var i = 1; i <= n; i++){
-    var id = party_counter*100+i;
-    var insertHere = document.getElementById(id);
-    var fname = insertHere.getElementsByTagName("input")[0].value;
-    var lname = insertHere.getElementsByTagName("input")[1].value;
-    var title = insertHere.getElementsByTagName("input")[2].value;
-    var email = insertHere.getElementsByTagName("input")[3].value;
-    console.log(fname);
-    var newFields = document.getElementById("person_submitted").cloneNode(true);
-    newFields.id = party_counter*100+i;
-    newFields.style.display = 'block';
-    newFields.getElementsByTagName("h5")[0].innerHTML = fname;
-    newFields.getElementsByTagName("h5")[1].innerHTML = lname;
-    newFields.getElementsByTagName("h5")[2].innerHTML = title;
-    newFields.getElementsByTagName("h5")[3].innerHTML = email;
-    submit_form(newFields);
-    $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, project_id:window.project_id} );
-  }
-  removeAllChildNodes(parent_element);
+  $.ajax({
+    url : '../PHP/pull_all_registered_users.php',
+    type : 'POST',     
+    success:function(data){
+      js_data = JSON.parse(data);
+      console.log(js_data);
+      console.log(email);
+      
+        /*for(var i = 0; i<js_data.length;i++){
+          js_data[i] = js_data[i].toLowerCase();
+        }
+        var user_exist = data.includes(email.toLowerCase());
+        if(user_exist){
+
+        }*/
+        var party_counter = GLOBAL_COUNTER+1;
+        var n = count_person(party_counter);
+        var parent_element = this_id.parentElement;
+        var pname = parent_element.getElementsByTagName("h2")[0];
+        submit_form(pname);
+        for(var i = 1; i <= n; i++){
+          var id = party_counter*100+i;
+          var insertHere = document.getElementById(id);
+          var fname = insertHere.getElementsByTagName("input")[0].value;
+          var lname = insertHere.getElementsByTagName("input")[1].value;
+          var title = insertHere.getElementsByTagName("input")[2].value;
+          var email = insertHere.getElementsByTagName("input")[3].value;
+          var newFields = document.getElementById("person_submitted").cloneNode(true);
+          newFields.id = party_counter*100+i;
+          newFields.style.display = 'block';
+          newFields.getElementsByTagName("h5")[0].innerHTML = fname;
+          newFields.getElementsByTagName("h5")[1].innerHTML = lname;
+          newFields.getElementsByTagName("h5")[2].innerHTML = title;
+          newFields.getElementsByTagName("h5")[3].innerHTML = email;
+          submit_form(newFields);
+          $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, project_id:window.project_id} );
+          console.log(email);
+          //checking existing users and adding administry level if not assigned
+          //TODO: auto email for personels noy yet registered
+          if(containsKey(js_data, email)){
+            console.log(js_data[email]);
+            update_user_merge(js_data[email], window.project_id);
+          }
+          else{
+            //TODO: email invitation
+          }
+        }
+        removeAllChildNodes(parent_element);
+    }
+    
+  });
 }
 
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
+}
+
+function update_user_merge(register_id, project_id){
+  console.log("updated");
+  $.post( "../PHP/update_merge_from_party.php", { Register_id: register_id, Project_id: project_id} );
 }
 
 function search_party() { 
@@ -269,7 +304,6 @@ function search_party() {
 } 
 
 function add_function_to_search(function_call){
-  console.log('runningkjkjk');
   var search_tag =document.getElementById('searchbar');
   search_tag.setAttribute('onkeyup',function_call);
   var search_title = document.getElementById("search_bar_title");

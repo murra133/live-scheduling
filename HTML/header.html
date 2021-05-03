@@ -20,6 +20,10 @@
     <script src="../JS/side_bar.js"></script>
     <script src="../JS/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 <body>
         <!-- CHECKS to See if User is connected-->
@@ -33,7 +37,8 @@
         </nav>
         <div id = "content">
         <div id="main_page">
-            <div id = "search_navbar"></div>
+            <div id = "search_navbar">
+            </div>
             <div id="header">
                 <h1 id="main_title">Company Schedule</h1>
                 <div>
@@ -45,9 +50,10 @@
                         </a>
                         <input id="start_date_input" name="yes" type="date" class="collapse">
                     </div>
+                    <div id="filter_button"></div>
                     <div id="upload_button">
-                        <button class="website_button" type="submit">Push to All</button>
-                        <button class="website_button" type="submit">Push to Team</button>
+                        
+                        <button class="website_button" type="clickable" id="push_all_button" onclick="push_to_all()">Push to All</button>
                     </div>
             </div>
             </div>
@@ -78,9 +84,10 @@
 </body>
 <footer>
     <script>
+        //$('#filter_button').load('filter.html');
         $('#search_navbar').load('../HTML/search_bar_nav.html'); 
         $('#sidebar').load('side_bar_nav.html');
-        setTimeout(add_function_to_search,300,"search_activity()");
+        setTimeout(add_function_to_search,200,"search_activity()");
         //setTimeout(add_function_to_search,300,'search_party()');
         //document.getElementById("search_bar_title").innerHTML += " Schedule";
         //setTimeout(add_function_to_search,300,'search_party()');

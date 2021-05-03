@@ -226,14 +226,7 @@ border-radius: 5px;
     -ms-transform: translate(-50%, -50%);
 }
 
-.clickable:hover{
-    cursor: pointer;
-    opacity: 50%;
-}
-.clickable:active{
-    opacity: 150%;
-    cursor: pointer;
-}
+
 .sub_activity_add{
     display: block;
     float:left;

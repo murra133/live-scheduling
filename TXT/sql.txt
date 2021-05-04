@@ -58,7 +58,11 @@ Create Project Database
 CREATE TABLE Project_Database (
     Project_id int NOT NULL AUTO_INCREMENT,
     ProjectName varchar(255) NOT NULL,
-    PRIMARY KEY (Project_id)
+    PRIMARY KEY (Project_id),
+    ADD ProjectDescription text,
+    ADD ProjectStart date,
+    ADD ProjectEnd date,
+    ADD ProjectAddress text,
 );
 
 Create Project Merger Database

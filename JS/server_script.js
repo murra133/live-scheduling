@@ -8,6 +8,22 @@ function ReadCookie() {
    return cookiearray;
 }
 
+function cookie_value(input_cookie){
+    var all_cookies = ReadCookie();
+    var cookies_variable_array = Array();
+    for(var n=0; n<all_cookies.length;n++){
+      cookies_variable_array[n]=all_cookies[n].split("=")[0].trim();
+    }
+    if (cookies_variable_array.includes(input_cookie)){
+      var index = cookies_variable_array.indexOf(input_cookie);
+      var result_value = all_cookies[index].split("=")[1].trim();
+      return result_value;
+    }
+    else{
+    return false;
+    }
+    };
+
 function close_button(){
     removeAllChildNodes(document.getElementById('content_box'));
     $('#main_page').removeAttr('style');

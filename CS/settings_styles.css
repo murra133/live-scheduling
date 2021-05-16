@@ -60,11 +60,20 @@ body{
     margin-bottom: 2%;
 }
 .admin_input{
-    width: 23%;
+    width: 23.8%;
+    font-size: 1vw;
+
 }
 .user_admin h7{
-    width: 24%;
+    width: 23.8%;
     display: inline-block;
+    font-size: 1vw;
+
+}
+.user_admin h5{
+    width: 23.8%;
+    display: inline-block;
+    font-size: 1.2vw;
 }
 
 .add_user{

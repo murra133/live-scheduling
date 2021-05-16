@@ -17,8 +17,12 @@ if ($action == 'project_information'){
 }
 elseif ($action == 'project_settings'){
     $workweek = $_POST['workweek'];
+    $start_day = $_POST['start_day'];
     $holidays = $_POST['holidays'];
-    $stmt = $link->prepare("UPDATE project_database SET WorkWeek = ? , Holidays = ? WHERE Project_id = ?");
+    $stmt = $link->prepare("UPDATE project_database SET WorkWeek = ? , start_day = ? WHERE Project_id = ?");
+    $stmt->bind_param("isi", $workweek, $holidays, $project_id);
+    $stmt->execute();
+    $stmt = $link->prepare("UPDATE holidays_".$project_id." SET Holiday_Name = ? , start_day = ? WHERE Project_id = ?");
     $stmt->bind_param("isi", $workweek, $holidays, $project_id);
     $stmt->execute();
 };

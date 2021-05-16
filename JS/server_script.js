@@ -163,7 +163,7 @@ function submit_register(action){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function add_admin_input(admin_add_tag){
-    var user_admin_tag = document.getElementById("sample_input");
+    var user_admin_tag = document.getElementById("admin_sample");
     console.log(user_admin_tag);
     var cloned_input_tag = user_admin_tag.cloneNode(true);
     cloned_input_tag.removeAttribute('id');

@@ -105,34 +105,42 @@
                     <input type="text" class="form-control" id="address" placeholder="Enter the Project's Address">
                   </div>
                   <button type="button" class="btn btn-primary" onclick="update_project_info()">Update Profile</button>
-                  <button type="reset" class="btn btn-light">Reset Changes</button>
+                  <button type="reset" class="btn btn-light" onclick="pull_project_info()">Reset Changes</button>
                 </form>
               </div>
               <div class="tab-pane" id="administrator">
                 <h6>ADMINISTRATOR SETTINGS</h6>
                 <hr>
-                <form>
-                  <p class="text-muted font-size-sm">Update all administrator settings to the people within your team. All the people below will be able to see the latest changes to the schedule.</p>
-                  <div class = "user_admin form-group col-auto">
-                    <h7 class="firstname"></h7>
-                    <h7 class="lastname"></h7>
-                    <h7 class="email"></h7>
-                    <h7 value ="1" class="admin_level">Administrator</h7>
-                </div>
-                  <div class = "user_admin_input form-group col-auto">
-                    <input class = "admin_input firstname" type="text" placeholder="First Name:">
-                    <input class = "admin_input lastname" type="text" placeholder="Last Name:">
-                    <input class = "admin_input email" type="text" placeholder="Email:">
-                    <select class = "admin_input admin_level">
-                        <option value="2">Sub-Administrator</option>
-                        <option value="3">Scheduler</option>
-                        <option value="4">Viewer</option>
-                        </select>
-                        <i class="far fa-trash-alt clickable" onclick="delete_user_admin_input(this)"></i>
-                </div>
+                <form  id="admin_form">
+                  <div>
+                    <p class="text-muted font-size-sm">Update all administrator settings to the people within your team. All the people below will be able to see the latest changes to the schedule.</p>
+                    <div class = "user_admin form-group col-auto">
+                      <h5 class="firstname_title">First Name</h7>
+                      <h5 class="lastname_tile">Last Name</h7>
+                      <h5 class="email_title">Email</h7>
+                      <h5 value ="1" class="admin_level_title">Administrative Level</h7>
+                  </div>
+                    <div class = "user_admin form-group col-auto">
+                      <h7 class="firstname"></h7>
+                      <h7 class="lastname"></h7>
+                      <h7 class="email"></h7>
+                      <h7 value ="1" class="admin_level">Administrator</h7>
+                  </div>
+                    <div class = "user_admin_input form-group col-auto" id="admin_sample" style="display:none">
+                      <input class = "admin_input firstname" type="text" placeholder="First Name:">
+                      <input class = "admin_input lastname" type="text" placeholder="Last Name:">
+                      <input class = "admin_input email" type="text" placeholder="Email:">
+                      <select class = "admin_input admin_level">
+                          <option value="2">Sub-Administrator</option>
+                          <option value="3">Scheduler</option>
+                          <option value="4">Viewer</option>
+                          </select>
+                          <i class="far fa-trash-alt clickable" onclick="delete_user_admin_input(this)"></i>
+                  </div>
+              </div>
                 <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_admin_input(this)"> Add User</i>
-                    <button type="button" class="btn btn-primary">Update Administrators</button>
-                    <button type="reset" class="btn btn-light">Reset Changes</button>
+                    <button type="button" class="btn btn-primary" onclick="update_admin()">Update Administrators</button>
+                    <button type="reset" class="btn btn-light" onclick="reset_changes('admin_settings')">Reset Changes</button>
                  </form>
               </div>
               <div class="tab-pane" id="projectsettings">
@@ -150,17 +158,27 @@
                     </select>
                   </div>
                   <div class="form-group">
+                    <label for="start_day">Schedule Start Day</label>
+                    <select class = "form-control" id = "start_day">
+                      <option value="1">Start On Sunday</option>
+                      <option value="2">Start on Monday</option>
+                      <option value="3">Start on Saturday</option>
+                      <option value="4">Start Today</option>
+                    </select>
+                  </div>
+                    </div>
+
+                  <div class="form-group">
                     <label id="holiday_label">Add Days Off</label>
                       <div id="sample_holidays" style="display:none">
                         <input style="width:49%; display:inline-block" class = "holiday_input holidayname form-control" type="text" placeholder="Holiday">
                         <input style="width:49%; display:inline-block" type="date" class="form-control" >
                       </div>
                     </div>
-                      <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_admin_input(this)"> Add Holiday</i>
+                      <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_holidays(this)"> Add Holiday</i>
                   <button type="button" class="btn btn-primary">Update Settings</button>
                   <button type="reset" class="btn btn-light">Reset Changes</button>
                 </form>
-              </div>
               <div class="tab-pane" id="notification">
                 <h6>NOTIFICATION SETTINGS</h6>
                 <hr>

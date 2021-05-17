@@ -36,6 +36,36 @@ return false;
 }
 };
 
+function add_box_blur_background(url){
+  //////Submit URL for page to load as if you were pulling it from the javascript Ex. "../HTML/add_sub_activity.html"////
+  document.getElementById("main_page").style.blur = "10px";
+  $('#content_box').load(url);
+  $("#main_page").css({
+    "-webkit-filter": "blur(3px)", 
+    "-moz-filter": "blur(3px)", 
+    "-o-filter": "blur(3px)", 
+    "-ms-filter": "blur(3px)", 
+    "filter": "blur(3px)", 
+  }
+);
+}
+
+function update_sub_activity(this_tag){
+  ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
+  add_box_blur_background("../HTML/add_sub_activity.html")
+  var sub_id = this_tag.id.split("_")[1];
+  var parent_id = this_tag.parentElement.parentElement.parentElement.id;
+  var action = "update"
+  var id_array = [sub_id,parent_id,action]
+  var activity_title = document.getElementById("name_"+sub_id).innerHTML;
+  var start_date = document.getElementById("sdate_"+sub_id).getAttribute("name");
+  var end_date = document.getElementById("edate_"+sub_id).getAttribute("name");
+  var duration = document.getElementById("duration_"+sub_id).innerHTML;
+  var party_involved = document.getElementById("contractor_"+sub_id).innerHTML;
+  var values_array = [activity_title,start_date,end_date,duration,party_involved];
+  setTimeout(add_id_to_box,150,id_array);
+  setTimeout(place_values_in_subactivity_box,150,values_array);
+}
 ////////////////////////////////////////////////////////////////////////////
 //fetch main activity
 $( document ).ready(function() {
@@ -313,6 +343,20 @@ var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
 });
 //////////////////////////////////////////////////////////////////////////////
+function delete_main_activity_box(delete_icon_tag){
+  var main_id= delete_icon_tag.id.split("_")[1];
+  var main_activity_title = delete_icon_tag.parentElement.getAttribute("name");
+  var main_tag = document.getElementById(main_id);
+  var url = "../HTML/delete_confirm.html";
+  add_box_blur_background(url);
+  var action = "delete_main_activity";
+  var id_array = [main_id,main_id,action];
+  var message = "You sure you want to delete: <br>"+main_activity_title;
+  setTimeout(add_id_to_box,150,id_array);
+  setTimeout(add_value_to_message_box,150,message)
+
+}
+//////////////////////////////////////////////////////////////////
   function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -1210,46 +1254,10 @@ function place_values_in_subactivity_box(values_array){
 }
 
 ////
-function update_sub_activity(this_tag){
-  ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
-  document.getElementById("main_page").style.blur = "10px";
-    $('#content_box').load("../HTML/add_sub_activity.html");
-    $("#main_page").css({
-      "-webkit-filter": "blur(3px)", 
-      "-moz-filter": "blur(3px)", 
-      "-o-filter": "blur(3px)", 
-      "-ms-filter": "blur(3px)", 
-      "filter": "blur(3px)", 
-    }
-  );
-  var sub_id = this_tag.id.split("_")[1];
-  var parent_id = this_tag.parentElement.parentElement.parentElement.id;
-  var action = "update"
-  var id_array = [sub_id,parent_id,action]
-  var activity_title = document.getElementById("name_"+sub_id).innerHTML;
-  var start_date = document.getElementById("sdate_"+sub_id).getAttribute("name");
-  var end_date = document.getElementById("edate_"+sub_id).getAttribute("name");
-  var duration = document.getElementById("duration_"+sub_id).innerHTML;
-  var party_involved = document.getElementById("contractor_"+sub_id).innerHTML;
-  var values_array = [activity_title,start_date,end_date,duration,party_involved];
-  setTimeout(add_id_to_box,150,id_array);
-  setTimeout(place_values_in_subactivity_box,150,values_array);
-}
+
 
 /////////////////////////////////////////////////////////////////
-function add_box_blur_background(url){
-  //////Submit URL for page to load as if you were pulling it from the javascript Ex. "../HTML/add_sub_activity.html"////
-  document.getElementById("main_page").style.blur = "10px";
-  $('#content_box').load(url);
-  $("#main_page").css({
-    "-webkit-filter": "blur(3px)", 
-    "-moz-filter": "blur(3px)", 
-    "-o-filter": "blur(3px)", 
-    "-ms-filter": "blur(3px)", 
-    "filter": "blur(3px)", 
-  }
-);
-}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 function get_all_sub_tags_with_id(sub_id){
@@ -1270,19 +1278,7 @@ function add_value_to_message_box(message){
   document.getElementById("message").innerHTML = message;
 }
 //////////////////////////////////////////////////////////////////////////////
-function delete_main_activity_box(delete_icon_tag){
-  var main_id= delete_icon_tag.id.split("_")[1];
-  var main_activity_title = delete_icon_tag.parentElement.getAttribute("name");
-  var main_tag = document.getElementById(main_id);
-  var url = "../HTML/delete_confirm.html";
-  add_box_blur_background(url);
-  var action = "delete_main_activity";
-  var id_array = [main_id,main_id,action];
-  var message = "You sure you want to delete: <br>"+main_activity_title;
-  setTimeout(add_id_to_box,150,id_array);
-  setTimeout(add_value_to_message_box,150,message)
 
-}
 
 
 //////////////////////////////////////////////////////////////////////////////

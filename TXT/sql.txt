@@ -92,3 +92,10 @@ CREATE TABLE Relationship (
     FOREIGN KEY (Child_ID) REFERENCES sub_activities_61(Sub_ID)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE holidays_68(
+    Holiday_id INT NOT NULL,
+    PRIMARY KEY(Holiday_id),
+    HolidayName text,
+    HolidayDate date
+    );

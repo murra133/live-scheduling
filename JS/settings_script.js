@@ -43,23 +43,30 @@ $(document).ready(function(){
                 }
                     document.getElementById('workweek').value = p_workweek ;
                     document.getElementById('start_day').value=p_startday
-                /*if (p_holiday != null){
-                    var holidays = new Array();
-                    holidays = p_holiday.split(',');
-                    var holiday_tag = document.getElementById('sample_holidays').cloneNode(true);
-                    for(var h=0; h<holidays.length;h++){
-                        var holiday_name = holidays[h].split('_')[0];
-                        var holiday_date = holidays[h].split('_')[1];
-                        holiday_tag.childNodes[0].value = holiday_name;
-                        holiday_tag.childNodes[1].value = holiday_date;
-                        holiday_tag.removeAttribute('style');
-                        document.getElementById('sample_holidays').parentElement.appendChild(holiday_tag);
-    
-                    }
-                } */
+                    $.ajax({
+                        url : '../PHP/pull_holidays.php',
+                        type : 'POST',
+                        data : 'project_id='+window.project_id,     
+                        success:function(data){
+                            var holidays_data = JSON.parse(data);
+                            for (var z=0;z<Object.keys(holidays_data).length;z++){
+                                var holiday_tag = document.getElementById('sample_holidays').cloneNode(true);
+                                var holiday_id = Object.keys(holidays_data)[z];
+                                var holiday_name = holidays_data[holiday_id][0]['HolidayName'];
+                                var holiday_date = holidays_data[holiday_id][0]['HolidayDate'];
+                                holiday_tag.getElementsByClassName('holidayname')[0].value = holiday_name;
+                                holiday_tag.getElementsByClassName('holidaydate')[0].value = holiday_date;
+                                
+
+                                holiday_tag.removeAttribute('style');
+                                holiday_tag.id = "holiday_"+holiday_id;
+                                document.getElementById('sample_holidays').parentElement.appendChild(holiday_tag);
+
+                            }
             }
+        })
     
-    
+            }
     })
 
     }
@@ -88,6 +95,7 @@ $(document).ready(function(){
                 for(var a=0;a<admin_data.length;a++){
                     var admin_level = admin_data[a]['admin_level'];
                     var register_id = admin_data[a]['Register_id'];
+                    console.log('register_id='+register_id);
                     $.ajax({
                         url : '../PHP/pull_user_from_registry.php',
                         type : 'POST',
@@ -168,4 +176,22 @@ function add_holidays(add_button){
     cloned_tag.removeAttribute('id');
     cloned_tag.removeAttribute('style');
     parentElement.appendChild(cloned_tag);
+}
+
+function update_settings(){
+    var workweek = document.getElementById('workweek').value;
+    var start_day = document.getElementById('start_day').value;
+    var h_name_array = document.getElementsByClassName('holidayname');
+    var h_date_array = document.getElementsByClassName('holidaydate');
+    var action = 'project_settings';
+    var holidays_array = new Array;
+    for (var h =0;h<h_name_array.length;h++){
+        if (h_name_array[h].parentElement.id !='sample_holidays'){
+            holidays_array[h] = h_name_array[h].value+"_"+h_date_array[h].value;
+        }
+
+    }
+    holidays_array = holidays_array.toString();
+    $.post('../PHP/update_project_settings.php',{project_id:window.project_id,action:action,workweek:workweek,start_day:start_day,holidays:holidays_array});
+
 }

@@ -18,13 +18,27 @@ if ($action == 'project_information'){
 elseif ($action == 'project_settings'){
     $workweek = $_POST['workweek'];
     $start_day = $_POST['start_day'];
-    $holidays = $_POST['holidays'];
+    $holidays_array = explode(',',$_POST['holidays']);
     $stmt = $link->prepare("UPDATE project_database SET WorkWeek = ? , start_day = ? WHERE Project_id = ?");
     $stmt->bind_param("isi", $workweek, $holidays, $project_id);
     $stmt->execute();
-    $stmt = $link->prepare("UPDATE holidays_".$project_id." SET Holiday_Name = ? , start_day = ? WHERE Project_id = ?");
-    $stmt->bind_param("isi", $workweek, $holidays, $project_id);
-    $stmt->execute();
+
+    for ($h=0;$h<sizeof($holidays_array);$h++){
+        $holiday_name = explode('%',$holidays_array[$h])[0];
+        $holiday_date = explode('%',$holidays_array[$h])[1];
+        if (isset(explode('%',$holidays_array[$h])[2]){
+            $holiday_id = explode('%',$holidays_array[$h])[2];
+            $stmt = $link->prepare("UPDATE holidays_".$project_id." SET HolidayName = ? , HolidayDate = ? WHERE Holiday_id = ?");
+            $stmt->bind_param("ssi", $holiday_name, $holiday_date, $holiday_id);
+            $stmt->execute();
+        }
+        else{
+        $stmt = $link->prepare("UPDATE holidays_".$project_id." SET HolidayName = ? , HolidayDate = ?");
+        $stmt->bind_param("ss", $holiday_name, $holiday_date);
+        $stmt->execute();
+        }
+    }
+
 };
 
 require_once("db_link_close.php");

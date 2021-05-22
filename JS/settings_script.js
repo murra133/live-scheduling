@@ -185,9 +185,18 @@ function update_settings(){
     var h_date_array = document.getElementsByClassName('holidaydate');
     var action = 'project_settings';
     var holidays_array = new Array;
+    var n=0;
     for (var h =0;h<h_name_array.length;h++){
         if (h_name_array[h].parentElement.id !='sample_holidays'){
-            holidays_array[h] = h_name_array[h].value+"_"+h_date_array[h].value;
+            if (h_name_array[h].parentElement.id == ""){
+                holidays_array[n] = h_name_array[h].value+"_"+h_date_array[h].value;
+            }
+            else{
+                var id = h_name_array[h].parentElement.id.split("_")[1];
+                holidays_array[n] = h_name_array[h].value+"_"+h_date_array[h].value+"_"+id;
+            }
+            n++;
+            console.log(holidays_array);
         }
 
     }

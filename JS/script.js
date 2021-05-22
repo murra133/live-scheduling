@@ -339,6 +339,15 @@ $( document ).ready(function() {
     }
   });  
 
+  /*$.ajax({
+    url : '../PHP/pull_holidays.php',
+    type : 'POST',
+    data : 'project_id='+window.project_id,     
+    success:function(data){
+      var holidays_data = JSON.parse(data);
+      holidays_data
+    }})*/
+
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
 });

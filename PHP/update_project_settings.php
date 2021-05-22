@@ -31,7 +31,7 @@ elseif ($action == 'project_settings'){
         echo json_encode($holiday_date);
         echo "INSERT INTO holidays_".$project_id." (HolidayName, HolidayDate) VALUES (".$holiday_name.",".$holiday_date.")";
         if (isset(explode('_',$holidays_array[$h])[2])){
-            $holiday_id = explode('%',$holidays_array[$h])[2];
+            $holiday_id = explode('_',$holidays_array[$h])[2];
             $stmt = $link->prepare("UPDATE holidays_".$project_id." SET HolidayName = ? , HolidayDate = ? WHERE Holiday_id = ?");
             $stmt->bind_param("ssi", $holiday_name, $holiday_date, $holiday_id);
             $stmt->execute();

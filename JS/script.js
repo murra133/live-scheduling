@@ -1,5 +1,5 @@
 // ------ Brian's JavaScript------//
-
+//------------General Scripts Start-------//
 // --------- Cookie Script ---------//
 function ReadCookie() {
   //// Np Input, Returns Array with all Cookies
@@ -50,6 +50,99 @@ function add_box_blur_background(url){
 );
 }
 
+function weekend_date_transform(server_value){
+  ///Input is the server value for the weekend returns and array for the days off///
+  if (server_value == "1"){
+    return [6,0];
+  }
+  else if(server_value == "2"){
+    return [5,6];
+  }
+  else if(server_value == "3"){
+    return [0];
+  }
+  else if(server_value == "4"){
+    return [6];
+  }
+  else if(server_value == "5"){
+    return [5];
+  }
+}
+
+function weekday_name(weekday_value){
+  var weekday = new Array(7);
+  weekday[0] = "Sunday";
+  weekday[1] = "Monday";
+  weekday[2] = "Tuesday";
+  weekday[3] = "Wednesday";
+  weekday[4] = "Thursday";
+  weekday[5] = "Friday";
+  weekday[6] = "Saturday";
+  console.log("weekday value="+weekday_value);
+  return(weekday[weekday_value]);
+}
+
+function standarize_dates_to_UTC(date){
+  var offset = date.getTimezoneOffset();
+  var time = date.getTime();
+  var standard_date = new Date(time-(offset*60000));
+  return standard_date;
+}
+
+//----------General Scripts End--------//
+
+function form_to_schedule(this_tag){
+  var parent_element = this_tag.parentElement.parentElement;
+  var id = document.getElementById("main_id").innerHTML;
+  var activity_title = document.getElementById("activity_title_input").value;
+  var start_date = document.getElementById("start_date_input_box").value;
+  var start_date_format = date_format_changer(start_date);// start_date.split("-")[1]+"/"+start_date.split("-")[2];
+  var end_date = document.getElementById("end_date_input_box").value;
+  var end_date_format = date_format_changer(end_date); // end_date.split("-")[1]+"/"+end_date.split("-")[2];
+  var duration = document.getElementById("duration").value;
+  var party_involved = document.getElementById("party_involved_box").value;
+  ////Need to add section for Relationships once relationships are figured out///
+  var id_array= document.getElementById("main_id").getAttribute("name");
+  var main_id = id_array.split("_")[0];
+  
+  //Adds the Main Activity Title
+  document.getElementById("name_"+id).innerHTML=activity_title;
+  document.getElementById("sdate_"+id).innerHTML=start_date_format;
+  document.getElementById("sdate_"+id).setAttribute("name",start_date);
+  document.getElementById("edate_"+id).innerHTML=end_date_format;
+  document.getElementById("edate_"+id).setAttribute("name",end_date);
+  document.getElementById("contractor_"+id).innerHTML=party_involved;
+  document.getElementById("duration_"+id).innerHTML=duration;
+  var action = document.getElementById("box").getAttribute("name");
+  if ( action == "new"){
+  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  }
+  else{
+    $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  }
+  
+  removeAllChildNodes(parent_element);
+  $('#main_page').removeAttr('style');
+  return false;
+  }
+  //////////////////////////////////////////////////////////////////////////////////
+  function place_values_in_subactivity_box(values_array){
+    ////////value_array = [activity_title,start_date,end_date,duration,party_involved] format for dates is yyyy-mm-dd;
+    document.getElementById("activity_title_input").value = values_array[0];
+    document.getElementById("start_date_input_box").value=values_array[1];
+    document.getElementById("end_date_input_box").value = values_array[2];
+    document.getElementById("duration").value=values_array[3];
+    document.getElementById("party_involved_box").value=values_array[4];
+  }
+function place_values_in_subactivity_box(values_array){
+  ////////value_array = [activity_title,start_date,end_date,duration,party_involved] format for dates is yyyy-mm-dd;
+  document.getElementById("activity_title_input").value = values_array[0];
+  document.getElementById("start_date_input_box").value=values_array[1];
+  document.getElementById("end_date_input_box").value = values_array[2];
+  document.getElementById("duration").value=values_array[3];
+  document.getElementById("party_involved_box").value=values_array[4];
+}
+
 function update_sub_activity(this_tag){
   ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
   add_box_blur_background("../HTML/add_sub_activity.html")
@@ -82,14 +175,12 @@ $( document ).ready(function() {
       console.log(window.register_id);
       console.log(js_data_level['admin_level']);
       if(js_data_level['admin_level']<4){
-        //console.log("true!!");
           $.ajax({
             url : '../PHP/pull_activity.php',
             type : 'POST',
             data : 'project_id='+window.project_id+'&admin_level='+admin_level,     
             success:function(data){
               var js_data = JSON.parse(data);
-                //alert(js_data[0][0]);
                 var main_parent = document.getElementById("added_cell");
                 var divadd = document.createElement('div');
                 for (var i=0; i<Object.keys(js_data).length;i++){
@@ -292,14 +383,20 @@ $( document ).ready(function() {
 
                   var date_array = date_filler(sub_start_date, sub_end_date);
                   for (var z=0; z <sub_bdate_div.children.length;z++){
-                  
-                  var n;
-                  for(n = 0; n<date_array.length; n++){
-                    if(sub_bdate_div.children[z].id===(sub_id+"_"+date_array[n])){
-                      sub_bdate_div.children[z].style.backgroundColor="green";
+            
+                    var n;
+                    for(n = 0; n<date_array.length; n++){
+                      if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
+                        sub_bdate_div.children[z].style.backgroundColor="gray";
+                      }
+                      if(sub_bdate_div.children[z].id===(sub_id+"_"+date_array[n])){
+                        sub_bdate_div.children[z].style.backgroundColor="green";
+                        if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
+                          sub_bdate_div.children[z].style.backgroundColor="gray";
+                        }
+                      }
                     }
                   }
-                }
 
                   id_div.appendChild(sub_id_div);
                   name_div.appendChild(sub_name_div);
@@ -339,14 +436,31 @@ $( document ).ready(function() {
     }
   });  
 
-  /*$.ajax({
+  $.ajax({
     url : '../PHP/pull_holidays.php',
     type : 'POST',
     data : 'project_id='+window.project_id,     
     success:function(data){
       var holidays_data = JSON.parse(data);
-      holidays_data
-    }})*/
+      holidays_date_array = new Array();
+      holidays_name_array = new Array();
+      holidays_id_array = new Array();
+      for (var h=0;h<Object.keys(holidays_data).length;h++){
+        holidays_date_array[h] =holidays_data[Object.keys(holidays_data)[h]][0]['HolidayDate'];
+        holidays_name_array[h] =holidays_data[Object.keys(holidays_data)[h]][0]['HolidayName'];
+        holidays_id_array[h] =Object.keys(holidays_data)[h];
+      }
+    }})
+    $.ajax({
+      url : '../PHP/pull_project_settings.php',
+      type : 'POST',
+      data : 'project_id='+window.project_id,     
+      success:function(data){
+        var settings = JSON.parse(data);
+        weekend_value = settings['WorkWeek'];
+        console.log("weekend_value="+weekend_value)
+      }})
+
 
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
@@ -411,7 +525,7 @@ function delete_main_activity_box(delete_icon_tag){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /* Creates the dates to go on the three week ahead using the existing start date*/
-function three_week_ahead(this_tag){
+function three_week_ahead(bdate_dates,bdate_days){
   var n;
   var date = document.getElementById("start_date").innerHTML;
   var dd = parseInt(date.split("/")[1]);
@@ -451,11 +565,16 @@ function three_week_ahead(this_tag){
       var date = document.createElement("h3");
       date.setAttribute("class","date");
       date.innerHTML = nmm+'/'+ndd+'/'+nyy;
-      this_tag.appendChild(date);
+      var day_value = (standarize_dates_to_UTC(new Date(nyy+"-"+nmm+"-"+ndd))).getDay();
+      var day = weekday_name(day_value);
+      var day_tag = document.createElement("h3");
+      day_tag.setAttribute("class","day");
+      day_tag.innerHTML =day;
+      bdate_dates.appendChild(date);
+      bdate_days.appendChild(day_tag);
       dd=dd+1;
   }
-  return (this_tag);
-
+    console.log(bdate_days)
   };
 //////////////////////////////////////////////////////////////////////////////
   /*Takes the start date and end date inputs and fills the respective cells*/
@@ -550,9 +669,11 @@ $(document).on('change', '#start_date_input', function(){
 
   /*Updates all existing date cells and their id's*/
   var cell_dates = document.getElementsByClassName("cell_dates");
+  var cell_days = document.getElementsByClassName("cell_days");
   for (i=0;i<cell_dates.length;i++){
     removeAllChildNodes(cell_dates[i]);
-    three_week_ahead(cell_dates[i]);
+    removeAllChildNodes(cell_days[i]);
+    three_week_ahead(cell_dates[i],cell_days[i]);
   }
 
   ///Updates the filler once a date is updated///
@@ -827,10 +948,14 @@ function cancel_main_activity(cancel_tag){
     /* Add Dates to the Activity Location */
     var bdate = document.createElement('div');
     bdate.setAttribute("class","sub_activity_bdate sub")
+    var bdate_days = document.createElement("div");
+    bdate_days.setAttribute("class","cell_days");
     var bdate_dates = document.createElement("div");
     bdate_dates.setAttribute("class","cell_dates");
-    three_week_ahead(bdate_dates);
+    three_week_ahead(bdate_dates,bdate_days);
+    console.log(bdate_days)
     bdate.appendChild(bdate_dates);
+    bdate.appendChild(bdate_days);
 
     /* Add edit to the Activity Location */
     var edit_div = document.createElement('div');
@@ -1100,12 +1225,147 @@ function number_of_days_from_date(date){
 
 }
 //////////////////////////////////////////////////////////////////////////////
-function add_duration_to_dates(start_date,end_date,duration){
-  //Input is duration in days  start date in yyyy-mm-dd, end date in yyyy-mm-dd//
-  
+function return_duration(start_date,end_date,holidays_array,weekend_days){
+  //Input is start_date in yyyy-mm-dd, end_date in yyyy-mm-dd, holidays_array in yyyy-mm-dd, weekend_days
+  var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
+  var workweek = weekend_date_transform(weekend_days);
+  var duration = 0;
+  var date = (standarize_dates_to_UTC(new Date(start_date))).getTime();
+  var e_date = (standarize_dates_to_UTC((new Date(end_date)))).getTime();
+  while(date != e_date){
+    var flag = 0;
+    for (var w=0;w<workweek.length;w++){
+      for(var h=0;h<holidays_array.length;h++){
+        var hol_date = (new Date(holidays_array[h])).getTime();
+        if (day ==workweek[w]||date == hol_date){
+          flag++;
+        }
+      }
+    }
+    if (flag == 0){
+      duration = duration + 1;
+    }
+    date = date = date + 86400000;
+    day = (new Date(date)).getDay();
+  }
+
+  return (duration+1);
+}
+
+function return_end_date(start_date, duration, holidays_array, weekend_days){
+    //Input is start_date in yyyy-mm-dd, duration in number of days, holidays_array in yyyy-mm-dd, weekend_days
+    var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
+    var workweek = weekend_date_transform(weekend_days);
+    var date = (standarize_dates_to_UTC(new Date(start_date))).getTime();
+    var d = 1;
+    while(d<=parseInt(duration)){
+      var flag = 0;
+      for (var w=0;w<workweek.length;w++){
+        for(var h=0;h<holidays_array.length;h++){
+          var hol_date = (new Date(holidays_array[h])).getTime();
+          if (day ==workweek[w]||date == hol_date){
+            flag++;
+          }
+        }
+      }
+      if (flag == 0){
+        d=d+1;
+      }
+              date = date = date + 86400000;
+        day = (new Date(date)).getDay();
+    }
+    date = new Date(date);
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+    var end_date = yyyy+"-"+mm+"-"+dd;
+    return end_date;
+
 }
 //////////////////////////////////////////////////////////////////////////////
+$(document).on('change','#duration', function(){
+  console.log("running function")
+  var duration = this.value;
+  var start_date = document.getElementById("start_date_input_box").value;
+  if(start_date == null){
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '/' + dd;
+    document.getElementById("start_date_input_box").value = today;
+    start_date = today;
+  }
+  var end_date = return_end_date(start_date,duration,holidays_date_array,weekend_value);
+  document.getElementById("end_date_input_box").value = end_date;
+  
+
+  var id=document.getElementById("main_id").innerHTML;
+  var date_all = document.getElementById("bdate_"+id).children;
+  for (var j = 0; j<date_all.length; j++){
+    var date_j = date_all[j];
+    date_j.style.backgroundColor = "white";
+    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+      date_j.style.backgroundColor="gray";
+    }
+  }
+  var date_array = date_filler(start_date,end_date);
+  var i;
+  for(i = 0; i<date_array.length; i++){
+    if( document.getElementById(id+"_"+date_array[i])===null){
+      continue;
+    }
+    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    if (check_if_no_work(date_array[i],5)==false){
+      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
+    }
+    }
+  }
+
+})
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 ///Checks for Errors between the start date and end date box once the start date box is populated
+///Checks for Errors between the start date and end date box once the end date box is populated
+$(document).on('change','.end_date_input_box', function(){
+  var end_date = this.value;
+  var start_date_tag = document.getElementById("start_date_input_box");
+
+  if (start_date_tag.value==""){
+    start_date_tag.value=end_date;
+  }
+
+  date = sdate_greater_edate(start_date_tag.value,end_date);
+
+  if (date.length>1){
+    document.getElementById("start_date_input_box").value=date[1];
+  }
+  var duration_tag = document.getElementById("duration");
+  var duration = return_duration(start_date_tag.value,end_date,holidays_date_array,weekend_value);
+  duration_tag.value = duration;
+  //Fills In Cells corresponding to dates
+  var id=document.getElementById("main_id").innerHTML;
+  var date_all = document.getElementById("bdate_"+id).children;
+  for (var j = 0; j<date_all.length; j++){
+    var date_j = date_all[j];
+    date_j.style.backgroundColor = "white";
+    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+      date_j.style.backgroundColor="gray";
+    }
+  }
+  var date_array = date_filler(start_date_tag.value,end_date);
+  var i;
+  for(i = 0; i<date_array.length; i++){
+    if( document.getElementById(id+"_"+date_array[i])===null){
+      continue;
+    }
+    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
+    if (check_if_no_work(date_array[i],5)==false){
+      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
+    }
+    }
+  }
+})
 
 $(document).on('change','.start_date_input_box', function(){
   var start_date = this.value;
@@ -1118,8 +1378,9 @@ $(document).on('change','.start_date_input_box', function(){
   if (date.length>1){
     document.getElementById("end_date_input_box").value=date[0];
   }
+  var duration = return_duration(start_date,end_date_tag.value,holidays_date_array,weekend_value);
   var duration_tag = document.getElementById("duration");
-  duration_tag.value = number_of_days_from_date(end_date_tag.value)-number_of_days_from_date(start_date);
+  duration_tag.value = duration;
 
   var id=document.getElementById("main_id").innerHTML;
   var date_all = document.getElementById("bdate_"+id).children;
@@ -1127,7 +1388,6 @@ $(document).on('change','.start_date_input_box', function(){
     var date_j = date_all[j];
     date_j.style.backgroundColor = "white";
     if (check_if_no_work(date_j.id.split('_')[1],5)==false){
-      console.log('running Inside')
       date_j.style.backgroundColor="gray";
     }
   }
@@ -1170,97 +1430,12 @@ function transform_duration(start_date,duration,days_off){
   }
   return duration;
 }
-
-///Checks for Errors between the start date and end date box once the end date box is populated
-$(document).on('change','.end_date_input_box', function(){
-  var end_date = this.value;
-  var start_date_tag = document.getElementById("start_date_input_box");
-
-  if (start_date_tag.value==""){
-    start_date_tag.value=end_date;
-  }
-
-  date = sdate_greater_edate(start_date_tag.value,end_date);
-
-  if (date.length>1){
-    document.getElementById("start_date_input_box").value=date[1];
-  }
-  var duration_tag = document.getElementById("duration");
-  duration_tag.value = number_of_days_from_date(end_date)-number_of_days_from_date(start_date_tag.value);
-  //Fills In Cells corresponding to dates
-  var id=document.getElementById("main_id").innerHTML;
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
-      console.log('running Inside')
-      date_j.style.backgroundColor="gray";
-    }
-  }
-  var date_array = date_filler(start_date_tag.value,end_date);
-  var i;
-  for(i = 0; i<date_array.length; i++){
-    if( document.getElementById(id+"_"+date_array[i])===null){
-      continue;
-    }
-    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
-    if (check_if_no_work(date_array[i],5)==false){
-      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
-    }
-    }
-  }
-})
-
-//////////////////////////////////////////////////////////////////////////////
-$(document).on('change','#duration', function(){
-  var duration_value = this.value;
-
-})
-//////////////////////////////////////////////////////////////////////////////
-function form_to_schedule(this_tag){
-var parent_element = this_tag.parentElement.parentElement;
-var id = document.getElementById("main_id").innerHTML;
-var activity_title = document.getElementById("activity_title_input").value;
-var start_date = document.getElementById("start_date_input_box").value;
-var start_date_format = date_format_changer(start_date);// start_date.split("-")[1]+"/"+start_date.split("-")[2];
-var end_date = document.getElementById("end_date_input_box").value;
-var end_date_format = date_format_changer(end_date); // end_date.split("-")[1]+"/"+end_date.split("-")[2];
-var duration = document.getElementById("duration").value;
-var party_involved = document.getElementById("party_involved_box").value;
-////Need to add section for Relationships once relationships are figured out///
-var id_array= document.getElementById("main_id").getAttribute("name");
-var main_id = id_array.split("_")[0];
-
-//Adds the Main Activity Title
-document.getElementById("name_"+id).innerHTML=activity_title;
-document.getElementById("sdate_"+id).innerHTML=start_date_format;
-document.getElementById("sdate_"+id).setAttribute("name",start_date);
-document.getElementById("edate_"+id).innerHTML=end_date_format;
-document.getElementById("edate_"+id).setAttribute("name",end_date);
-document.getElementById("contractor_"+id).innerHTML=party_involved;
-document.getElementById("duration_"+id).innerHTML=duration;
-var action = document.getElementById("box").getAttribute("name");
-if ( action == "new"){
-$.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
-}
-else{
-  $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
 }
 
-removeAllChildNodes(parent_element);
-$('#main_page').removeAttr('style');
-return false;
-}
-//////////////////////////////////////////////////////////////////////////////////
-function place_values_in_subactivity_box(values_array){
-  ////////value_array = [activity_title,start_date,end_date,duration,party_involved] format for dates is yyyy-mm-dd;
-  document.getElementById("activity_title_input").value = values_array[0];
-  document.getElementById("start_date_input_box").value=values_array[1];
-  document.getElementById("end_date_input_box").value = values_array[2];
-  document.getElementById("duration").value=values_array[3];
-  document.getElementById("party_involved_box").value=values_array[4];
-}
+
+
+
+
 
 ////
 
@@ -1334,7 +1509,7 @@ else if(action=='delete_main_activity') {
 }
   
 
-}
+
 
 
   ////Delete Activity/////

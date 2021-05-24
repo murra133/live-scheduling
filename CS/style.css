@@ -247,7 +247,8 @@ width: 98%;
 float:left;
 position:relative;
 top: 2vh;
-overflow: hidden;
+overflow: inherit;
+
 }
 
 .sub{
@@ -258,6 +259,7 @@ overflow: hidden;
 .sub h3{
     font-size: 1vw;
 }
+
 
 .sub h5{
     font-size: .85vw;
@@ -272,6 +274,7 @@ overflow: hidden;
 
 .sub_activity_id{
     width:2%;
+    display: none;
 }
 .sub_activity_name{
     width:22.5%;
@@ -338,11 +341,22 @@ width:95%;
     border-style: solid;
     border-width: 0px 1px 1px 1px;
     padding:.2vw;
-    font-size:small;
+    font-size:.7vw!important;
     margin-bottom: auto;
     width:4vw;
     text-align: center;
     }
+
+    .day{
+        display:inline-block;
+        border-style: solid;
+        border-width: 0px 1px 1px 1px;
+        padding:.2vw;
+        font-size:.7vw!important;
+        margin-bottom: auto;
+        width:4vw;
+        text-align: center;
+        }
     
 
 .date_box{
@@ -366,6 +380,7 @@ height: 3.087vh;
     overflow: auto;
     position: relative;
     left: 2%;
+    bottom: 3.12vh;
 }
 
 

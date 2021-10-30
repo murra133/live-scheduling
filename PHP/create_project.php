@@ -113,6 +113,13 @@ $stmt = ("CREATE TABLE Relationship_".$project_id['Project_id']."(
     ON UPDATE CASCADE ON DELETE CASCADE)");
     mysqli_query($link,$stmt);
 
+    $stmt = ("CREATE TABLE holidays_".$project_id['Project_id']."(
+        Holiday_id int NOT NULL AUTO_INCREMENT,
+        HolidayName varchar(255) NOT NULL,
+        HolidayDate varchar(255) NOT NULL
+        PRIMARY KEY (Holiday_id)");
+        mysqli_query($link,$stmt);
+
 
 
 echo $project_id['Project_id'];

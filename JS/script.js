@@ -600,6 +600,8 @@ function input_edit(input_tag){
     input.setAttribute('type','number');
     input.setAttribute('id',id_);
     input.setAttribute('class',class_);
+    input.setAttribute('onChange','field_edit(this)')
+    input.value = HTML
     input_tag.replaceWith(input)
   }
   else if(class_type == 'sub_contractor'){
@@ -645,6 +647,14 @@ function field_edit(input_tag){
 
   }
   else if(class_type == 'sub_contractor'){
+    var input = document.createElement('h5');
+    input.setAttribute('class',class_);
+    input.setAttribute('id',id_);
+    input.setAttribute('onClick','input_edit(this)')
+    input.innerHTML = HTML;
+    input_tag.replaceWith(input)
+  }
+  else if(class_type == "sub_duration"){
     var input = document.createElement('h5');
     input.setAttribute('class',class_);
     input.setAttribute('id',id_);
@@ -1397,8 +1407,7 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
   console.log(date)
   console.log(e_date)
   while(date != e_date){
-    // console.log(date)
-
+    console.log(date)
     var flag = 0;
     for (var w=0;w<workweek.length;w++){
       for(var h=0;h<holidays_array.length;h++){
@@ -1411,8 +1420,10 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
     if (flag == 0){
       duration = duration + 1;
     }
-    date = date = date + 86400000;
+    date = date + 86400000;
     day = (new Date(date)).getDay();
+    console.log(duration)
+    console.log(e_date)
   }
 
   return (duration+1);
@@ -1494,7 +1505,6 @@ $(document).on('change','#duration', function(){
 ///Checks for Errors between the start date and end date box once the start date box is populated
 ///Checks for Errors between the start date and end date box once the end date box is populated
 $(document).on('change','.sub_edate', function(){
-  console.log('working')
   var end_date = this.value;
   var id = this.id.split("_")[1]
   console.log(id)
@@ -1513,11 +1523,11 @@ $(document).on('change','.sub_edate', function(){
     start_date_tag.innerHTML = date_format_changer(date[1])
   }
   var duration_tag = document.getElementById("duration_"+id);
-  console.log('working')
   var duration = return_duration(start_date_tag.getAttribute('value'),end_date,holidays_date_array,weekend_value);
-  console.log('working')
   duration_tag.setAttribute('value',duration);
   duration_tag.innerHTML=duration
+  console.log('working')
+
   //Fills In Cells corresponding to dates
   var date_all = document.getElementById("bdate_"+id).children;
   for (var j = 0; j<date_all.length; j++){
@@ -1527,6 +1537,7 @@ $(document).on('change','.sub_edate', function(){
       date_j.style.backgroundColor="gray";
     }
   }
+  console.log('working')
   var date_array = date_filler(start_date_tag.getAttribute('value'),end_date);
   console.log('working')
 
@@ -1537,7 +1548,8 @@ $(document).on('change','.sub_edate', function(){
     }
     else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
     if (check_if_no_work(date_array[i],5)==false){
-      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
+      console.log("working")
+      document.getElementById(id+"_"+date_array[i]).style.backgroundColor="gray";
     }
     }
   }

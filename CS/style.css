@@ -239,7 +239,7 @@ border-radius: 5px;
     color: rgb(128,128,128);
 }
 .activity_left{
-text-align: left;
+text-align: center;
 display: block;
 position: relative;
 left:3%;
@@ -253,7 +253,8 @@ transition:width 1s;
 }
 
 .activity_left.collapsed{
-    width:40%
+    width:40%;
+    text-align:center;
 }
 
 .activity_right{
@@ -304,6 +305,7 @@ transition:width 1s;
 .sub_activity_name{
     width:45%;
     transition: width 1s;
+    text-align: left;
 
 }
 .sub_activity_name.collapsed{
@@ -328,6 +330,27 @@ transition:width 1s;
 
 .sub_activity_duration{
     width: 10%;
+    text-align: center;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.sub_duration{
+    position: relative;
+    width: fit-content;
+    display: block;
+    margin: auto;
+
+}
+
+input.sub_duration{
+    width: -webkit-fill-available!important;
+    width: fit-content;
+    text-align: center;
 }
 .sub_activity_contractor{
     width:15%;

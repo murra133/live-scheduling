@@ -137,7 +137,7 @@ h1{
 }
 
 .main_activity_title{
-    width:56.5%;
+    width:54%;
     position:relative;
     left:2%;
  
@@ -238,21 +238,34 @@ border-radius: 5px;
     font-size: 1vw;
     color: rgb(128,128,128);
 }
-.sub_activity{
+.activity_left{
 text-align: left;
 display: block;
 position: relative;
 left:3%;
-width: 98%;
+width: 54%;
 float:left;
 position:relative;
 top: 2vh;
 overflow: inherit;
+transition:width 1s;
 
 }
 
+.activity_left.collapsed{
+    width:40%
+}
+
+.activity_right{
+    display: block;
+    position: relative;
+    width:45%;
+    float: left;
+    left:2%;
+}
+
 .sub{
-    display: inline-block;
+    display: block;
     float:left;
     position: relative;
 }
@@ -263,7 +276,19 @@ overflow: inherit;
 
 .sub h5{
     font-size: .85vw;
-    margin-bottom: 1vh;
+    transition: background-color 500ms;
+    padding: 7px;
+    margin-bottom: 0px;
+}
+.sub h5:hover{
+    cursor: pointer;
+    background-color: lightgray;
+    border-radius: 4px;
+
+}
+
+.sub input{
+    font-size: .85vw;
 }
 
 .sub i{
@@ -277,24 +302,44 @@ overflow: inherit;
     display: none;
 }
 .sub_activity_name{
-    width:22.5%;
+    width:45%;
+    transition: width 1s;
 
+}
+.sub_activity_name.collapsed{
+    width:65%;
 }
 .sub_activity_sdate{
-    width:5.5%;
+    width:10%;
+    transition: width 1s;
 
 }
+.sub_activity_sdate.collapsed{
+    width:14%;
+}
 .sub_activity_edate{
-    width:5.5%;
+    width:10%;
+    transition: width 1s;
 
+}
+.sub_activity_edate.collapsed{
+    width: 14%;
 }
 
 .sub_activity_duration{
-    width: 5.5%;
+    width: 10%;
 }
 .sub_activity_contractor{
-    width:7.5%;
+    width:15%;
 
+}
+
+.sub_activity_edit{
+    width:1.2vw;
+
+}
+.sub_activity_delete{
+    width:1.2vw;
 }
 .sub_id{
     margin-bottom: 22%;
@@ -335,11 +380,21 @@ width:95%;
     padding-left: 40%;
     font-size: 110%;
 }
-
+.cell_dates{
+    position: relative;
+    top:2vh;
+}
+.collapsable_button{
+    display: block;
+    position: relative;
+    float: right;
+    padding-right:2vw;
+    padding-top: 22.39vh;
+}
 .date{
     display:inline-block;
     border-style: solid;
-    border-width: 0px 1px 1px 1px;
+    border-width: 0px 1px 0px 1px;
     padding:.2vw;
     font-size:.7vw!important;
     margin-bottom: auto;
@@ -375,12 +430,11 @@ height: 3.087vh;
 }
 
 .sub_activity_bdate{
-    width:49%;
     white-space: nowrap;
     overflow: auto;
     position: relative;
-    left: 2%;
     bottom: 3.12vh;
+    overflow: scroll;
 }
 
 
@@ -389,7 +443,7 @@ height: 3.087vh;
 /*  Add Sub Activity HTML CSS */
 
 .add_sub_activity_button{
-    margin-left: 4%;
+    margin: 4%;
 }
 
 #activity_title {
@@ -506,6 +560,8 @@ height: 3.087vh;
     font-size: 125%;
 
 }
+
+
 
 /* Response Tablet */
 

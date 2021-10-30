@@ -90,6 +90,26 @@ function standarize_dates_to_UTC(date){
 }
 
 //----------General Scripts End--------//
+function upload_sub_activity(sub_id,action){
+  var values_array = update_sub_activity(sub_id)
+  console.log(values_array)
+  var name = values_array[0]
+  var sdate = values_array[1]
+  var edate = values_array[2]
+  var duration = values_array[3]
+  var party_involved = values_array[4]
+  var sub_id = values_array[5];
+  var action = values_array[6]
+if(action == 'add'){
+  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+}
+else{
+  $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(sub_id), sub_activity:name , start_date:sdate, end_date:edate, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+}
+
+  
+
+  }
 
 function form_to_schedule(this_tag){
   var parent_element = this_tag.parentElement.parentElement;
@@ -108,9 +128,9 @@ function form_to_schedule(this_tag){
   //Adds the Main Activity Title
   document.getElementById("name_"+id).innerHTML=activity_title;
   document.getElementById("sdate_"+id).innerHTML=start_date_format;
-  document.getElementById("sdate_"+id).setAttribute("name",start_date);
+  document.getElementById("sdate_"+id).setAttribute("value",start_date);
   document.getElementById("edate_"+id).innerHTML=end_date_format;
-  document.getElementById("edate_"+id).setAttribute("name",end_date);
+  document.getElementById("edate_"+id).setAttribute("value",end_date);
   document.getElementById("contractor_"+id).innerHTML=party_involved;
   document.getElementById("duration_"+id).innerHTML=duration;
   var action = document.getElementById("box").getAttribute("name");
@@ -143,21 +163,16 @@ function place_values_in_subactivity_box(values_array){
   document.getElementById("party_involved_box").value=values_array[4];
 }
 
-function update_sub_activity(this_tag){
+function update_sub_activity(sub_id){
   ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
-  add_box_blur_background("../HTML/add_sub_activity.html")
-  var sub_id = this_tag.id.split("_")[1];
-  var parent_id = this_tag.parentElement.parentElement.parentElement.id;
   var action = "update"
-  var id_array = [sub_id,parent_id,action]
   var activity_title = document.getElementById("name_"+sub_id).innerHTML;
-  var start_date = document.getElementById("sdate_"+sub_id).getAttribute("name");
-  var end_date = document.getElementById("edate_"+sub_id).getAttribute("name");
+  var start_date = document.getElementById("sdate_"+sub_id).getAttribute("value");
+  var end_date = document.getElementById("edate_"+sub_id).getAttribute("value");
   var duration = document.getElementById("duration_"+sub_id).innerHTML;
   var party_involved = document.getElementById("contractor_"+sub_id).innerHTML;
-  var values_array = [activity_title,start_date,end_date,duration,party_involved];
-  setTimeout(add_id_to_box,150,id_array);
-  setTimeout(place_values_in_subactivity_box,150,values_array);
+  var values_array = [activity_title,start_date,end_date,duration,party_involved,sub_id,action];
+  return values_array
 }
 ////////////////////////////////////////////////////////////////////////////
 //fetch main activity
@@ -225,6 +240,20 @@ $( document ).ready(function() {
                   var edit_div = empty_divs[7];
                   var activity_div = empty_divs[8];
                   var delete_div = empty_divs[9];
+                  var date_div = document.createElement('div');
+                  date_div.setAttribute('class','activity_right');
+                  var action_div = document.createElement('div');
+                  action_div.setAttribute('class','activity_left uncollapsed')
+                  var collapsable_button = document.createElement('div')
+                  collapsable_button.setAttribute('class','collapsable_button')
+                  var c_button = document.createElement('i')
+                  c_button.setAttribute('class','fas fa-ellipsis-v clickable')
+                  c_button.setAttribute('onclick','collapse_activities(this)')
+                  c_button.setAttribute('type','active')
+                  c_button.setAttribute('id','collapse_'+main_id)
+                  collapsable_button.appendChild(c_button)
+
+
 
 
                   ///Gets dates from bdate////
@@ -277,16 +306,20 @@ $( document ).ready(function() {
                     bdate.appendChild(sub_bdate_div);
                     edit_div.appendChild(sub_edit_div);
                     delete_div.appendChild(sub_delete_div);
-                    activity_div.appendChild(id_div);
-                    activity_div.appendChild(name_div);
-                    activity_div.appendChild(sdate_div);
-                    activity_div.appendChild(edate_div);
-                    activity_div.appendChild(duration_div);
-                    activity_div.appendChild(contractor_div);
-                    activity_div.appendChild(edit_div);
-                    activity_div.appendChild(delete_div);
-                    activity_div.appendChild(bdate);
+                    action_div.appendChild(id_div);
+                    action_div.appendChild(name_div);
+                    action_div.appendChild(sdate_div);
+                    action_div.appendChild(edate_div);
+                    action_div.appendChild(duration_div);
+                    action_div.appendChild(contractor_div);
+                    action_div.appendChild(edit_div);
+                    action_div.appendChild(delete_div);
+                    action_div.appendChild(collapsable_button)
+                    date_div.appendChild(bdate);
+                    activity_div.appendChild(action_div)
+                    activity_div.appendChild(date_div);
                     divadd.appendChild(activity_div);
+
 
                     
 
@@ -503,6 +536,126 @@ function delete_main_activity_box(delete_icon_tag){
       setTimeout(display_null,328);
     }
   };
+/////////////////////////////////////////////////////////////////////////
+$(document).ready(function(){
+ $.ajax({
+    url : '../PHP/pull_parties.php',
+    type : 'POST', 
+    data : 'project_id='+window.project_id,  
+    success:function(data){
+      var js_data = JSON.parse(data);
+        party_list = document.createElement('span')
+        for (var i = 0; i < Object.keys(js_data).length; i++){
+          var div_grid = document.createElement('div');
+          var div_project = document.createElement('div');
+          div_grid.className = "col-sm-2";
+          div_project.className = "card overflow-auto";
+          var location = Object.keys(js_data)[i];
+          var main_id = js_data[location]["PARTY_ID"];
+          var main_title = js_data[main_id]['PARTY_NAME'];
+          var party_option = document.createElement("option");
+          party_option.value = main_title;
+          party_option.innerHTML = main_title;
+          party_list.appendChild(party_option);
+          console.log(party_list)
+            ///submit_form(newFields2);
+          }
+
+        
+
+
+        }
+  
+  });
+})
+
+//////////////////////////////////////////////////////////////////////
+function input_edit(input_tag){
+  var id_ = input_tag.id;
+  var class_ = input_tag.getAttribute('class');
+  var class_type = class_.split(' ')[0]
+  var HTML = input_tag.innerHTML
+  console.log(class_type)
+  console.log(class_)
+  if (class_type == 'sub_name'){
+    var input = document.createElement('input');
+    input.setAttribute('type','text');
+    input.setAttribute('id',id_);
+    input.setAttribute('class',class_);
+    input.setAttribute('onChange','field_edit(this)')
+    input.value = HTML;
+    input_tag.replaceWith(input)
+  }
+  else if(class_type=='sub_sdate' || class_type == 'sub_edate'){
+    var input = document.createElement('input');
+    input.setAttribute('type','date');
+    input.setAttribute('id',id_);
+    input.setAttribute('class',class_);
+    input.setAttribute('onChange','field_edit(this)')
+    input.value = input_tag.getAttribute('value');
+    input_tag.replaceWith(input)
+  }
+  else if(class_type == 'sub_duration'){
+    var input = document.createElement('input');
+    input.setAttribute('type','number');
+    input.setAttribute('id',id_);
+    input.setAttribute('class',class_);
+    input_tag.replaceWith(input)
+  }
+  else if(class_type == 'sub_contractor'){
+    var input = document.createElement('select');
+    input.setAttribute('id',id_);
+    input.setAttribute('class',class_);
+    var party_array = party_list.children
+    input.setAttribute('onChange','field_edit(this)')
+    for(var i=0; i<party_array.length;i++){
+      console.log(party_array[i])
+      input.appendChild(party_array[i])
+    }
+    input.value = HTML;
+    input_tag.replaceWith(input)
+  }
+}
+
+////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+function field_edit(input_tag){
+  var id_ = input_tag.id;
+  var class_ = input_tag.getAttribute('class');
+  var class_type = class_.split(' ')[0]
+  var HTML = input_tag.value
+  if (class_type == 'sub_name'){
+    var input = document.createElement('h5');
+    input.setAttribute('class',class_);
+    input.setAttribute('id',id_);
+    input.setAttribute('onClick','input_edit(this)')
+    input.innerHTML = HTML;
+    input_tag.replaceWith(input)
+  }
+  else if(class_type=='sub_sdate' || class_type == 'sub_edate'){
+    var date = date_format_changer(HTML)
+    var input = document.createElement('h5');
+    input.setAttribute('class',class_);
+    input.setAttribute('id',id_);
+    input.setAttribute('onClick','input_edit(this)')
+    input.setAttribute('value',HTML)
+    input.innerHTML = date;
+    input_tag.replaceWith(input)
+
+  }
+  else if(class_type == 'sub_contractor'){
+    var input = document.createElement('h5');
+    input.setAttribute('class',class_);
+    input.setAttribute('id',id_);
+    input.setAttribute('onClick','input_edit(this)')
+    input.innerHTML = HTML;
+    input_tag.replaceWith(input)
+  }
+  setTimeout(function(){
+    upload_sub_activity(id_.split('_')[1])
+  },500)
+}
 //////////////////////////////////////////////////////////////////////
 /*Checks for today's date once the document loads and inputs it onto the start date div*/
   $(document).ready(function start_date_today(){
@@ -725,7 +878,7 @@ $(document).on('change', '#start_date_input', function(){
 
 function date_format_changer(date){
   ///input date yyyy-mm-dd output mm/dd////////
-  var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0];
+  var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0].split('0')[1];
   return formatted_date;
 }
   //////////////////////////////////////////////////////////////////////////////
@@ -931,7 +1084,7 @@ function cancel_main_activity(cancel_tag){
 
     /* Add Duration */
     var duration_div = document.createElement('div');
-    duration_div.setAttribute("class","sub_activity_duration sub")
+    duration_div.setAttribute("class","sub_activity_duration collapsable sub")
     var duration_title = document.createElement("h3");
     duration_title.setAttribute("class","duration_title");
     duration_title.innerHTML="Duration";
@@ -939,7 +1092,7 @@ function cancel_main_activity(cancel_tag){
 
     /* Add Party Invloved */
     var contractor_div = document.createElement('div');
-    contractor_div.setAttribute("class","sub_activity_contractor sub")
+    contractor_div.setAttribute("class","sub_activity_contractor collapsable sub")
     var contractor_title = document.createElement("h3");
     contractor_title.setAttribute("class","contractor_title");
     contractor_title.innerHTML="Party Involved";
@@ -959,14 +1112,14 @@ function cancel_main_activity(cancel_tag){
 
     /* Add edit to the Activity Location */
     var edit_div = document.createElement('div');
-    edit_div.setAttribute("class","sub_activity_edit sub")
+    edit_div.setAttribute("class","sub_activity_edit collapsable sub")
     var edit_empty_title = document.createElement("div");
     edit_empty_title.setAttribute("class","edit_icon");
     edit_div.appendChild(edit_empty_title);
 
     // Adds Delete Icon ///
     var delete_div = document.createElement('div');
-    delete_div.setAttribute("class","sub_activity_delete sub")
+    delete_div.setAttribute("class","sub_activity_delete collapsable sub")
     var delete_empty_title = document.createElement("div");
     delete_empty_title.setAttribute("class","delete_icon");
     delete_div.appendChild(delete_empty_title);
@@ -994,34 +1147,39 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
 
   /* Create Activity */
   var input_activity = document.createElement("h5");
-  input_activity.setAttribute("class"," sub_name sub_activity_"+id.toString());
+  input_activity.setAttribute("class","sub_name sub_activity_"+id.toString());
   input_activity.setAttribute("id","name_"+id.toString());
+  input_activity.setAttribute('ondblclick','input_edit(this)')
   input_activity.innerHTML=activity_title;
 
    /* Create Start Date */
    var input_sdate = document.createElement("h5");
    input_sdate.setAttribute("class","sub_sdate sub_activity_"+id.toString());
    input_sdate.setAttribute("id","sdate_"+id.toString());
-   input_sdate.setAttribute("name",start_date);
+   input_sdate.setAttribute("value",start_date);
+   input_sdate.setAttribute('ondblclick','input_edit(this)')
    input_sdate.innerHTML = date_format_changer(start_date);
 
    /* Create End Date */
    var input_edate = document.createElement("h5");
    input_edate.setAttribute("class","sub_edate sub_activity_"+id.toString());
    input_edate.setAttribute("id","edate_"+id.toString());
-   input_edate.setAttribute("name",end_date)
+   input_edate.setAttribute("value",end_date)
+   input_edate.setAttribute('ondblclick','input_edit(this)')
    input_edate.innerHTML = date_format_changer(end_date);
 
    //Create Duration//
    var input_duration = document.createElement("h5");
    input_duration.setAttribute("class","sub_duration sub_activity_"+id.toString());
    input_duration.setAttribute("id","duration_"+id.toString());
+   input_duration.setAttribute('ondblclick','input_edit(this)')
    input_duration.innerHTML = duration;
 
      /* Create Contartcor Option */
    var input_contractor = document.createElement("h5");
    input_contractor.setAttribute("class","sub_contractor sub_activity_"+id.toString());
    input_contractor.setAttribute("id","contractor_"+id.toString());
+   input_contractor.setAttribute('ondblclick','input_edit(this)')
    input_contractor.innerHTML = party_involved
 
    var edit = document.createElement("i");
@@ -1227,12 +1385,20 @@ function number_of_days_from_date(date){
 //////////////////////////////////////////////////////////////////////////////
 function return_duration(start_date,end_date,holidays_array,weekend_days){
   //Input is start_date in yyyy-mm-dd, end_date in yyyy-mm-dd, holidays_array in yyyy-mm-dd, weekend_days
+  console.log(start_date)
+  console.log(end_date)
   var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
   var workweek = weekend_date_transform(weekend_days);
   var duration = 0;
+  console.log(workweek)
+  console.log(holidays_array)
   var date = (standarize_dates_to_UTC(new Date(start_date))).getTime();
   var e_date = (standarize_dates_to_UTC((new Date(end_date)))).getTime();
+  console.log(date)
+  console.log(e_date)
   while(date != e_date){
+    // console.log(date)
+
     var flag = 0;
     for (var w=0;w<workweek.length;w++){
       for(var h=0;h<holidays_array.length;h++){
@@ -1327,24 +1493,32 @@ $(document).on('change','#duration', function(){
 //////////////////////////////////////////////////////////////////////////////
 ///Checks for Errors between the start date and end date box once the start date box is populated
 ///Checks for Errors between the start date and end date box once the end date box is populated
-$(document).on('change','.end_date_input_box', function(){
+$(document).on('change','.sub_edate', function(){
+  console.log('working')
   var end_date = this.value;
-  var start_date_tag = document.getElementById("start_date_input_box");
-
-  if (start_date_tag.value==""){
-    start_date_tag.value=end_date;
+  var id = this.id.split("_")[1]
+  console.log(id)
+  var start_date_tag = document.getElementById("sdate_"+id);
+  console.log(start_date_tag.getAttribute('value'))
+  if (start_date_tag.getAttribute('value')==""){
+    start_date_tag.setAttribute('value',end_date);
+    start_date_tag.innerHTML = date_format_changer(end_date)
   }
 
-  date = sdate_greater_edate(start_date_tag.value,end_date);
+  date = sdate_greater_edate(start_date_tag.getAttribute('value'),end_date);
+  console.log(date[0]+" "+date[1])
 
   if (date.length>1){
-    document.getElementById("start_date_input_box").value=date[1];
+    start_date_tag.setAttribute('value',date[1]);
+    start_date_tag.innerHTML = date_format_changer(date[1])
   }
-  var duration_tag = document.getElementById("duration");
-  var duration = return_duration(start_date_tag.value,end_date,holidays_date_array,weekend_value);
-  duration_tag.value = duration;
+  var duration_tag = document.getElementById("duration_"+id);
+  console.log('working')
+  var duration = return_duration(start_date_tag.getAttribute('value'),end_date,holidays_date_array,weekend_value);
+  console.log('working')
+  duration_tag.setAttribute('value',duration);
+  duration_tag.innerHTML=duration
   //Fills In Cells corresponding to dates
-  var id=document.getElementById("main_id").innerHTML;
   var date_all = document.getElementById("bdate_"+id).children;
   for (var j = 0; j<date_all.length; j++){
     var date_j = date_all[j];
@@ -1353,7 +1527,9 @@ $(document).on('change','.end_date_input_box', function(){
       date_j.style.backgroundColor="gray";
     }
   }
-  var date_array = date_filler(start_date_tag.value,end_date);
+  var date_array = date_filler(start_date_tag.getAttribute('value'),end_date);
+  console.log('working')
+
   var i;
   for(i = 0; i<date_array.length; i++){
     if( document.getElementById(id+"_"+date_array[i])===null){
@@ -1367,22 +1543,25 @@ $(document).on('change','.end_date_input_box', function(){
   }
 })
 
-$(document).on('change','.start_date_input_box', function(){
+$(document).on('change','.sub_sdate', function(){
   var start_date = this.value;
-  var end_date_tag = document.getElementById("end_date_input_box");
+  var id = this.id.split("_")[1]
+  var end_date_tag = document.getElementById("edate_"+id);
 
   if (end_date_tag.value==""){
-    end_date_tag.value=start_date;
+    end_date_tag.setAttribute('value',start_date);
+    end_date_tag.innerHTML = date_format_changer(start_date)
   }
-  date = sdate_greater_edate(start_date,end_date_tag.value);
+  date = sdate_greater_edate(start_date,end_date_tag.getAttribute('value'));
   if (date.length>1){
-    document.getElementById("end_date_input_box").value=date[0];
+    end_date_tag.setAttribute('value',date[0]);
+    end_date_tag.innerHTML = date_format_changer(date[0])
   }
-  var duration = return_duration(start_date,end_date_tag.value,holidays_date_array,weekend_value);
-  var duration_tag = document.getElementById("duration");
-  duration_tag.value = duration;
+  var duration = return_duration(start_date,end_date_tag.getAttribute('value'),holidays_date_array,weekend_value);
+  var duration_tag = document.getElementById("duration_"+id);
+  duration_tag.setAttribute('value',duration);
+  duration_tag.innerHTML = duration
 
-  var id=document.getElementById("main_id").innerHTML;
   var date_all = document.getElementById("bdate_"+id).children;
   for (var j = 0; j<date_all.length; j++){
     var date_j = date_all[j];
@@ -1621,4 +1800,50 @@ function cancel_box(cancel_button_tag){
 $('#main_page').removeAttr('style');
 return false;
 
+}
+
+
+//////////////////////////////////////////////////////////////////////
+function collapse_activities(collapse_button){
+  var action = collapse_button.getAttribute('type');
+  var id = collapse_button.getAttribute('id').split('_')[1];
+  var parent_div = document.getElementById(id);
+  var children_array = parent_div.getElementsByClassName('collapsable')
+  var activities_div = parent_div.getElementsByClassName('activity_left')[0];
+  var name_div = parent_div.getElementsByClassName('sub_activity_name')[0]
+  var sdate_div = parent_div.getElementsByClassName('sub_activity_sdate')[0]
+  var edate_div = parent_div.getElementsByClassName('sub_activity_edate')[0]
+  if (action == 'active'){
+    collapse_button.setAttribute('type','hidden');
+    activities_div.setAttribute('class','activity_left collapsed')
+    name_div.setAttribute('class','sub_activity_name sub collapsed')
+    sdate_div.setAttribute('class','sub_activity_sdate sub collapsed')
+    edate_div.setAttribute('class','sub_activity_edate sub collapsed')
+    setTimeout(function (){
+      for (var i =0; i<children_array.length;i++){
+        console.log(name_div)
+        children_array[i].style.display = 'none'
+    }},0);
+
+    // activities_div.style.width = '40%'
+    // name_div.style.width = '65%'
+    // sdate_div.style.width='14%'
+    // edate_div.style.width='14%'
+  }
+  else{
+    collapse_button.setAttribute('type','active');
+    activities_div.setAttribute('class','activity_left')
+    name_div.setAttribute('class','sub_activity_name sub')
+    sdate_div.setAttribute('class','sub_activity_sdate sub')
+    edate_div.setAttribute('class','sub_activity_edate sub')
+    setTimeout(function (){
+      for (var i =0; i<children_array.length;i++){
+        console.log(name_div)
+        children_array[i].style.display = 'inline-block'
+    }},950);
+    // name_div.style.width = '45%'
+    // sdate_div.style.width='10%'
+    // edate_div.style.width='10%'
+  }
+   
 }

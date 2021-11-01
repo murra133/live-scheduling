@@ -71,14 +71,13 @@ function weekend_date_transform(server_value){
 
 function weekday_name(weekday_value){
   var weekday = new Array(7);
-  weekday[0] = "Sunday";
-  weekday[1] = "Monday";
-  weekday[2] = "Tuesday";
-  weekday[3] = "Wednesday";
-  weekday[4] = "Thursday";
-  weekday[5] = "Friday";
-  weekday[6] = "Saturday";
-  console.log("weekday value="+weekday_value);
+  weekday[6] = "Sunday";
+  weekday[0] = "Monday";
+  weekday[1] = "Tuesday";
+  weekday[2] = "Wednesday";
+  weekday[3] = "Thursday";
+  weekday[4] = "Friday";
+  weekday[5] = "Saturday";
   return(weekday[weekday_value]);
 }
 
@@ -92,7 +91,6 @@ function standarize_dates_to_UTC(date){
 //----------General Scripts End--------//
 function upload_sub_activity(sub_id,action){
   var values_array = update_sub_activity(sub_id)
-  console.log(values_array)
   var name = values_array[0]
   var sdate = values_array[1]
   var edate = values_array[2]
@@ -186,9 +184,6 @@ $( document ).ready(function() {
     data : 'project_id='+window.project_id+'&register_id='+window.register_id,     
     success:function(data){
       var js_data_level = JSON.parse(data);
-      console.log(window.project_id);
-      console.log(window.register_id);
-      console.log(js_data_level['admin_level']);
       if(js_data_level['admin_level']<4){
           $.ajax({
             url : '../PHP/pull_activity.php',
@@ -281,21 +276,7 @@ $( document ).ready(function() {
                     var sub_delete_div = filled_divs[8];
 
                     var date_array = date_filler(sub_start_date, sub_end_date);
-                    for (var z=0; z <sub_bdate_div.children.length;z++){
-            
-                      var n;
-                      for(n = 0; n<date_array.length; n++){
-                        if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
-                          sub_bdate_div.children[z].style.backgroundColor="gray";
-                        }
-                        if(sub_bdate_div.children[z].id===(sub_id+"_"+date_array[n])){
-                          sub_bdate_div.children[z].style.backgroundColor="green";
-                          if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
-                            sub_bdate_div.children[z].style.backgroundColor="gray";
-                          }
-                        }
-                      }
-                    }
+                    sub_bdate_div = log_dates_to_schedule(date_array,sub_bdate_div,"new")   
 
                     id_div.appendChild(sub_id_div);
                     name_div.appendChild(sub_name_div);
@@ -416,19 +397,7 @@ $( document ).ready(function() {
 
                   var date_array = date_filler(sub_start_date, sub_end_date);
                   for (var z=0; z <sub_bdate_div.children.length;z++){
-            
-                    var n;
-                    for(n = 0; n<date_array.length; n++){
-                      if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
-                        sub_bdate_div.children[z].style.backgroundColor="gray";
-                      }
-                      if(sub_bdate_div.children[z].id===(sub_id+"_"+date_array[n])){
-                        sub_bdate_div.children[z].style.backgroundColor="green";
-                        if (check_if_no_work(sub_bdate_div.children[z].id.split("_")[1],5)==false){
-                          sub_bdate_div.children[z].style.backgroundColor="gray";
-                        }
-                      }
-                    }
+                      log_dates_to_schedule(date_array,sub_bdate_div,'new')
                   }
 
                   id_div.appendChild(sub_id_div);
@@ -491,7 +460,6 @@ $( document ).ready(function() {
       success:function(data){
         var settings = JSON.parse(data);
         weekend_value = settings['WorkWeek'];
-        console.log("weekend_value="+weekend_value)
       }})
 
 
@@ -557,7 +525,6 @@ $(document).ready(function(){
           party_option.value = main_title;
           party_option.innerHTML = main_title;
           party_list.appendChild(party_option);
-          console.log(party_list)
             ///submit_form(newFields2);
           }
 
@@ -575,8 +542,6 @@ function input_edit(input_tag){
   var class_ = input_tag.getAttribute('class');
   var class_type = class_.split(' ')[0]
   var HTML = input_tag.innerHTML
-  console.log(class_type)
-  console.log(class_)
   if (class_type == 'sub_name'){
     var input = document.createElement('input');
     input.setAttribute('type','text');
@@ -611,7 +576,6 @@ function input_edit(input_tag){
     var party_array = party_list.children
     input.setAttribute('onChange','field_edit(this)')
     for(var i=0; i<party_array.length;i++){
-      console.log(party_array[i])
       input.appendChild(party_array[i])
     }
     input.value = HTML;
@@ -737,10 +701,11 @@ function three_week_ahead(bdate_dates,bdate_days){
       bdate_days.appendChild(day_tag);
       dd=dd+1;
   }
-    console.log(bdate_days)
   };
 //////////////////////////////////////////////////////////////////////////////
   /*Takes the start date and end date inputs and fills the respective cells*/
+
+
   function date_filler(sdate,edate){
     var ndd;
     var nmm;
@@ -799,14 +764,55 @@ function three_week_ahead(bdate_dates,bdate_days){
   function check_if_no_work(date,work_days_in_week){
     var dt = new Date(date);
     var day = parseInt(dt.getDay());
-
-    if(day<=(parseInt(work_days_in_week)-1)){
-      return true;
-    }
-    else{
+    if(work_days_in_week.indexOf(day)>=0){
       return false;
     }
+    else{
+      return true;
+    }
   }
+
+function log_dates_to_schedule(date_array,id_handler,action){
+  if (action == 'new'){
+    for(var z = 0; z<id_handler.children.length;z++){
+      date = id_handler.children[z].id.split("_")[1]
+      if (date_array.indexOf(date)>=0){
+        id_handler.children[z].style.backgroundColor ="green";
+      }
+      if (check_if_no_work(date,weekend_date_transform(weekend_value))==false){
+        id_handler.children[z].style.backgroundColor ="gray";
+      }
+
+    }
+    return id_handler
+
+
+  }
+  else if (action=='update'){
+    var id = id_handler.id.split("_")[1]
+    var date_all = document.getElementById("bdate_"+id).children;
+    for (var j = 0; j<date_all.length; j++){
+      var date_j = date_all[j];
+      date_j.style.backgroundColor = "white";
+      if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
+        date_j.style.backgroundColor="gray";
+      }
+    }
+    for(var i=0;i<date_array.length;i++){
+      if(document.getElementById(id+"_"+date_array[i])!=null){
+        document.getElementById(id+"_"+date_array[i]).style.backgroundColor = 'green'
+        if (check_if_no_work(date_array[i],weekend_date_transform(weekend_value))==false){
+          document.getElementById(id+"_"+date_array[i]).style.backgroundColor = 'gray'
+        }
+  
+      }
+    }
+  
+  }
+
+
+}
+
 //////////////////////////////////////////////////////////////////////////////
     /* Creates the boxes using the respective dates of the Div above*/
   function date_box(this_tag,id,this_dates){
@@ -821,69 +827,6 @@ function three_week_ahead(bdate_dates,bdate_days){
     return (this_tag);
   };
 
-    //////////////////////////////////////////////////////////////////////////////
-/*Checks for updated start date on the input box and updates the start date div*/
-$(document).on('change', '#start_date_input', function(){
-  var new_date= this.value;
-  var dd= new_date.split("-")[2];
-  var mm = new_date.split("-")[1];
-  var yy = new_date.split("-")[0];
-  document.getElementById("start_date").innerHTML=(mm+"/"+dd+"/"+yy);
-
-  /*Updates all existing date cells and their id's*/
-  var cell_dates = document.getElementsByClassName("cell_dates");
-  var cell_days = document.getElementsByClassName("cell_days");
-  for (i=0;i<cell_dates.length;i++){
-    removeAllChildNodes(cell_dates[i]);
-    removeAllChildNodes(cell_days[i]);
-    three_week_ahead(cell_dates[i],cell_days[i]);
-  }
-
-  ///Updates the filler once a date is updated///
-  var sub_id=document.getElementsByClassName("sub_id");
-  var id_array = new Array();
-  for (i=0;i<sub_id.length;i++){
-    id_array[i] = sub_id[i].id;
-  }
-  for (n=0;n<id_array.length;n++){
-    start_date = document.getElementById("sdate_"+id_array[n]).innerHTML;
-    end_date = document.getElementById("edate_"+id_array[n]).innerHTML;
-    start_date_transformed = document.getElementById("sdate_"+id_array[n]).getAttribute("name")
-    end_date_transformed = document.getElementById("edate_"+id_array[n]).getAttribute("name");
-    var box_date = document.getElementById("bdate_"+id_array[n]);
-    removeAllChildNodes(box_date);
-    date_box(box_date,id_array[n],cell_dates[0]);
-    var date_all = box_date.children;
-    for (var j = 0; j<date_all.length; j++){
-      var date_j = date_all[j];
-      date_j.style.backgroundColor = "white";
-      console.log(date_j)
-      if (check_if_no_work(date_j.id.split('_')[1],5)==false){
-        console.log('running Inside')
-        date_j.style.backgroundColor="gray";
-      }
-    }
-    var date_array = date_filler(start_date_transformed, end_date_transformed);
-    var i;
-    for(i = 0; i<date_array.length; i++){
-      ////Add functionality for day changes
-
-      if( document.getElementById(id_array[n]+"_"+date_array[i])===null){
-        console.log(id_array[n]+"_"+date_array[i]);
-
-        continue;
-      }
-      else {
-        
-        document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="green";
-        if (check_if_no_work(date_array[i],5)==false){
-          document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
-        }
-      }
-    }
-  }
-
-  })
 //////////////////////////////////////////////////////////////////////////////
 
 function date_format_changer(date){
@@ -1116,7 +1059,6 @@ function cancel_main_activity(cancel_tag){
     var bdate_dates = document.createElement("div");
     bdate_dates.setAttribute("class","cell_dates");
     three_week_ahead(bdate_dates,bdate_days);
-    console.log(bdate_days)
     bdate.appendChild(bdate_dates);
     bdate.appendChild(bdate_days);
 
@@ -1395,19 +1337,12 @@ function number_of_days_from_date(date){
 //////////////////////////////////////////////////////////////////////////////
 function return_duration(start_date,end_date,holidays_array,weekend_days){
   //Input is start_date in yyyy-mm-dd, end_date in yyyy-mm-dd, holidays_array in yyyy-mm-dd, weekend_days
-  console.log(start_date)
-  console.log(end_date)
   var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
   var workweek = weekend_date_transform(weekend_days);
   var duration = 0;
-  console.log(workweek)
-  console.log(holidays_array)
   var date = (standarize_dates_to_UTC(new Date(start_date))).getTime();
   var e_date = (standarize_dates_to_UTC((new Date(end_date)))).getTime();
-  console.log(date)
-  console.log(e_date)
   while(date != e_date){
-    console.log(date)
     var flag = 0;
     for (var w=0;w<workweek.length;w++){
       for(var h=0;h<holidays_array.length;h++){
@@ -1420,10 +1355,15 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
     if (flag == 0){
       duration = duration + 1;
     }
+
     date = date + 86400000;
+    if((date+3600000==e_date)){
+      date = date+3600000
+    }
+    else if((date-3600000==e_date)){
+      date = date-3600000
+    }
     day = (new Date(date)).getDay();
-    console.log(duration)
-    console.log(e_date)
   }
 
   return (duration+1);
@@ -1432,24 +1372,35 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
 function return_end_date(start_date, duration, holidays_array, weekend_days){
     //Input is start_date in yyyy-mm-dd, duration in number of days, holidays_array in yyyy-mm-dd, weekend_days
     var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
-    var workweek = weekend_date_transform(weekend_days);
+    var weekend = weekend_date_transform(weekend_days);
     var date = (standarize_dates_to_UTC(new Date(start_date))).getTime();
-    var d = 1;
+    var d = 2;
     while(d<=parseInt(duration)){
-      var flag = 0;
-      for (var w=0;w<workweek.length;w++){
-        for(var h=0;h<holidays_array.length;h++){
-          var hol_date = (new Date(holidays_array[h])).getTime();
-          if (day ==workweek[w]||date == hol_date){
-            flag++;
-          }
-        }
-      }
-      if (flag == 0){
-        d=d+1;
-      }
-              date = date = date + 86400000;
+      if(weekend.indexOf(day)>=0){
+        date = date+86400000;
         day = (new Date(date)).getDay();
+        continue
+      }
+      else{
+        d=d+1
+        date = date+86400000;
+        day = (new Date(date)).getDay();
+      }
+
+      // var flag = 0;
+      // for (var w=0;w<workweek.length;w++){
+      //   for(var h=0;h<holidays_array.length;h++){
+      //     var hol_date = (new Date(holidays_array[h])).getTime();
+      //     if (day ==workweek[w]||date == hol_date){
+      //       flag++;
+      //     }
+      //   }
+      // }
+      // if (flag == 0){
+      //   d=d+1;
+      // }
+      //         date = date = date + 86400000;
+      //   day = (new Date(date)).getDay();
     }
     date = new Date(date);
     var dd = String(date.getDate()).padStart(2, '0');
@@ -1460,44 +1411,35 @@ function return_end_date(start_date, duration, holidays_array, weekend_days){
 
 }
 //////////////////////////////////////////////////////////////////////////////
-$(document).on('change','#duration', function(){
-  console.log("running function")
+$(document).on('change','.sub_duration', function(){
   var duration = this.value;
-  var start_date = document.getElementById("start_date_input_box").value;
+  var id = this.id.split("_")[1]
+  var start_date_tag = document.getElementById("sdate_"+id)
   if(start_date == null){
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '/' + dd;
-    document.getElementById("start_date_input_box").value = today;
-    start_date = today;
+    today = yyyy + '-' + mm + '-' + dd;
+    start_date_tag.setAttribute('value',today);
   }
+  var start_date = start_date_tag.getAttribute('value')
   var end_date = return_end_date(start_date,duration,holidays_date_array,weekend_value);
-  document.getElementById("end_date_input_box").value = end_date;
+  document.getElementById("edate_"+id).setAttribute('value',end_date);
+  document.getElementById("edate_"+id).innerHTML = date_format_changer(end_date)
   
 
-  var id=document.getElementById("main_id").innerHTML;
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
-      date_j.style.backgroundColor="gray";
-    }
-  }
+  // var id=document.getElementById("main_id").innerHTML;
+  // var date_all = document.getElementById("bdate_"+id).children;
+  // for (var j = 0; j<date_all.length; j++){
+  //   var date_j = date_all[j];
+  //   date_j.style.backgroundColor = "white";
+  //   if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
+  //     date_j.style.backgroundColor="gray";
+  //   }
+  // }
   var date_array = date_filler(start_date,end_date);
-  var i;
-  for(i = 0; i<date_array.length; i++){
-    if( document.getElementById(id+"_"+date_array[i])===null){
-      continue;
-    }
-    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
-    if (check_if_no_work(date_array[i],5)==false){
-      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
-    }
-    }
-  }
+  log_dates_to_schedule(date_array,this,'update')
 
 })
 //////////////////////////////////////////////////////////////////////////////
@@ -1505,18 +1447,16 @@ $(document).on('change','#duration', function(){
 ///Checks for Errors between the start date and end date box once the start date box is populated
 ///Checks for Errors between the start date and end date box once the end date box is populated
 $(document).on('change','.sub_edate', function(){
+  console.log('working')
   var end_date = this.value;
   var id = this.id.split("_")[1]
-  console.log(id)
   var start_date_tag = document.getElementById("sdate_"+id);
-  console.log(start_date_tag.getAttribute('value'))
   if (start_date_tag.getAttribute('value')==""){
     start_date_tag.setAttribute('value',end_date);
     start_date_tag.innerHTML = date_format_changer(end_date)
   }
 
   date = sdate_greater_edate(start_date_tag.getAttribute('value'),end_date);
-  console.log(date[0]+" "+date[1])
 
   if (date.length>1){
     start_date_tag.setAttribute('value',date[1]);
@@ -1526,35 +1466,20 @@ $(document).on('change','.sub_edate', function(){
   var duration = return_duration(start_date_tag.getAttribute('value'),end_date,holidays_date_array,weekend_value);
   duration_tag.setAttribute('value',duration);
   duration_tag.innerHTML=duration
-  console.log('working')
 
   //Fills In Cells corresponding to dates
   var date_all = document.getElementById("bdate_"+id).children;
   for (var j = 0; j<date_all.length; j++){
     var date_j = date_all[j];
     date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+    if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
       date_j.style.backgroundColor="gray";
     }
   }
-  console.log('working')
   var date_array = date_filler(start_date_tag.getAttribute('value'),end_date);
-  console.log('working')
-
-  var i;
-  for(i = 0; i<date_array.length; i++){
-    if( document.getElementById(id+"_"+date_array[i])===null){
-      continue;
-    }
-    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
-    if (check_if_no_work(date_array[i],5)==false){
-      console.log("working")
-      document.getElementById(id+"_"+date_array[i]).style.backgroundColor="gray";
-    }
-    }
-  }
+  log_dates_to_schedule(date_array,this,'update')
 })
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).on('change','.sub_sdate', function(){
   var start_date = this.value;
   var id = this.id.split("_")[1]
@@ -1578,22 +1503,12 @@ $(document).on('change','.sub_sdate', function(){
   for (var j = 0; j<date_all.length; j++){
     var date_j = date_all[j];
     date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],5)==false){
+    if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
       date_j.style.backgroundColor="gray";
     }
   }
-  var date_array = date_filler(start_date,end_date_tag.value);
-  var i;
-  for(i = 0; i<date_array.length; i++){
-    if( document.getElementById(id+"_"+date_array[i])===null){
-      continue;
-    }
-    else {document.getElementById(id+"_"+date_array[i]).style.backgroundColor="green";
-    if (check_if_no_work(date_array[i],5)==false){
-      document.getElementById(id_array[n]+"_"+date_array[i]).style.backgroundColor="gray";
-    }
-    }
-  }
+  var date_array = date_filler(start_date,end_date_tag.getAttribute('value'));
+  log_dates_to_schedule(date_array,this,'update')
 
 })
 /////////////////////////////////////////////////////////////////////////
@@ -1794,7 +1709,6 @@ function add_function_to_search(function_call){
 }
 
 function push_to_all(){
-  console.log('Push_to_all_Running')
   $.post( "../PHP/push_to_all.php", { project_id:window.project_id});
 }
 
@@ -1833,7 +1747,6 @@ function collapse_activities(collapse_button){
     edate_div.setAttribute('class','sub_activity_edate sub collapsed')
     setTimeout(function (){
       for (var i =0; i<children_array.length;i++){
-        console.log(name_div)
         children_array[i].style.display = 'none'
     }},0);
 
@@ -1850,7 +1763,6 @@ function collapse_activities(collapse_button){
     edate_div.setAttribute('class','sub_activity_edate sub')
     setTimeout(function (){
       for (var i =0; i<children_array.length;i++){
-        console.log(name_div)
         children_array[i].style.display = 'inline-block'
     }},950);
     // name_div.style.width = '45%'

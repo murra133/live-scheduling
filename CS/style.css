@@ -245,8 +245,6 @@ position: relative;
 left:3%;
 width: 54%;
 float:left;
-position:relative;
-top: 2vh;
 overflow: inherit;
 transition:width 1s;
 
@@ -262,7 +260,6 @@ transition:width 1s;
     position: relative;
     width:45%;
     float: left;
-    left:2%;
 }
 
 .sub{
@@ -297,7 +294,12 @@ transition:width 1s;
     margin-bottom: 1vh;
 }
 
+.sub_activity{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+}
 .sub_activity_id{
     width:2%;
     display: none;
@@ -408,11 +410,9 @@ width:95%;
     top:2vh;
 }
 .collapsable_button{
+    padding:1vw;
     display: block;
     position: relative;
-    float: right;
-    padding-right:2vw;
-    padding-top: 22.39vh;
 }
 .date{
     display:inline-block;

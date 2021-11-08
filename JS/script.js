@@ -87,9 +87,27 @@ function standarize_dates_to_UTC(date){
   var standard_date = new Date(time+(offset*60000));
   return standard_date;
 }
-
+//////NEEEED TO WORK ON THIS///////
 //----------General Scripts End--------//
 function upload_sub_activity(sub_id,action){
+if(action == 'add'){
+  var id = sub_id.id.split("_")[1]
+  var array = ['name_','sdate_','edate_','contractor_','duration_','add_'];
+  for(var i = 0; i<array.length;i++){
+    console.log(array[i]+id)
+    all_sub_activities_to_h5(array[i]+id)
+  }
+  var values_array = update_sub_activity(id)
+  var name = values_array[0]
+  var sdate = values_array[1]
+  var edate = values_array[2]
+  var duration = values_array[3]
+  var party_involved = values_array[4]
+  var sub_id = values_array[5];
+  var action = values_array[6]
+  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+}
+else{
   var values_array = update_sub_activity(sub_id)
   var name = values_array[0]
   var sdate = values_array[1]
@@ -98,10 +116,6 @@ function upload_sub_activity(sub_id,action){
   var party_involved = values_array[4]
   var sub_id = values_array[5];
   var action = values_array[6]
-if(action == 'add'){
-  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
-}
-else{
   $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(sub_id), sub_activity:name , start_date:sdate, end_date:edate, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
 }
 
@@ -541,7 +555,6 @@ function date_range_picker(id_,action){
   console.log(id_)
   var start_tag = document.getElementById('sdate_'+id_.split('_')[1])
   var end_tag = document.getElementById('edate_'+id_.split('_')[1])
-  if(action=='update'){
     var start_date = date_format_changer2(start_tag.getAttribute('value'))
     var end_date = date_format_changer2(end_tag.getAttribute('value'))
     $("#"+id_).daterangepicker({
@@ -550,12 +563,13 @@ function date_range_picker(id_,action){
       opens: 'center'
     }, function(start, end, label) {
       console.log('working_Inside')
-      start_tag.setAttribute('value',start.format("YYYY-MM-DD"))
-      start_tag.innerHTML = date_format_changer(start.format('YYYY-MM-DD'))
-      end_tag.setAttribute('value',end.format("YYYY-MM-DD"))
-      end_tag.innerHTML = date_format_changer(end.format('YYYY-MM-DD'))
+
       get_duration(start.format("YYYY-MM-DD"),end.format("YYYY-MM-DD"),id_.split('_')[1])
       if(action=='update'){
+        start_tag.setAttribute('value',start.format("YYYY-MM-DD"))
+        start_tag.innerHTML = date_format_changer(start.format('YYYY-MM-DD'))
+        end_tag.setAttribute('value',end.format("YYYY-MM-DD"))
+        end_tag.innerHTML = date_format_changer(end.format('YYYY-MM-DD'))
         if(id_.split('_')[0]=="sdate"){
           field_edit(start_tag)
         }
@@ -563,23 +577,16 @@ function date_range_picker(id_,action){
           field_edit(end_tag)
         }
     }
-
-    })
-  }
-  else{
-    $("#"+id_).daterangepicker({
-      opens: 'center'
-    }, function(start, end, label) {
-      console.log('working_Inside')
-      start_tag.setAttribute('value',start.format("YYYY-MM-DD"))
+    else{
+      start_tag.setAttribute('value',date_format_changer2(start.format('YYYY-MM-DD')))
       start_tag.innerHTML = date_format_changer(start.format('YYYY-MM-DD'))
-      end_tag.setAttribute('value',end.format("YYYY-MM-DD"))
+      end_tag.setAttribute('value',date_format_changer2(end.format('YYYY-MM-DD')))
       end_tag.innerHTML = date_format_changer(end.format('YYYY-MM-DD'))
-      get_duration(start.format("YYYY-MM-DD"),end.format("YYYY-MM-DD"),id_.split('_')[1])
+    }
 
     })
   }
-}
+
 
 //////////////////////////////////////////////////////////////////////
 function input_edit(input_tag){
@@ -626,7 +633,58 @@ function input_edit(input_tag){
 }
 
 ////////////////////////////////////////////
+function all_sub_activities_to_h5(id_){
+  console.log(id_)
+    var input_tag = document.getElementById(id_)
+    var class_ = input_tag.getAttribute('class');
+    var class_type = class_.split(' ')[0]
+    var HTML = input_tag.value
+    console.log(input_tag)
+    console.log(HTML)
+    if (class_type == 'sub_name'){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+    }
+    else if(class_type=='sub_sdate' || class_type == 'sub_edate'){
+      var HTML = input_tag.getAttribute('value')
+      var date = date_format_changer(HTML)
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.setAttribute('value',HTML)
+      input.innerHTML = date;
+      input_tag.replaceWith(input)
+  
+    }
+    else if(class_type == 'sub_contractor'){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+    }
+    else if(class_type == "sub_duration"){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+    }
+    else if(class_type == "fas"){
+      var input = document.createElement('i');
+      input.setAttribute('class','fas fa-edit edit_sub_icon clickable sub_activity_1004');
+      input.setAttribute('id','edit_'+id_.split[1]);
+      input_tag.replaceWith(input)
 
+    }
+}
 //////////////////////////////////////////////////////////////////////
 function field_edit(input_tag){
   var id_ = input_tag.id;
@@ -884,6 +942,22 @@ function date_format_changer2(date){
     ///input date yyyy-mm-dd output mm/dd/yyyy   ///////
     var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0];
     return formatted_date;
+  }
+
+  function date_standard_to_yyyy_mm_dd_format(date){
+    var dd = (date.getDate()).toString()
+    var mm = (date.getMonth()+1).toString()
+    var yyyy = (date.getFullYear()).toString()
+    if(parseInt(dd)<10){
+      dd="0"+dd
+    }
+    if(parseInt(mm)<10){
+      mm="0"+mm
+    }
+    console.log(dd)
+    var formatted_date = yyyy+"-"+mm+"-"+dd
+    return formatted_date
+
   }
   //////////////////////////////////////////////////////////////////////////////
 /* Adds the Main Activity Line */
@@ -1275,7 +1349,7 @@ function add_sub_activity(this_tag){
    input_sdate.setAttribute("class","sub_sdate sub_activity_"+id.toString());
    input_sdate.setAttribute("id","sdate_"+id.toString());
    input_sdate.setAttribute("onfocus","date_range_picker(this.id,'new')");
-   input.value = 
+   input_sdate.setAttribute('value',date_format_changer2(date_standard_to_yyyy_mm_dd_format(new Date())))
    sdate_parent.appendChild(input_sdate);
 
    /* Create End Date */
@@ -1285,6 +1359,7 @@ function add_sub_activity(this_tag){
    input_edate.setAttribute("class","sub_edate sub_activity_"+id.toString());
    input_edate.setAttribute("id","edate_"+id.toString());
    input_edate.setAttribute("onfocus","date_range_picker(this.id,'new')");
+   input_edate.setAttribute('value',date_format_changer2(date_standard_to_yyyy_mm_dd_format(new Date())))
    edate_parent.appendChild(input_edate);
 
    //Create Duration//
@@ -1293,6 +1368,7 @@ function add_sub_activity(this_tag){
    input_duration.setAttribute('type','number')
    input_duration.setAttribute("class","sub_duration sub_activity_"+id.toString());
    input_duration.setAttribute("id","duration_"+id.toString());
+   input_duration.value=1
    duration_parent.appendChild(input_duration);
 
      /* Create Contartcor Option */
@@ -1301,12 +1377,12 @@ function add_sub_activity(this_tag){
    input_contractor.setAttribute("class","sub_contractor sub_activity_"+id.toString());
    input_contractor.setAttribute("id","contractor_"+id.toString());
    contractor_parent.appendChild(input_contractor);
-  //// Create Edit Button////
+  //// Create Add Button////
    var add_parent= parent_div.getElementsByClassName("sub_activity_edit")[0];
    var add = document.createElement("i");
    add.setAttribute("class","fas fa-check-square add_sub_icon clickable sub_activity_"+id.toString());
    add.setAttribute("id","add_"+id);
-   add.setAttribute("onclick","add_sub_activity(this)")
+   add.setAttribute("onclick","upload_sub_activity(this,'add')")
    add_parent.appendChild(add);
 
    ////Create Delete Button/////
@@ -1553,6 +1629,7 @@ function get_duration(start_date,end_date,id){
   var duration = return_duration(start_date,end_date,holidays_date_array,weekend_value);
   var duration_tag = document.getElementById("duration_"+id);
   duration_tag.setAttribute('value',duration);
+  duration_tag.value = duration
   duration_tag.innerHTML = duration
 
   var date_all = document.getElementById("bdate_"+id).children;

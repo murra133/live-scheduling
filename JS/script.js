@@ -651,13 +651,13 @@ function all_sub_activities_to_h5(id_){
     }
     else if(class_type=='sub_sdate' || class_type == 'sub_edate'){
       var HTML = input_tag.getAttribute('value')
-      var date = date_format_changer(HTML)
+      var date = date_format_changer3(HTML)
       var input = document.createElement('h5');
       input.setAttribute('class',class_);
       input.setAttribute('id',id_);
       input.setAttribute('onClick','input_edit(this)')
-      input.setAttribute('value',HTML)
-      input.innerHTML = date;
+      input.setAttribute('value',date)
+      input.innerHTML = HTML;
       input_tag.replaceWith(input)
   
     }
@@ -941,6 +941,12 @@ function date_format_changer(date){
 function date_format_changer2(date){
     ///input date yyyy-mm-dd output mm/dd/yyyy   ///////
     var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0];
+    return formatted_date;
+  }
+
+  function date_format_changer3(date){
+    ///input date mm/dd/yyyy output yyyy-mm-dd   ///////
+    var formatted_date = date.split("/")[2]+"-"+date.split("/")[0]+"-"+date.split("/")[1];
     return formatted_date;
   }
 

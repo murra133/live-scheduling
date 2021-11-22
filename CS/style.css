@@ -243,7 +243,7 @@ text-align: center;
 display: block;
 position: relative;
 left:3%;
-width: 54%;
+width: 1130px;
 float:left;
 overflow: inherit;
 transition:width 1s;
@@ -251,7 +251,7 @@ transition:width 1s;
 }
 
 .activity_left.collapsed{
-    width:40%;
+    width:920px;
     text-align:center;
 }
 
@@ -263,17 +263,18 @@ transition:width 1s;
 }
 
 .sub{
-    display: block;
+    display: grid;
     float:left;
     position: relative;
 }
 .sub h3{
     font-size: 1vw;
+    margin-bottom: 0px;
 }
 
 
 .sub h5{
-    font-size: .85vw;
+    font-size: 15px;
     transition: background-color 500ms;
     padding: 7px;
     margin-bottom: 0px;
@@ -289,14 +290,8 @@ transition:width 1s;
     font-size: .85vw;
 }
 
-.sub i{
-    font-size: .85vw;
-    margin-bottom: 1vh;
-}
-
 .sub_activity{
     display: flex;
-    justify-content: center;
     align-items: center;
 
 }
@@ -305,7 +300,7 @@ transition:width 1s;
     display: none;
 }
 .sub_activity_name{
-    width:45%;
+    width:500px;
     transition: width 1s;
     text-align: left;
 
@@ -313,26 +308,22 @@ transition:width 1s;
 .sub_activity_name.collapsed{
     width:65%;
 }
-.sub_activity_sdate{
-    width:10%;
-    transition: width 1s;
-
+.sub_activity_actualized{
+    justify-items: center;
+    width:16px
 }
-.sub_activity_sdate.collapsed{
-    width:14%;
-}
-.sub_activity_edate{
-    width:10%;
-    transition: width 1s;
-
-}
-.sub_activity_edate.collapsed{
-    width: 14%;
+.sub_actualized{
+    height:32px
 }
 
 .sub_activity_duration{
-    width: 10%;
+    width: 80px;
     text-align: center;
+}
+
+.sub_activity_date{
+    width:200px;
+
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -350,21 +341,16 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input.sub_duration{
-    width: -webkit-fill-available!important;
-    width: fit-content;
     text-align: center;
+    width: 50%;
 }
 .sub_activity_contractor{
-    width:15%;
+    width:200px;
 
 }
 
-.sub_activity_edit{
-    width:1.2vw;
-
-}
 .sub_activity_delete{
-    width:1.2vw;
+    width:23px;
 }
 .sub_id{
     margin-bottom: 22%;
@@ -382,7 +368,7 @@ input.sub_duration{
 
 }
 .sub_contractor{
-height:120%;
+height:32px;
 width:95%;
 
 }
@@ -401,63 +387,67 @@ width:95%;
 
 .delete_sub_icon{
     display:block !important;
-    padding-bottom: 0.3295vh;
-    padding-left: 40%;
-    font-size: 110%;
+    position: relative;
+    left: 20px;
+    height: 32px;
+    font-size: 15px;
 }
 .cell_dates{
     position: relative;
-    top:2vh;
+    top:40px;
+}
+.cell_days{
+    position: relative;
+    top: 15px;
 }
 .collapsable_button{
     padding:1vw;
     display: block;
     position: relative;
 }
-.date{
+.date, .day{
     display:inline-block;
     border-style: solid;
     border-width: 0px 1px 0px 1px;
-    padding:.2vw;
-    font-size:.7vw!important;
+    font-size:12px!important;
     margin-bottom: auto;
-    width:4vw;
+    height: 32px;
+    width:75px;
     text-align: center;
     }
 
-    .day{
+    /* .day{
         display:inline-block;
         border-style: solid;
         border-width: 0px 1px 1px 1px;
-        padding:.2vw;
-        font-size:.7vw!important;
+        font-size:.12px!important;
         margin-bottom: auto;
-        width:4vw;
+        width:75px;
         text-align: center;
-        }
+        } */
     
 
 .date_box{
     display:inline-block;
     border-style: solid;
     border-width: 1px;
-    padding:1.2vh;
+    padding:10px;
     font-size:small;
     position: relative;
-    width:4vw;
+    width:75px;
+    height: 28px;
+
 }
 
 .sub_bdate{
-height: 3.087vh;
+height: 32px;
 
 }
 
 .sub_activity_bdate{
     white-space: nowrap;
-    overflow: auto;
     position: relative;
     bottom: 3.12vh;
-    overflow: scroll;
 }
 
 

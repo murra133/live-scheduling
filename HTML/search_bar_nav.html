@@ -1,5 +1,8 @@
-<nav class="navbar navbar-light bg-light justify-content-between" >
-        <h5 id = "search_bar_title" class="navbar-brand">Party Involved</h5>
+<nav id="topbar" class="navbar navbar-light bg-light justify-content-between" >
+        <h5 id = "search_bar_title" class="navbar-brand"></h5>
+        <div id="filters" class="btn-group">
+          <button type="button" class="btn dropdown-toggle clickable" onclick="toggle_filters()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Additional Options</button>
+        </div>
         <form class="form-inline">
           <input id="searchbar" class="form-control mr-sm-2" type="search" placeholder="Search for keywords" aria-label="Search">
         </form>
@@ -18,9 +21,35 @@
           </div>
         </div>
       </nav>
-
-      
-
-      <script>
-          update_project_name();
-        </script>
+  <div class = "navbar" id="filter_div">
+    <div id="start_date_div" class="filter">
+      <h8>Schedule Start:</h8>
+      <input id="start_date" type="text" onfocus="start_date_picker(this)" >
+    </div>
+    <div id="date_range_div" class="filter">
+      <h8>Filter by Date Range:</h8>
+      <input id="date_range" type="text" onfocus="filter_date_range(this)" value=''>
+    </div>
+    <div id="viewable_div" class="filter">
+      <h8>Filter by Status:</h8>
+      <select id="viewable" value="1">
+        <option value="1">Only Outsanding Activities</option>
+        <option value="2">Only Actualized Activities</option>
+        <option value="3">All Activities</option>
+        </select>
+    </div>
+    <div id="party_div" class="filter">
+      <h8>Filter by Party:</h8>
+      <select id="party" value="All">
+        <option value="All">Show All</option>
+        </select>
+    </div>
+    <div class="filter">
+      <button onclick="apply_filters()" class="website_button">Apply Filters</button>
+    </div>
+  </div>
+<script>
+  // update_project_name();
+  set_start_date();
+  console.log('runninginside ')
+</script>

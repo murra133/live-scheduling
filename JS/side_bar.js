@@ -60,8 +60,24 @@ function update_project_name(){
 
 function toggle_side_bar(){
 	console.log("running");
+	var side_bar = document.getElementById("sidebarCollapse")
+	var main_page = document.getElementById("main_page")
+	var navbar = document.getElementById("search_navbar")
+	if (side_bar.getAttribute('class')=='btn btn-primary'){
+		side_bar.setAttribute('class','btn btn-primary active')
+		main_page.setAttribute('class','active')
+		navbar.setAttribute('class','active')
+	}
+	else{
+	  side_bar.setAttribute('class','btn btn-primary')
+	  main_page.removeAttribute('class')
+	  navbar.removeAttribute('class')
+
+	}
   $('#sidebar').toggleClass('active');
+
 };
+
 
 
 

@@ -1,5 +1,5 @@
 
-
+/* Navbar Box*/
 #user_account{
     font-size: 2vw;
     margin-right: 3vw;
@@ -22,16 +22,26 @@
 }
 .navbar{
     padding:0rem 1rem!important;
+    transition: all .3s;
+    z-index: 99;
 }
 
 #searchbar{
-    width:400%;
+    width: 900px;
+    position: relative;
+    
+}
+.navbar_active{
+  box-shadow: 0px 0px 5px 0px gray;
 }
 .form-inline{
     display: inline-block!important;
     align-self: center;
 }
 
+
+/* Filter Box*/
+/* Buttons*/
 .clickable:hover{
     cursor: pointer;
     opacity: 50%;
@@ -41,6 +51,37 @@
     cursor: pointer;
 }
 
+
+.website_button {
+  border-radius: 5px;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: rgb(40, 40, 40);
+  opacity: 85%;
+  font-size: .8vw!important;
+  color: #fff;
+  vertical-align: middle;
+  transition: all .2s;
+}
+.website_button:hover{
+   opacity: 100%;
+}
+.website_button:active{
+  filter: invert(1);
+}
+
+
+#message{
+  text-align: center;
+  color: red;
+  font-weight: bolder;
+}
 
 /* The switch - the box around the slider */
 .switch {

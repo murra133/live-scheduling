@@ -40,40 +40,32 @@
         <div id="main_page">
             <div id = "search_navbar">
             </div>
-            <div id="header">
-                <h1 id="main_title">Company Schedule</h1>
-                <div>
-                    <div id="start_date_div">
-                        <a class="btn" data-toggle="collapse" href="#start_date_input" role="button" aria-expanded="false" aria-controls="multiCollapseExample1" onclick="start_date_block_style()">
-                            <i class="far fa-caret-square-down" class="start_date"></i>
-                            <h3 class="start_date">Start Date:</h3>
-                            <h3 class="start_date" id="start_date"></h3>
-                        </a>
-                        <input id="start_date_input" name="yes" type="date" class="collapse">
-                    </div>
-                    <div id="filter_button"></div>
-                    <div id="upload_button">
-                        
-                        <button class="website_button" type="clickable" id="push_all_button" onclick="push_to_all()">Push to All</button>
-                    </div>
-            </div>
-            </div>
+                <div id="header">
+                    <h1 id="main_title">Company Schedule</h1>
+                    <div>
+                        <div id="filter_button"></div>
+                        <div id="upload_button">
+                            
+                            <button class="website_button" type="clickable" id="push_all_button" onclick="push_to_all()">Push to All</button>
+                        </div>
+                </div>
+                </div>
         <!-- Scedule Headers-->
-        <div id="cell">
-            <div id="cell_header">
-                <br>
-            </div>
-                <div id="added_cell">
+            <div id="cell">
+                <div id="cell_header">
+                    <br>
+                </div>
+                    <div id="added_cell">
+
+                    </div>
+
+                    <div id="activity_add">
+                        <div id="main_activity_add" class = "clickable" onclick="add_main_activity()">
+                            <i class="far fa-plus-square">  Add Main Activity</i>
+                        </div>
+                        </div>
 
                 </div>
-
-                <div id="activity_add">
-                    <div id="main_activity_add" class = "clickable" onclick="add_main_activity()">
-                        <i class="far fa-plus-square">  Add Main Activity</i>
-                    </div>
-                    </div>
-
-            </div>
 
 
             </div>

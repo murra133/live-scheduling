@@ -8,27 +8,7 @@ h1{
     text-align: center;
 }
 
-.website_button {
-    border: none;
-    width: 7vw;
-    height: 5vh;
-    margin: auto;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background: #333;
-    font-size: .8vw!important;
-    color: #fff;
-    vertical-align: middle;
- }
 
-#message{
-    text-align: center;
-    color: red;
-    font-weight: bolder;
-}
 #main_title{
     text-align: center;
     display:block;
@@ -50,13 +30,21 @@ h1{
     padding-left: 10rem;
 }
 
-.start_date{
-    display:inline-block;
-    font-size: 1.5vw;
+.filter h2,.filter input{
+    display: inline-block
 }
-#start_date_div{
-    display:inline-block;
-    width: 50%;
+
+#filter_div{
+    height: 65px;
+    background-color: #f3f7fa!important;
+    position: relative;
+    top:-65px;
+    transition:all .5s;
+    z-index: 98
+}
+
+#filter_div.filter_active{
+    top:0px
 }
 
 #main_page{
@@ -107,7 +95,7 @@ h1{
 /* ---------- Main Activity CSS  ------------*/
 .main_activity{
     display:grid;
-    padding-bottom: 3%;
+    padding-bottom: 5px;
 }
 .main_activity_input{
     text-align: left;
@@ -123,7 +111,8 @@ h1{
     left:1vw;
     font-size: 1.2vw;
     color: rgb(128,128,128);
-    padding-top:-6%;
+    top: 20px;
+    margin-bottom: 250px;
 
 }
 #main_activity_add:hover{
@@ -137,16 +126,16 @@ h1{
 }
 
 .main_activity_title{
-    width:54%;
+    width: 1200px;
     position:relative;
-    left:2%;
+    left: 38px;;
  
 
 }
 .main_activity_title > h2{
 text-align: left;
-font-size: 1vw;
-padding:.8vh;
+font-size: 20px;
+padding: 5px;
 color:white;
 background-color: gray;
 width:90%;
@@ -156,22 +145,31 @@ border-radius: 5px;
 }
 .title{
     display: inline-block!important;
+    float: left;
     
 }
 
-
-
-
-.main_edit{
-    padding-left: 1%;
-    float: right;
-
+.main_add{
+    position: relative;
+    font-size: 23px;
+    top: 4px;
+    left: 5px;
 }
 
+
+input.title{
+    width: 90%;
+    position:relative;
+    height: 32px;
+    margin-bottom:8px;
+}
+
+
 .main_delete{
-    padding-left: 1%;
-    float: right;
-    font-size: 108%;
+    position: relative;
+    font-size: 23px;
+    top: 4px;
+    left:10px
 }
 
 
@@ -231,13 +229,26 @@ border-radius: 5px;
     display: block;
     float:left;
     position: relative;
-    left:1vw;
+    left:50px;
     text-align: left;
     position: relative;
     width:50%;
-    font-size: 1vw;
     color: rgb(128,128,128);
 }
+.sub_activity_add i{
+    font-size: 22px;
+}
+
+.error_message{
+    display: block;
+    left:90px;
+    position: relative;
+    float:left;
+    color: red;
+    top:-20px;
+
+}
+
 .activity_left{
 text-align: center;
 display: block;
@@ -267,8 +278,9 @@ transition:width 1s;
     float:left;
     position: relative;
 }
+
 .sub h3{
-    font-size: 1vw;
+    font-size: 20px;
     margin-bottom: 0px;
 }
 
@@ -303,6 +315,7 @@ transition:width 1s;
     width:500px;
     transition: width 1s;
     text-align: left;
+    margin-bottom: 8.2px;
 
 }
 .sub_activity_name.collapsed{
@@ -372,21 +385,12 @@ height:32px;
 width:95%;
 
 }
-.edit_icon{
-    margin-bottom: 3.399vh;
-}
-
-.edit_sub_icon{
-    display:block !important;
-    padding-bottom: 0.3295vh;
-}
-
 .delete_icon{
-    margin-bottom: 3.399vh;
+    margin-bottom: 34px;
 }
 
 .delete_sub_icon{
-    display:block !important;
+    display:block;
     position: relative;
     left: 20px;
     height: 32px;
@@ -416,15 +420,7 @@ width:95%;
     text-align: center;
     }
 
-    /* .day{
-        display:inline-block;
-        border-style: solid;
-        border-width: 0px 1px 1px 1px;
-        font-size:.12px!important;
-        margin-bottom: auto;
-        width:75px;
-        text-align: center;
-        } */
+
     
 
 .date_box{
@@ -455,9 +451,6 @@ height: 32px;
 
 /*  Add Sub Activity HTML CSS */
 
-.add_sub_activity_button{
-    margin: 4%;
-}
 
 #activity_title {
     display:block;
@@ -635,14 +628,11 @@ border-radius: 5px;
 }
 
 /*-------sidebar CSS -----*/
-#sidebar{
-    z-index: 2;
-}
 
 /*-------search bar CSS -----*/
-.navbar{
-    z-index: 1;
-}
+
+
+
 
 .navbar-brand{
     padding-left: 3%

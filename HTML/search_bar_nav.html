@@ -32,10 +32,10 @@
     </div>
     <div id="viewable_div" class="filter">
       <h8>Filter by Status:</h8>
-      <select id="viewable" value="1">
+      <select id="viewable" value="3">
+        <option value="3">All Activities</option>
         <option value="1">Only Outsanding Activities</option>
         <option value="2">Only Actualized Activities</option>
-        <option value="3">All Activities</option>
         </select>
     </div>
     <div id="party_div" class="filter">
@@ -46,6 +46,7 @@
     </div>
     <div class="filter">
       <button onclick="apply_filters()" class="website_button">Apply Filters</button>
+      <button onclick="remove_filters()" class="website_button">Remove Filters</button>
     </div>
   </div>
 <script>

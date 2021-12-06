@@ -496,7 +496,16 @@ $(document).ready(function(){
 
 
         }
-  
+        
+        document.getElementById('party').replaceWith(window.party_list)
+        var input = document.getElementById('party_div').children[1]
+        console.log(input)
+        input.setAttribute('id','party')
+        var show_all = document.createElement('option')
+        show_all.value='All'
+        show_all.innerHTML='Show All'
+        input.appendChild(show_all)
+        input.value = 'All'
   }});
 
 })
@@ -755,43 +764,101 @@ function start_date_picker(date_input_tag){
     }
   });
 };
-
+function remove_filters(remove_button){
+  document.getElementById('date_range').value=''
+  document.getElementById('viewable').value=3
+  document.getElementById('party').value = 'All'
+  apply_filters(remove_button)
+}
 function apply_filters(apply_button){
-  var dates = document.getElementById('date_range').value
   var res_array =[]
-  if(dates!=''){
-    var start_date = dates.split(' ')[0]
-    var end_date = dates.split(' ')[2]
-    res_array=filter_dates(start_date,end_date,res_array)
+  var count ={}
+  var id_array = document.getElementsByClassName('sub_id')
+  var m_activty = document.getElementsByClassName('main_activity')
+  console.log(m_activty)
+  for(var i=0;i<id_array.length;i++){
+    res_array.push(id_array[i].id)
   }
-  else{
-    console.log(dates)
-    var id_array = document.getElementsByClassName('sub_id')
-    for(var i=0;i<id_array.length;i++){
-      res_array.push(id_array[i].id)
+  for(var k=0;k<m_activty.length;k++){
+    count[m_activty[k].id]=0
+  }
+  /////Dates Filter
+  var dates = document.getElementById('date_range').value
+  var return_=filter_dates(dates,res_array,count)
+  res_array=return_[0]
+  count = return_[1]
+  /////Actualized Filter
+  var status = document.getElementById('viewable').value
+  return_= filter_status(status,res_array,count)
+  res_array=return_[0]
+  count = return_[1]
+  ///////Filter by Party
+  var party = document.getElementById('party').value
+  console.log(party)
+  return_ = filter_parties(party,res_array,count)
+  res_array=return_[0]
+  count = return_[1]
+  console.log(res_array)
+  var m_activty = document.getElementsByClassName('main_activity')
+  for (var i = 0; i< m_activty.length;i++){
+    var parent_id = m_activty[i].id
+    var parent_div = m_activty[i]
+    var child_length = parent_div.getElementsByClassName('sub_id').length
+    console.log("Child_leght="+child_length)
+    console.log("Count="+count[parent_id])
+    if (child_length == count[parent_id]){
+      parent_div.setAttribute('style','display:none')
+    }
+    else{
+      parent_div.removeAttribute('style')
     }
   }
-  var status = document.getElementById('viewable').value
-  res_array = filter_status(status,res_array)
+  toggle_filters()
 }
 
-function filter_status(status,res_array){
+function filter_parties(party,res_array,count){
+  var sres_array = []
+  for(var i=0;i<res_array.length;i++){
+    var party_div = document.getElementById('contractor_'+res_array[i])
+    var value = party_div.innerHTML
+    console.log(value)
+    var activity_array = document.getElementsByClassName('sub_activity_'+res_array[i])
+    if (value!=party&&party!='All'){
+      var parent_id =party_div.parentElement.parentElement.parentElement.parentElement.id
+      for(var k=0;k<activity_array.length;k++){
+        activity_array[k].setAttribute('style','display:none')
+      }
+      count[parent_id]++
+      continue
+    }
+    sres_array.push(res_array[i])
+    for(var k=0;k<activity_array.length;k++){
+      activity_array[k].removeAttribute('style')
+    }
+
+
+  }
+  return [sres_array,count]
+}
+function filter_status(status,res_array,count){
   var sres_array=[]
   for(var i=0;i<res_array.length;i++){
     var act_div = document.getElementById('actualized_'+res_array[i])
-    console.log(act_div)
+    var parent_id = act_div.parentElement.parentElement.parentElement.parentElement.id
     var activity_array = document.getElementsByClassName('sub_activity_'+res_array[i])
     if (status==1&&act_div.checked == true){
       for(var k=0;k<activity_array.length;k++){
         activity_array[k].setAttribute('style','display:none')
-        continue
       }
+      count[parent_id]++
+      continue
     }
     else if(status==2&&act_div.checked == false){
       for(var k=0;k<activity_array.length;k++){
         activity_array[k].setAttribute('style','display:none')
-        continue
       }
+      count[parent_id]++
+      continue
     }
     else if((status==3)||(status==1&&act_div.checked==false)||(status==2&&act_div.checked==true)){
       for(var k=0;k<activity_array.length;k++){
@@ -800,31 +867,23 @@ function filter_status(status,res_array){
     }
     sres_array.push(res_array[i])
   }
-  return sres_array
+  console.log(sres_array)
+  return [sres_array,count]
 
 }
 
 
-function filter_dates(start,end,res_array){
+function filter_dates(dates,res_array,count){
+  if (dates==''){
+    return [res_array, count]
+  }
+  var sres_array = []
+  var start = dates.split(' ')[0]
+  var end = dates.split(' ')[2]
   var date_array = document.getElementsByClassName('sub_date')
   var start_val = (new Date(start)).getTime()
   var end_val = (new Date(end)).getTime()
-  var parent_id = 1
-  var n_childs = date_array[0].parentElement.children.length-1
-  var count = 0
   for(var i=0;i<date_array.length;i++){
-    if (parent_id!=date_array[i].parentElement.parentElement.parentElement.parentElement.id){
-
-      if(n_childs==count){
-        document.getElementById(parent_id).setAttribute('style','display:none')
-      }
-      else{
-        document.getElementById(parent_id).removeAttribute('style')
-      }
-      parent_id = date_array[i].parentElement.parentElement.parentElement.parentElement.id
-      n_childs = date_array[i].parentElement.children.length-1
-      count = 0
-    }
     var v_start = (new Date(date_array[i].getAttribute('value').split(' ')[0])).getTime()
     var v_end = (new Date(date_array[i].getAttribute('value').split(' ')[2])).getTime()
     var id_ = date_array[i].getAttribute('id').split('_')[1]
@@ -833,23 +892,19 @@ function filter_dates(start,end,res_array){
       for(var k=0;k<activity_array.length;k++){
         activity_array[k].removeAttribute('style')
       }
-      res_array.push(id_)
+      sres_array.push(id_)
     }
     else{
       for(var k=0;k<activity_array.length;k++){
         activity_array[k].setAttribute('style','display:none')
         
       }
-      count = 1+count
+      var parent_id = date_array[i].parentElement.parentElement.parentElement.parentElement.id
+      count[parent_id]++
     }
   }
-  if(n_childs==count){
-    document.getElementById(parent_id).setAttribute('style','display:none')
-  }
-  else{
-    document.getElementById(parent_id).removeAttribute('style')
-}
-return res_array
+console.log(sres_array)
+return [sres_array, count]
 }
 
 function filter_date_range(date_input_tag){
@@ -1393,9 +1448,9 @@ function download_sub_activity(main_id,sub_id,activity_title,date,duration,party
   }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-function check_for_active_inputs(add_sub_activty_tag){
+function check_for_active_inputs(add_sub_activity_tag){
   /*This function ensures that all inputs are submitted prior to starting a new activty*/
-var main_div = add_sub_activty_tag.parentElement;
+var main_div = add_sub_activity_tag.parentElement;
 var main_id = main_div.id
 var sub_array = main_div.getElementsByClassName('sub')
 if(sub_array[0]!=null){
@@ -1529,7 +1584,7 @@ function add_sub_activity(this_tag){
     //// Create Add Button////
     var add_parent= parent_div.getElementsByClassName("sub_activity_actualized")[0];
     var add = document.createElement("i");
-    add.setAttribute("class","fas fa-check-square add_sub_icon clickable sub_activity_"+id.toString());
+    add.setAttribute("class","far fa-plus-square add_sub_icon clickable sub_activity_"+id.toString());
     add.setAttribute("id","add_"+id);
     add.setAttribute("onclick","upload_sub_activity(this,'add')")
     add_parent.appendChild(add);
@@ -1662,6 +1717,7 @@ $(document).on('change','.sub_duration', function(){
   var date_tag = document.getElementById("date_"+id)
   var dates = date_tag.getAttribute('value')
   var start_date = dates.split(" ")[0]
+  var holidays_date_array = []
   var end_date = return_end_date(start_date,duration,holidays_date_array,weekend_value);
   dates = start_date+" - "+end_date  
   date_tag.setAttribute('value',dates)
@@ -1801,73 +1857,122 @@ return false;
 
 }
 
-function add_title(){
-  document.getElementById("search_bar_title").innerHTML += " Schedule";
-}
+// function add_title(){
+//   document.getElementById("search_bar_title").innerHTML += " Schedule";
+// }
 
-function search_activity() { 
+// function search_activity() { 
+//   let input = document.getElementById('searchbar').value;
+//   input=input.toLowerCase(); 
+//   let x = document.getElementsByClassName('main_activity_title'); 
+//   let y = document.getElementsByClassName('sub_name'); 
+//   let contractor = document.getElementsByClassName('sub_contractor');
+//   /*for (i = 0; i < x.length; i++) {  
+//   } */
+//   if(input==""){
+//     for(var l=0;l<x.length;l++){
+//       x[l].parentElement.removeAttribute('style');
+//     }
+//     for (var m = 0; m < y.length; m++){
+//         y[m].parentElement.parentElement.parentElement.removeAttribute('style','display');
+//         var split = y[m].id.split("_")[1];
+//         var row = document.getElementsByClassName("sub_activity_"+split);
+//         for (var k3=0;k3<row.length;k3++){
+//           row[k3].style.display = "";
+//         }
+//     }
+//   }
+//   else{
+//     for (var i = 0; i < x.length; i++) {  
+//       if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
+//           x[i].parentElement.style.display="none"; 
+//           for (var j = 0; j < y.length; j++){
+//             if (y[j].textContent.toLowerCase().includes(input)||
+//                 contractor[j].textContent.toLowerCase().includes(input)){
+//               var split = y[j].id.split("_")[1];
+//               y[j].parentElement.parentElement.parentElement.removeAttribute('style','display'); 
+//               var row = document.getElementsByClassName("sub_activity_"+split);
+//               for (var p=0;p<row.length;p++){
+//                 row[p].style.removeAttribute('style');
+//               }
+//             }
+//             else{
+//               if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
+//                 var split = y[j].id.split("_")[1];
+//                 var row = document.getElementsByClassName("sub_activity_"+split);
+//                 for (var k=0;k<row.length;k++){
+//                   row[k].style.display = "none";
+//                 }
+//               }
+//               else{
+//                 var split = y[j].id.split("_")[1];
+//                 var row = document.getElementsByClassName("sub_activity_"+split);
+//                 for (var k2=0;k2<row.length;k2++){
+//                   row[k2].style.removeAttribute('style');
+//                 }
+//               }
+//             }
+//           }
+//       } 
+//       else { 
+//           x[i].parentElement.removeAttribute('style');                  
+//       } 
+//     } 
+//   }
+
+// } 
+
+
+function search_activity(){
   let input = document.getElementById('searchbar').value;
-  input=input.toLowerCase(); 
-  let x = document.getElementsByClassName('main_activity_title'); 
-  let y = document.getElementsByClassName('sub_name'); 
-  let date = document.getElementsByClassName('sub_date'); 
-  let contractor = document.getElementsByClassName('sub_contractor');
-  /*for (i = 0; i < x.length; i++) {  
-  } */
-  if(input==""){
-    for(var l=0;l<x.length;l++){
-      x[l].parentElement.removeAttribute('style','display');
-    }
-    for (var m = 0; m < y.length; m++){
-        y[m].parentElement.parentElement.parentElement.removeAttribute('style','display');
-        var split = y[m].id.split("_")[1];
-        var row = document.getElementsByClassName("sub_activity_"+split);
-        for (var k3=0;k3<row.length;k3++){
-          row[k3].style.display = "";
-        }
-    }
+  if(input==''){
+    remove_filters(input)
+    toggle_filters()
+    return
   }
-  else{
-    for (var i = 0; i < x.length; i++) {  
-      if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
-          x[i].parentElement.style.display="none"; 
-          for (var j = 0; j < y.length; j++){
-            if (y[j].textContent.toLowerCase().includes(input)||
-                sdate[j].textContent.includes(input)||
-                edate[j].textContent.includes(input)||
-                contractor[j].textContent.toLowerCase().includes(input)){
-              var split = y[j].id.split("_")[1];
-              y[j].parentElement.parentElement.parentElement.removeAttribute('style','display');; 
-              var row = document.getElementsByClassName(" sub_activity_"+split);
-              for (var p=0;p<row.length;p++){
-                row[p].style.display = "";
-              }
-            }
-            else{
-              if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
-                var split = y[j].id.split("_")[1];
-                var row = document.getElementsByClassName("sub_activity_"+split);
-                for (var k=0;k<row.length;k++){
-                  row[k].style.display = "none";
-                }
-              }
-              else{
-                var split = y[j].id.split("_")[1];
-                var row = document.getElementsByClassName("sub_activity_"+split);
-                for (var k2=0;k2<row.length;k2++){
-                  row[k2].style.display = "";
-                }
-              }
-            }
+  input = input.toLowerCase()
+  let main_title = document.getElementsByClassName('title')
+  console.log(main_title)
+  for(var i=0;i<main_title.length;i++){
+    if(main_title[i].tagName=='I'){
+      continue
+    }
+    var main_id = main_title[i].id.split("_")[1]
+    console.log(main_title[i].tagName)
+    let title = main_title[i].textContent.toLowerCase()
+    if(title.includes(input)){
+      var main_div = document.getElementById(main_id)
+      main_div.removeAttribute('style')
+      continue
+    }
+    else{
+      count = 0
+      let sub_name = document.getElementById(main_id).getElementsByClassName('sub_name')
+      for(var k=0;k<sub_name.length;k++){
+        let activity = sub_name[k].textContent.toLowerCase()
+        let id_ = sub_name[k].id.split("_")[1]
+        let activity_array = document.getElementsByClassName('sub_activity_'+id_)
+        if(activity.includes(input)){
+          for(let z=0;z<activity_array.length;z++){
+            activity_array[z].removeAttribute('style')
           }
-      } 
-      else { 
-          x[i].parentElement.removeAttribute('style','display');                  
-      } 
-    } 
+        }
+        else{
+          for(let z=0;z<activity_array.length;z++){
+            activity_array[z].setAttribute('style','display:none')
+          }
+          count++
+        }
+      }
+      if(count==sub_name.length){
+        document.getElementById(main_id).setAttribute('style','display:none')
+      }
+      else{
+        document.getElementById(main_id).removeAttribute('style')
+      }
+    }
   }
-
-} 
+}
 
 
 

@@ -396,6 +396,14 @@ width:95%;
     height: 32px;
     font-size: 15px;
 }
+
+.add_sub_icon{
+    display:block;
+    position: relative;
+    top: 10px;
+    height: 32px;
+    font-size: 15px;
+}
 .cell_dates{
     position: relative;
     top:40px;

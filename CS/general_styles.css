@@ -53,6 +53,7 @@
 
 
 .website_button {
+  display: inline-block!important;
   border-radius: 5px;
   width: fit-content;
   height: fit-content;

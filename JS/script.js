@@ -93,11 +93,10 @@ function upload_sub_activity(sub_id,action){
   
 if(action == 'add'){
   var parent_id = sub_id.parentElement.parentElement.parentElement.parentElement.id
-  remove_error(parent_id)
+  remove_error('error_'+parent_id)
   var id = sub_id.id.split("_")[1]
   var array = ['name_','date_','contractor_','duration_','add_'];
   for(var i = 0; i<array.length;i++){
-    console.log(array[i]+id)
     all_sub_activities_to_h5(array[i]+id)
   }
   var values_array = update_sub_activity(id)
@@ -108,12 +107,16 @@ if(action == 'add'){
   var party_involved = values_array[3]
   var sub_id = values_array[4];
   var action = values_array[5]
-  console.log(values_array)
   $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(parent_id), sub_activity:name , date:date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  var title = document.getElementById('title_'+parent_id);
+  var r_opt = document.createElement('option')
+  r_opt.setAttribute('value',sub_id+'-'+name)
+  r_opt.setAttribute.innerHTML = title
+  document.getElementById('datalistOptions').append(r_opt)
 }
 else{
   var parent_id = document.getElementById("name_"+sub_id).parentElement.parentElement.parentElement.parentElement.id
-  remove_error(parent_id)
+  remove_error('error_'+parent_id)
   var values_array = update_sub_activity(sub_id)
   var name = values_array[0]
   var date = values_array[1]
@@ -123,6 +126,16 @@ else{
   var action = values_array[5]
   var actualized = values_array[6]
   $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(sub_id), sub_activity:name , date:date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id,actualized:actualized} );
+  var r_opt = document.createElement('option')
+  r_opt.setAttribute('value',sub_id+'-'+name)
+  r_opt.setAttribute.innerHTML = title
+  var data_array = document.getElementById('datalistOptions').children
+  for (var i=0;i<data_array.length;i++){
+    if (data_array[i].value.split('-')[0]==sub_id.toString()){
+      data_array[i].replaceWith(r_opt)
+      return
+    }
+  }
 }
 
   
@@ -143,8 +156,7 @@ function update_sub_activity(sub_id){
     var actualized = 0
     }
 
-  console.log("Actualized="+actualized)
-  var values_array = [activity_title,date,duration,party_involved,sub_id,action,actualized];
+    var values_array = [activity_title,date,duration,party_involved,sub_id,action,actualized];
   return values_array
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -152,6 +164,9 @@ function update_sub_activity(sub_id){
 $( document ).ready(function() {
   window.project_id = cookie_value('project_id');
   window.register_id = cookie_value('Registry_ID');
+  window.relationship_log = {};
+  window.date_log={}
+  window.rel_settings=0
   var admin_level = 1;
   $.ajax({
     url : '../PHP/check_admin_level.php',
@@ -223,7 +238,6 @@ $( document ).ready(function() {
 
 
 
-
                   ///Gets dates from bdate////
                   dates = bdate.getElementsByClassName("cell_dates")[0];
 
@@ -252,7 +266,8 @@ $( document ).ready(function() {
                     var sub_end_date = date_format_changer3(sub_dates.split(" ")[2])
                     var date_array = date_filler(sub_start_date, sub_end_date);
                     sub_bdate_div = log_dates_to_schedule(date_array,sub_bdate_div,"new")   
-
+                    
+                    window.date_log[sub_id]=sub_dates;
                     id_div.appendChild(sub_id_div);
                     name_div.appendChild(sub_name_div);
                     dateval_div.appendChild(sub_date_div);
@@ -275,7 +290,11 @@ $( document ).ready(function() {
                     activity_div.appendChild(collapsable_button)
                     activity_div.appendChild(date_div);
                     divadd.appendChild(activity_div);
-
+                    //Add Values to relationship box
+                    var r_opt = document.createElement('option')
+                    r_opt.setAttribute('value',sub_id+'-'+sub_activity_title)
+                    r_opt.innerHTML = main_title
+                    document.getElementById('datalistOptions').append(r_opt)
 
                     
 
@@ -443,8 +462,21 @@ $( document ).ready(function() {
         var settings = JSON.parse(data);
         weekend_value = settings['WorkWeek'];
       }})
-
-
+      $.ajax({
+        url : '../PHP/pull_relationship.php',
+        type : 'POST',
+        data: 'project_id='+window.project_id,
+        success:function(data){
+          var rel_data = JSON.parse(data);
+          console.log(rel_data);
+          for (let key in rel_data){
+            window.relationship_log[key]=rel_data[key]
+            
+          }
+          console.log(window.relationship_log)
+        }
+      })
+console.log(window.relationship_log)
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
 });
@@ -499,7 +531,6 @@ $(document).ready(function(){
         
         document.getElementById('party').replaceWith(window.party_list)
         var input = document.getElementById('party_div').children[1]
-        console.log(input)
         input.setAttribute('id','party')
         var show_all = document.createElement('option')
         show_all.value='All'
@@ -511,11 +542,11 @@ $(document).ready(function(){
 })
 
 function error_message(message,id){
-  document.getElementById('error_'+id).innerHTML = message
+  document.getElementById(id).innerHTML = message
 }
 
 function remove_error(id){
-  document.getElementById('error_'+id).innerHTML = ''
+  document.getElementById(id).innerHTML = ''
 }
 function date_range_picker(id_,action,value){
     var date_tag = document.getElementById(id_)
@@ -526,10 +557,9 @@ function date_range_picker(id_,action,value){
       "endDate": end_date,
       opens: 'center'
     }, function(start, end, label) {
-      console.log('working_Inside')
-
       get_duration(start.format("YYYY-MM-DD"),end.format("YYYY-MM-DD"),id_.split('_')[1])
       var dates_str = start.format("MM/DD/YYYY")+" - "+end.format("MM/DD/YYYY")
+      window.date_log[id_.split('_')[1]]=dates_str
       date_tag.setAttribute('value',dates_str)
       date_tag.innerHTML = dates_str
       if(action=='update'){
@@ -556,7 +586,6 @@ function input_edit(input_tag){
     input_tag.replaceWith(input)
   }
   else if(class_type=='sub_date'){
-  //   console.log('working')
     var input = document.createElement('input');
     input.setAttribute('type','text');
     input.setAttribute('id',id_);
@@ -596,13 +625,11 @@ function input_edit(input_tag){
 
 ////////////////////////////////////////////
 function all_sub_activities_to_h5(id_){
-  console.log(id_)
     var input_tag = document.getElementById(id_)
     var class_ = input_tag.getAttribute('class');
     var class_type = class_.split(' ')[0]
     var HTML = input_tag.value
-    console.log(input_tag)
-    console.log(HTML)
+
     if (class_type == 'sub_name'){
       var input = document.createElement('h5');
       input.setAttribute('class',class_);
@@ -652,8 +679,6 @@ function field_edit(input_tag){
   var class_ = input_tag.getAttribute('class');
   var class_type = class_.split(' ')[0]
   var HTML = input_tag.value
-  console.log(input_tag)
-  console.log(HTML)
   if (class_type == 'sub_name'){
     var input = document.createElement('h5');
     input.setAttribute('class',class_);
@@ -775,7 +800,6 @@ function apply_filters(apply_button){
   var count ={}
   var id_array = document.getElementsByClassName('sub_id')
   var m_activty = document.getElementsByClassName('main_activity')
-  console.log(m_activty)
   for(var i=0;i<id_array.length;i++){
     res_array.push(id_array[i].id)
   }
@@ -794,18 +818,14 @@ function apply_filters(apply_button){
   count = return_[1]
   ///////Filter by Party
   var party = document.getElementById('party').value
-  console.log(party)
   return_ = filter_parties(party,res_array,count)
   res_array=return_[0]
   count = return_[1]
-  console.log(res_array)
   var m_activty = document.getElementsByClassName('main_activity')
   for (var i = 0; i< m_activty.length;i++){
     var parent_id = m_activty[i].id
     var parent_div = m_activty[i]
     var child_length = parent_div.getElementsByClassName('sub_id').length
-    console.log("Child_leght="+child_length)
-    console.log("Count="+count[parent_id])
     if (child_length == count[parent_id]){
       parent_div.setAttribute('style','display:none')
     }
@@ -821,7 +841,6 @@ function filter_parties(party,res_array,count){
   for(var i=0;i<res_array.length;i++){
     var party_div = document.getElementById('contractor_'+res_array[i])
     var value = party_div.innerHTML
-    console.log(value)
     var activity_array = document.getElementsByClassName('sub_activity_'+res_array[i])
     if (value!=party&&party!='All'){
       var parent_id =party_div.parentElement.parentElement.parentElement.parentElement.id
@@ -867,7 +886,6 @@ function filter_status(status,res_array,count){
     }
     sres_array.push(res_array[i])
   }
-  console.log(sres_array)
   return [sres_array,count]
 
 }
@@ -903,7 +921,6 @@ function filter_dates(dates,res_array,count){
       count[parent_id]++
     }
   }
-console.log(sres_array)
 return [sres_array, count]
 }
 
@@ -965,7 +982,6 @@ function three_week_ahead(bdate_dates,bdate_days){
   var m = 3
   var n;
   var date = document.getElementById("start_date").value;
-  console.log(date)
 
   var dd = parseInt(date.split("/")[1]);
   var mm = parseInt(date.split("/")[0]); 
@@ -1159,6 +1175,20 @@ function date_format_changer2(date){
     var formatted_date = date.split("/")[2]+"-"+date.split("/")[0]+"-"+date.split("/")[1];
     return formatted_date;
   }
+  function date_format_changer4(date){
+    ///input date value in seconds outputs mm/dd/yyyy
+    date = new Date(date)
+    dd = date.getDate()
+    mm = date.getMonth()+1
+    yyyy=date.getFullYear()
+    if (dd<10){
+      dd="0"+dd
+    }
+    if(mm<10){
+      mm='0'+mm
+    }
+    return mm+"/"+dd+"/"+yyyy
+  }
 
   function date_standard_to_yyyy_mm_dd_format(date){
     var dd = (date.getDate()).toString()
@@ -1170,7 +1200,6 @@ function date_format_changer2(date){
     if(parseInt(mm)<10){
       mm="0"+mm
     }
-    console.log(dd)
     var formatted_date = yyyy+"-"+mm+"-"+dd
     return formatted_date
 
@@ -1263,7 +1292,6 @@ function cancel_main_activity(cancel_tag){
     var main_parent_element = add_tag.parentElement.parentElement;
     var input_parent= add_tag.parentElement;
     var input_value= input_parent.children[0].value;
-    console.log(input_parent)
     var id=main_parent_element.id;
     var action = 'add_main_activity'
     var main_div=input_parent.parentElement;
@@ -1291,8 +1319,6 @@ function cancel_main_activity(cancel_tag){
     removeAllChildNodes(main_parent_element)
     main_parent_element.appendChild(divtitle);
     main_parent_element.appendChild(subadd);
-    console.log("id="+id)
-    console.log('main_activty='+input_value)
     $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value, action:action, project_id:window.project_id} );
 
   };
@@ -1457,7 +1483,7 @@ if(sub_array[0]!=null){
   for(var i=1;i<5;i++){
     if(sub_array[i].getElementsByTagName('input')[0]!=null){
       var message = "Error All Values Must Be Submitted Prior To starting New Activty"
-      error_message(message,main_id)
+      error_message(message,'error_'+main_id)
       return false
     }
   }
@@ -1475,7 +1501,7 @@ function add_sub_activity(this_tag){
   else{
     var parent_div=this_tag.parentElement;
     var parent_id=parent_div.id;
-    remove_error(parent_id)
+    remove_error('error_'+parent_id)
     if (parent_div.children.length < 4){
       empty_divs = create_all_sub_activity_divs();
       var id_div = empty_divs[0];
@@ -1555,7 +1581,6 @@ function add_sub_activity(this_tag){
 
     /* Create Start Date */
     var date_parent= parent_div.getElementsByClassName("sub_activity_date")[0];
-    console.log(date_parent)
     var input_date = document.createElement("input");
     input_date.setAttribute('type','text')
     input_date.setAttribute("class","sub_date sub_activity_"+id.toString());
@@ -1670,39 +1695,44 @@ function return_end_date(start_date, duration, holidays_array, weekend_days){
     var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
     var weekend = weekend_date_transform(weekend_days);
     var date = (new Date(start_date)).getTime();
-    var d = 1;
-
-    while(d<=parseInt(duration)){
-      date = date+86400000;
-      if(weekend.indexOf(day)>=0){
-        day = day+1
+    if(duration>0){
+      var d = 1;
+      while(d<parseInt(duration)){
+        date = date+86400000;
+        if(day==6){
+          day=0
+        }
+        else{
+          day = day+1
+        }
+        if(weekend[0] == day || weekend[1]==day){
+        }
+        else{
+          d=d+1
+        }
       }
-      else{
-        d=d+1
-        day = day+1
-      }
-      if(day>6){
-        day=0
-      }
-
-      // var flag = 0;
-      // for (var w=0;w<workweek.length;w++){
-      //   for(var h=0;h<holidays_array.length;h++){
-      //     var hol_date = (new Date(holidays_array[h])).getTime();
-      //     if (day ==workweek[w]||date == hol_date){
-      //       flag++;
-      //     }
-      //   }
-      // }
-      // if (flag == 0){
-      //   d=d+1;
-      // }
-      //         date = date = date + 86400000;
-      //   day = (new Date(date)).getDay();
     }
-    console.log(date)
-    date = new Date(date);
-    console.log(date)
+    else if(duration==0){
+      return start_date
+    }
+    else{
+      d=-1
+      while(d>parseInt(duration)){
+        date = date-86400000;
+        if(day==0){
+          day=6
+        }
+        else{
+          day = day-1
+        }
+        if(weekend[0] == day || weekend[1]==day){
+        }
+        else{
+          d=d-1
+        }
+      }
+    }
+    date = new Date(date)
     var dd = String(date.getDate()).padStart(2, '0');
     var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = date.getFullYear();
@@ -1720,6 +1750,7 @@ $(document).on('change','.sub_duration', function(){
   var holidays_date_array = []
   var end_date = return_end_date(start_date,duration,holidays_date_array,weekend_value);
   dates = start_date+" - "+end_date  
+  window.date_log[id]=dates
   date_tag.setAttribute('value',dates)
   date_tag.innerHTML = dates
 
@@ -1751,7 +1782,6 @@ function get_duration(start_date,end_date,id){
 //////////////////////////////////////////////////////////////////////
 
 $(document).on('change','.sub_actualized',function(){
-  console.log("Working")
   var id = this.getAttribute('id').split("_")[1]
   upload_sub_activity(id,'update')
 })
@@ -1826,7 +1856,6 @@ function delete_selected_items(delete_button_tag){
   
   var action = document.getElementById("delete_box").getAttribute("name");
   var id = document.getElementById("main_id").innerHTML; ////this should be in the respective format ex id = 1001 for sub_id id=1 for main id/////
-  console.log(id)
   var delete_button_parent = document.getElementById('delete_'+id).parentElement;
 
   if (action == 'delete_sub_activity'){
@@ -1932,13 +1961,11 @@ function search_activity(){
   }
   input = input.toLowerCase()
   let main_title = document.getElementsByClassName('title')
-  console.log(main_title)
   for(var i=0;i<main_title.length;i++){
     if(main_title[i].tagName=='I'){
       continue
     }
     var main_id = main_title[i].id.split("_")[1]
-    console.log(main_title[i].tagName)
     let title = main_title[i].textContent.toLowerCase()
     if(title.includes(input)){
       var main_div = document.getElementById(main_id)
@@ -2045,4 +2072,785 @@ function collapse_activities(collapse_button){
     // edate_div.style.width='10%'
   }
    
+}
+
+////////////////   Relationship   //////////////////////
+function relationship_active(relationship_tag){
+  var relationship_box = document.getElementById('relationship')
+  if (relationship_tag.getAttribute('class').split(' ')[1]=='r_active'){
+    relationship_tag.setAttribute('class','website_button')
+    relationship_box.setAttribute('class','relationship')
+    relationship_box.removeAttribute('style')
+    relationship_tag.removeAttribute('style')
+  }
+  else{
+    relationship_tag.setAttribute('class','website_button r_active')
+    relationship_box.setAttribute('class','relationship r_active')
+    update_rel_height()
+
+  }
+}
+
+function update_rel_height(){
+  var relationship_box = document.getElementById('relationship')
+  var relationship_tag = document.getElementById('relationship_button')
+  height = relationship_box.offsetHeight
+  height_button = height+15
+  relationship_box.setAttribute('style','top:calc(100% - '+height+'px);left:0%')
+  relationship_tag.setAttribute('style','top:calc(100% - '+height_button+'px)')
+}
+
+
+function relationship_continue(continue_tag){
+  var input = document.getElementById('relationship_input')
+  var sub_id = input.value.split('-')[0]
+  if (sub_id==''){
+    let message = 'Activty Has Not Been Chosen'
+    error_message(message,'rel_errormsg')
+    update_rel_height()
+    return
+  }
+  remove_error('rel_errormsg')
+  var sub_activity = input.value.split('-')[1]
+  document.getElementById('relationship_title').innerHTML=sub_activity
+  document.getElementById('relationship_title').setAttribute('id','rel_'+sub_id)
+  /////////Relationship Boxes////////////////////////////
+  var activity_h5 = document.createElement('h5')
+  activity_h5.innerHTML='Activity'
+  activity_h5.setAttribute('class','rel_title rel_left')
+  var relationship_h5 = document.createElement('h5')
+  relationship_h5.innerHTML = 'Relationship'
+  relationship_h5.setAttribute('class','rel_title rel_mid')
+  var lag_h5 = document.createElement('h5')
+  lag_h5.innerHTML = 'lag'
+  lag_h5.setAttribute('class','rel_title rel_right')
+  var undo_h5 = document.createElement('div')
+  undo_h5.setAttribute('class','rel_title rel_delete_undo')
+  var title_div = document.createElement('div')
+  title_div.setAttribute('class','rel_row')
+  title_div.appendChild(activity_h5)
+  title_div.appendChild(relationship_h5)
+  title_div.appendChild(lag_h5)
+  title_div.appendChild(undo_h5)
+  var relationship_area = document.createElement('div')
+  relationship_area.setAttribute('class','rel_area')
+  relationship_area.append(title_div)
+  var relationship_area2 = relationship_area.cloneNode(true)
+  /////// Existing Relationships//
+
+
+  ///////Prdecessor//////
+  var div_pre = document.createElement('div')
+  var pre_title = document.createElement('h4')
+  pre_title.innerHTML = 'Predecessor'
+  var add_pre = document.createElement('i')
+  add_pre.setAttribute('class','far fa-plus-square clickable pre_suc')
+  add_pre.setAttribute('onclick','add_predecessor_successor(0,0,'+sub_id+')')
+  add_pre.innerHTML='Add Predecessor'
+  div_pre.append(pre_title)
+  div_pre.append(relationship_area2)
+  div_pre.append(add_pre)
+  /////Successor//////////////
+  var div_suc = document.createElement('div')
+  var suc_title = document.createElement('h4')
+  suc_title.innerHTML = 'Successor'
+  var add_suc = document.createElement('i')
+  add_suc.setAttribute('class','far fa-plus-square clickable pre_suc')
+  add_suc.setAttribute('onclick','add_predecessor_successor(1,0,'+sub_id+')')
+  add_suc.innerHTML='Add Successor'
+  div_suc.append(suc_title)
+  div_suc.append(relationship_area)
+  div_suc.append(add_suc)
+  var rel_bot_div = document.getElementById('relationship_bottom')
+  window.rel_data = rel_bot_div.children[1].cloneNode(true)
+  removeAllChildNodes(rel_bot_div)
+  rel_bot_div.append(div_pre)
+  rel_bot_div.append(div_suc)
+  rel_bot_div.append(window.rel_data)
+
+  ////Buttons////////////////
+  var submit = document.createElement('button')
+  submit.setAttribute('class','website_button clickable')
+  submit.innerHTML = "Submit"
+  submit.setAttribute('onclick','update_relationship_log('+sub_id+')')
+  var cancel = document.createElement('button')
+  cancel.setAttribute('class','website_button clickable')
+  cancel.innerHTML = "Cancel"
+  cancel.setAttribute('onclick','rel_cancel(1)')
+  continue_tag.parentElement.append(cancel)
+  continue_tag.replaceWith(submit)
+  if(window.relationship_log[parseInt(sub_id)]!=null){
+    for(let i in window.relationship_log[parseInt(sub_id)]){
+      for(let k in window.relationship_log[parseInt(sub_id)][i]){
+        add_predecessor_successor(i,k,sub_id)
+      }
+
+    }
+  }
+
+
+  ////////Update Relationship Box/////////////
+  update_rel_height()
+}
+
+function rel_del_undo(action,undo_tag,loc,id){
+  var rel_row = undo_tag.parentElement
+  rel_row.className = 'rel_row rel-'+loc
+  var activity = rel_row.children[0]
+  var rel_inp = rel_row.children[1]
+  var lag_inp = rel_row.children[2]
+  if (rel_row.id==''){
+    if(loc ==0){
+      loc_a= 1
+    }
+    else{
+      loc_a=0
+    }
+    rel_row.remove()
+    return
+  }
+  else{
+    var rel_id = rel_row.id.split('_')[1]
+  }
+  var child_id = window.relationship_log[id][loc][rel_id]['sub_id']
+  var child = child_id+'-'+document.getElementById('name_'+child_id).innerHTML
+  var rel = window.relationship_log[id][loc][rel_id]['Rel']
+  var lag = window.relationship_log[id][loc][rel_id]['Lag']
+  activity.value = child
+  rel_inp.value = rel
+  lag_inp.value = lag
+  if(action=='Delete'){
+    activity.className=activity.className+' rel_delete'
+    rel_inp.className=rel_inp.className+' rel_delete'
+    lag_inp.className=lag_inp.className+' rel_delete'
+    undo_tag.className = 'fas fa-undo-alt rel_delete_undo clickable'
+    undo_tag.setAttribute('onclick','rel_del_undo("Undo",this,'+loc+','+id+')')
+  }
+  else{
+    activity.className='rel_left'
+    rel_inp.className='rel_mid'
+    lag_inp.className='rel_right'
+    undo_tag.setAttribute('class','far fa-minus-square rel_delete_undo clickable')
+    undo_tag.setAttribute('onclick','rel_del_undo("Delete",this,'+loc+','+id+')')
+  }
+
+}
+function add_predecessor_successor(loc,relationship_id,id){
+/////Takes inputs for box whether predecessor:0 or successor:1, relationship_id... 0 if none, and id of activity
+  ///Activity////
+  var activity = document.createElement('input')
+  activity.setAttribute('list','datalistOptions')
+  activity.setAttribute('class','rel_left')
+  ///Relationship////
+  var relationship = document.createElement('select')
+  relationship.setAttribute('class','rel_mid')
+  var fs = document.createElement('option')
+  var sf = fs.cloneNode(true)
+  var ff = fs.cloneNode(true)
+  var ss = fs.cloneNode(true)
+  fs.value=0
+  fs.innerHTML = "Finsih Start"
+  sf.value = 1
+  sf.innerHTML = "Start Finish"
+  ff.value = 2
+  ff.innerHTML = "Finish Finish"
+  ss.value = 3
+  ss.innerHTML = "Start Start"
+  relationship.append(fs,sf,ff,ss)
+  ////Lag/////
+  var lag = document.createElement('input')
+  lag.setAttribute('class','rel_right')
+  lag.setAttribute('type','number')
+  var undo = document.createElement('i')
+  undo.setAttribute('class','far fa-minus-square rel_delete_undo clickable')
+  undo.setAttribute('onclick','rel_del_undo("Delete",this,'+loc+','+id+')')
+  let row = document.createElement('div')
+  row.setAttribute('class','rel_row')
+
+
+  if(relationship_id!=0){
+    let sub_id = window.relationship_log[id][loc][relationship_id]['sub_id']
+    let rel_type = window.relationship_log[id][loc][relationship_id]['Rel']
+    let lag_val = window.relationship_log[id][loc][relationship_id]['Lag']
+    row.setAttribute('id','rel_'+relationship_id)
+    activity.setAttribute('id','relact_'+sub_id)
+    activity.value = sub_id+'-'+document.getElementById('name_'+sub_id).innerHTML
+    lag.value = lag_val
+    relationship.value = rel_type
+  }
+  else{
+
+    lag.value=0
+  }
+  row.setAttribute('class','rel_row rel-'+loc)
+  row.append(activity)
+  row.append(relationship)
+  row.append(lag)
+  row.append(undo)
+  var relationship_area = document.getElementsByClassName('rel_area')[loc]
+  // var mid = document.getElementsByClassName('rel_mid')[loc]
+  // var right = document.getElementsByClassName('rel_right')[loc]
+  // left.append(activity)
+  // mid.append(relationship)
+  // right.append(lag)
+  relationship_area.appendChild(row)
+  // if (left.offsetHeight>250){
+  //   var top = left.offsetHeight-230
+  //   left.setAttribute('style','top:36px')
+  //   mid.setAttribute('style','top:'+top+"px")
+  //   right.setAttribute('style','top:'+top+"px")
+  // }
+  update_rel_height()
+}
+
+function rel_cancel(action){
+  if (document.getElementsByClassName('rel_0')!=null & action==0){
+  }
+  let top = document.createElement('h3')
+  top.id = 'relationship_title'
+  top.innerHTML = "Choose an Activity"
+  let datalist = document.getElementById('datalistOptions').cloneNode(true)
+  let input = document.createElement('input')
+  input.setAttribute('id','relationship_input')
+  input.setAttribute('class','form-control')
+  input.setAttribute('placeholder','Type to search...')
+  input.setAttribute('list','datalistOptions')
+  let apply = document.createElement('button')
+  apply.setAttribute('class','website_button')
+  apply.setAttribute('onclick','relationship_continue(this)')
+  apply.innerHTML='Continue'
+  let top_div = document.getElementById('relationship_top')
+  let bot_div = document.getElementById('relationship_bottom')
+  let button_div = document.getElementById('relationship_apply')
+  removeAllChildNodes(top_div)
+  removeAllChildNodes(bot_div)
+  removeAllChildNodes(button_div)
+  top_div.appendChild(top)
+  bot_div.appendChild(input)
+  bot_div.appendChild(datalist)
+  button_div.appendChild(apply)
+  remove_error('rel_errormsg')
+  update_rel_height()
+
+}
+
+$(document).on('change','.rel_row',function(){
+  this.className = this.className+' rel_change'
+})
+
+function update_relationship_log(id){
+  remove_error('rel_errormsg')
+  let pre_array = document.getElementsByClassName('rel-0')
+  let post_array = document.getElementsByClassName('rel-1')
+  console.log(post_array)
+  var dict = {}
+  var new_=0
+  dict[id]={0:{},1:{}}
+  var pre_id_log = []
+  var n_pre_id = []
+  var post_id_log = []
+  var delete_rel =''
+  /////Pre Array//////
+  for(var i=0;i<pre_array.length;i++){
+    var pre_id = pre_array[i].children[0].value.split('-')[0]
+    if(pre_id==''){
+      let message = 'All Input Fields must be Filled Prior to Submitting'
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else if(pre_id_log.includes(pre_id)){
+      let message = "Input '"+pre_id+"' has been inputted twice"
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else{
+      pre_id_log.push(pre_id)
+      if(pre_array[i].id!=''){
+        var rel_id = pre_array[i].id.split('_')[1]
+        ////Delete Relationship///
+        if(pre_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+          delete_rel=delete_rel+rel_id+';'
+          continue
+      }
+    }
+      else{
+        var rel_id = 0
+      }
+      var relationship = pre_array[i].children[1].value
+      var lag = pre_array[i].children[2].value
+      if (rel_id==0 & new_==0){
+        n_pre_id.push(pre_id)
+        dict[id][0][0]=[{'sub_id':pre_id,'Rel':relationship,'Lag':lag}]
+        new_=new_+1
+        if (window.relationship_log[pre_id][1]==undefined){
+          window.relationship_log[pre_id][1] = {}
+          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+          console.log(window.relationship_log[pre_id])
+        }
+        else{
+          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+        }
+      }
+      else if(rel_id==0 & new_!=0){
+        dict[id][0][0].push({'sub_id':pre_id,'Rel':relationship,'Lag':lag})
+        n_pre_id.push(pre_id)
+        if (window.relationship_log[pre_id][1]==undefined){
+          window.relationship_log[pre_id][1] = {}
+          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+        }
+        else{
+          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+        }
+
+      }
+      else{
+        dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+      }
+      
+
+    }
+
+  }
+
+
+  /////Post Array///////
+  var new_=0
+  var new_d =0
+  for(var i=0;i<post_array.length;i++){
+    var post_id = post_array[i].children[0].value.split('-')[0]
+    console.log(post_array[i].children[0].className)
+    if(post_id==''){
+      let message = 'All Input Fields must be Filled Prior to Submitting'
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else if(post_id_log.includes(post_id)){
+      let message = "Input '"+post_id+"' has been inputted twice"
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else{
+      post_id_log.push(post_id)
+      if(post_array[i].id!=''){
+        var rel_id = post_array[i].id.split('_')[1]
+      }
+      else{
+        var rel_id = 0
+      }
+      var relationship = post_array[i].children[1].value
+      var lag = post_array[i].children[2].value
+      if (rel_id==0 & new_==0){
+        dict[id][1][0]=[{'sub_id':post_id,'Rel':relationship,'Lag':lag}]
+        new_=new_+1
+      }
+      else if(rel_id==0 & new_!=0){
+        dict[id][1][0].push({'sub_id':post_id,'Rel':relationship,'Lag':lag})
+
+      }
+      else if(post_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+        if(new_d == 0){
+          delete_rel=delete_rel+rel_id+';'
+          dict[id][1][-1] = {}
+          dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag} 
+          new_d = 1
+        }
+        else{
+          delete_rel=delete_rel+rel_id+';'
+          dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+        }
+      }
+      else{
+        dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+      }
+
+    }
+
+  }
+  var datelog = {}
+  var array_answer = relationship_date(dict,id.toString(),1,[id.toString()],datelog)
+  for(let i =0;i<n_pre_id.length;i++){
+    
+    if (Object.keys(window.relationship_log[n_pre_id[i]][1]).length==1){
+      delete window.relationship_log[n_pre_id[i]][1]
+    }
+    else{
+      delete window.relationship_log[n_pre_id[i]][1][-2]
+    }
+
+  }
+  if (array_answer[0]=="Error"||array_answer[0]=="Erro"){
+    error_message(array_answer[1],'rel_errormsg')
+    return
+  }
+
+  else{
+    console.log(delete_rel)
+    ///Deleting at Server/////
+    $.post( "../PHP/delete_relationship.php", { project_id:window.project_id,rel_id:delete_rel});
+    for(var z in Object.keys(array_answer[1])){
+      console.log(array_answer[0])
+      var sub_id = Object.keys(array_answer[1])[z]
+      console.log(sub_id)
+      if(document.getElementById('actualized_'+sub_id).checked == false){
+        ////update Date/////
+        let date = array_answer[1][sub_id]
+        window.date_log[sub_id]=date
+        let doc_date = document.getElementById('date_'+sub_id)
+        doc_date.setAttribute('class','sub_date sub_changed')
+        doc_date.innerHTML = date
+        doc_date.setAttribute('value',date)
+        date_log[sub_id]=date
+        upload_sub_activity(sub_id,'update')
+        let date_array = date_filler(date_format_changer3(date.split(' ')[0]),date_format_changer3(date.split(' ')[2]))
+        log_dates_to_schedule(date_array,sub_id,'update')
+        // doc_date.setAttribute('class','sub_date')
+      }
+    ////Update Relationship////
+    var rel_id = ""
+    var relationship = ""
+    var post_id = ""
+    var pre_id = ""
+    var lag=""
+
+
+    for(var z in Object.keys(dict[id])){
+      loc = dict[id][z]
+      for(var k in Object.keys(loc)){
+        n = Object.keys(loc)[k]
+        i=loc[n]
+        if (n==0){
+          for(var g in Object.keys(i)){
+            rel_id = rel_id+'0;'
+            relationship=relationship+i[g]['Rel']+';'
+            lag = lag+i[g]['Lag']+';'
+            if (z==0){
+              post_id = post_id+id+';'
+              pre_id=pre_id+(i[g]['sub_id'])+';'
+            }
+            else{
+              post_id = post_id+(i[g]['sub_id'])+';'
+              pre_id = pre_id+(id)+';'
+            }
+          }
+        }
+        else{
+          rel_id = rel_id+n+';'
+          relationship=relationship+i['Rel']+';'
+          lag = lag+i['Lag']+';'
+            if (z==0){
+              post_id = post_id+id+';'
+              pre_id=pre_id+(i['sub_id'])+';'
+            }
+            else{
+              post_id = post_id+(i['sub_id'])+';'
+              pre_id = pre_id+(id)+';'
+            }
+          }
+        }
+      }
+    }
+    console.log(pre_id)
+    $.ajax({
+      url : "../PHP/add_relationship.php",
+      type : 'POST',
+      data:{rel_id: rel_id, project_id: window.project_id, relationship:relationship ,parent_id:pre_id, child_id:post_id,lag:lag},
+      success:function(data){
+        $.ajax({
+          url : "../PHP/pull_relationship.php",
+          type : 'POST',
+          data:'project_id='+window.project_id,
+          success:function(data){
+            var rel_data = JSON.parse(data)
+            for (let key in rel_data){
+              window.relationship_log[key]=rel_data[key]
+            }
+            var rel_area = document.getElementsByClassName('rel_area')
+            var rel_title = rel_area[0].children[0]
+            var rel_title2 = rel_title.cloneNode(true)
+            removeAllChildNodes(rel_area[0])
+            removeAllChildNodes(rel_area[1])
+            rel_area[0].appendChild(rel_title)
+            rel_area[1].appendChild(rel_title2)
+            for(let i in window.relationship_log[parseInt(id)]){
+              for(let k in window.relationship_log[parseInt(id)][i]){
+                add_predecessor_successor(i,k,id)
+              }
+            }
+          }
+        })
+
+      }
+    })
+    }
+
+}
+
+function calculate_max_sdate(pre_id,post_id,rel_dict,datelog){
+  var lag = rel_dict['Lag']
+  var relationship = rel_dict['Rel']
+  var dates = datelog[pre_id]
+  var sdate = dates.split(' ')[0]
+  var edate = dates.split(' ')[2]
+  var duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
+  var new_sdate = relationship_sdate(sdate,edate,relationship,lag,duration)
+  return new Date(new_sdate).getTime()
+
+}
+
+function days_skipped(sdate,edate,weekend_days,holidays_array){
+  var day = (new Date(sdate)).getDay();
+  var weekend = weekend_date_transform(weekend_days);
+  var sdate = (new Date(sdate)).getTime()
+  var edate = (new Date(edate)).getTime()
+  var skipped_days = 0
+  while(sdate<edate){
+    sdate = sdate+86400000;
+    if(day==6){
+      day=0
+    }
+    else{
+      day = day+1
+    }
+    if(weekend[0] == day || weekend[1]==day){
+      skipped_days=skipped_days+1
+    }
+      }
+      return skipped_days
+}
+  
+
+function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelog){
+  console.log(original_id)
+  console.log(id_rel_dict)
+  if (document.getElementById('actualized_'+sub_id).checked == true){
+    return [original_id,datelog]
+  }
+  ///input id_rel_dict: dictionary of current id where calculations are to be made, sub_id: id tied to id_rel_dict need predecessor: 1 for need to calculate from predecessor 0 for no need
+  ///original_id: id where all relationship calculations stem for, carrying date log of all changes///
+  //////Predecessor/////////////////
+  if(need_prdecessor==1 & id_rel_dict[sub_id][0]!=undefined){
+    console.log(id_rel_dict[sub_id][0])
+    if(datelog[sub_id]==null & window.rel_settings==1){
+      datelog[sub_id]==window.date_log[sub_id]
+      var og_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
+      var new_sdate = 0
+    }
+    else if(datelog[sub_id]==null & window.rel_settings==0){
+      datelog[sub_id]=0
+      var og_sdate = 0
+      var new_sdate = 0
+    }
+    else{
+      var new_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
+      var og_sdate = new_sdate
+    }
+    
+    for(var z in Object.keys(id_rel_dict[sub_id][0])){
+      var i = Object.keys(id_rel_dict[sub_id][0])[z]
+      //////New Predecessor/////////////
+      if (i==0){
+        for(var k in Object.keys(id_rel_dict[sub_id][0][0])){
+          let loc = id_rel_dict[sub_id][0][0]
+          var pre_id = loc[k]['sub_id']
+          if(datelog[pre_id]==null){
+            datelog[pre_id]==window.date_log[pre_id]
+          }
+          new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc[k],date_log),new_sdate)
+        }
+      }
+      /////////Existing Predecessor//////
+      else{
+        let loc = id_rel_dict[sub_id][0][i]
+        var pre_id = loc['sub_id']
+        new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc,date_log),new_sdate)
+
+      }
+      // original_id.push(pre_id)
+      // if (original_id.indexOf(pre_id)>-1 ){
+      //   let message = "Relationship Loop Created: "
+      //   for(let z=0;z<original_id.length-1;z++){
+      //     var name = document.getElementById('name_'+original_id[z]).innerHTML
+      //     message = message+name+" => "
+      //   }
+      //   var name = document.getElementById('name_'+original_id[z]).innerHTML
+      //   message = message+name
+      //   return ["Error",message]
+      // }
+    }
+    if (og_sdate<new_sdate){
+      console.log(new_sdate)
+      console.log(new Date(new_sdate))
+      new_sdate = date_format_changer4(new_sdate)
+      var duration = parseInt(document.getElementById('duration_'+sub_id).innerHTML)
+      var new_edate = return_end_date(new_sdate,duration,[],weekend_value)
+      datelog[sub_id] =new_sdate+" - "+new_edate
+    }
+
+      }
+/////Successor///////////////
+  if (id_rel_dict[sub_id]==undefined || !(1 in id_rel_dict[sub_id])){
+    console.log(original_id)
+    return [original_id,datelog]
+    }
+
+  if(datelog[sub_id]==null || datelog[sub_id]==0){
+    datelog[sub_id]=window.date_log[sub_id]
+  }
+  for(var z in Object.keys(id_rel_dict[sub_id][1])){
+    var post_loc = id_rel_dict[sub_id][1]
+    var i = Object.keys(post_loc)[z]
+    //// New Successor or Delete Successor/////////
+    if (i==0 || i==-1){
+      for(var k in post_loc[i]){
+        console.log(k)
+        let loc = post_loc[i][k]
+        let post_id = loc['sub_id']
+        console.log(post_id)
+        if (original_id.indexOf(post_id.toString())>-1 ){
+          let message = "Relationship Loop Created: "
+          for(let z=0;z<original_id.length;z++){
+            var name = document.getElementById('name_'+original_id[z]).innerHTML
+            message = message+name+" => "
+          }
+          var name = document.getElementById('name_'+post_id).innerHTML
+          message = message+name
+          return ["Error",message]
+        }
+        ///Delete///
+        if (i==-1){
+            var dict_k = window.relationship_log[post_id]
+            delete dict_k[0][k]
+            var dict_n = {}
+            dict_n[post_id]=dict_k
+            console.log(dict_n)
+            var array_answer = relationship_date(dict_n,post_id,1,original_id,datelog)
+            original_id = array_answer[0]
+            datelog=array_answer[1]
+            console.log(original_id)
+            original_id=original_id.slice(0,-1)
+            if (array_answer[0]=="Error"){
+              return array_answer
+            }
+            
+          
+
+        
+        }
+        ///ADD///
+        else{
+          var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id)
+          if (array_answer[0]=="Error"){
+            return array_answer
+          }
+          original_id = array_answer[0]
+          datelog=array_answer[1]
+          original_id=original_id.slice(0,-1)
+        }
+
+
+      }
+    }
+    ///Existing Successor////////
+    else{
+      let loc = post_loc[i]
+      let post_id = loc['sub_id']
+      console.log(original_id.indexOf(post_id.toString()))
+      if (original_id.indexOf(post_id.toString())>-1 ){
+        let message = "Relationship Loop Created: "
+        for(let z=0;z<original_id.length;z++){
+          var name = document.getElementById('name_'+original_id[z]).innerHTML
+          message = message+name+" => "
+        }
+        var name = document.getElementById('name_'+post_id).innerHTML
+        message = message+name
+        return ["Error",message]
+      }
+      var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id)
+      if (array_answer[0]=="Error"){
+        return array_answer
+      }
+      original_id = array_answer[0]
+      datelog=array_answer[1]
+      original_id=original_id.slice(0,-1)
+      
+  }
+}
+return [original_id,datelog]
+}
+
+function successor_relationship(sub_id,post_id,loc,datelog,original_id){
+  let npost_sdate = calculate_max_sdate(sub_id,post_id,loc,datelog)
+  // if(new Date(date_log[post_id].split(' ')[0]).getTime()<npost_sdate){
+  //   original_id=original_id.slice(0,-1)
+  //   return [original_id,datelog]
+  // }
+  if (datelog[post_id]==null  & window.rel_settings==1){
+    datelog[post_id]=window.date_log[post_id]
+    var post_sdate = (new Date(datelog[post_id].split(' ')[0])).getTime()
+  }
+  else if(datelog[post_id]==null  & window.rel_settings==0){
+    var post_sdate = 0
+  }
+  if (post_sdate<npost_sdate){
+    post_sdate=npost_sdate
+    duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
+    post_edate = return_end_date(npost_sdate,duration,[],weekend_value)
+    datelog[post_id] = date_format_changer4(post_sdate)+" - "+post_edate
+    original_id.push(post_id)
+
+    array_answer = relationship_date(window.relationship_log,post_id,1,original_id,datelog)
+    if (array_answer[0]=="Error"){
+      return array_answer
+    }
+    original_id=original_id.slice(0,-1)
+    datelog = array_answer[1]
+    console.log(original_id)
+  }
+  return [original_id,datelog]
+}
+
+function relationship_sdate(sdate,edate,relationship,lag,duration){
+  lag=parseInt(lag)+1
+    ///relationship must equal FS,SF,SS,FF, lag must be numeric interger, 
+    ///dates to be inputted in mm/dd/yyyy and be from the predecessor, duration is for the successor.
+    if (relationship == 0){//SF
+      return return_end_date(edate,lag,[],weekend_value)
+    }
+    else if (relationship == 3){//SS
+      return return_end_date(sdate,lag,[],weekend_value)
+    }
+    else if (relationship == 1){//SF
+      var finish_date = return_end_date(sdate,lag,[],weekend_value)
+      return return_end_date(finish_date,duration*-1,[],weekend_value)
+    }
+    else if (relationship == 2){//FF
+      var finish_date = return_end_date(edate,lag,[],weekend_value)
+      return return_end_date(finish_date,duration*-1,[],weekend_value)
+    }
+  }
+function convert_to_FS(relationship,lag,parent_sdate, parent_edate,child_duration,skipped_days){
+  ///relationship must equal FS,SF,SS,FF, lag must be numeric interger, dates to be inputted in mm/dd/yyyy.
+  var sdate = new Date(parent_sdate);
+  var edate = new Date(parent_edate);
+  var diff = sdate.getTime()-edate.getTime();
+  var date_diff = diff/(1000*3600*24)+1;
+  if (relationship == 0){
+    return parseInt(lag)+1
+  }
+  else if (relationship == 3){
+    new_lag = parseInt(lag)+date_diff;
+    return new_lag
+  }
+  else if (relationship == 1){
+    new_lag = (parseInt(lag)-parseInt(child_duration)+date_diff);
+    return new_lag
+  }
+  else if (relationship == 2){
+    new_lag = parseInt(lag)-parseInt(child_duration)+1;
+    return new_lag
+  }
 }

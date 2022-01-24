@@ -239,15 +239,7 @@ input.title{
     font-size: 22px;
 }
 
-.error_message{
-    display: block;
-    left:90px;
-    position: relative;
-    float:left;
-    color: red;
-    top:-20px;
 
-}
 
 .activity_left{
 text-align: center;
@@ -337,6 +329,9 @@ transition:width 1s;
 .sub_activity_date{
     width:200px;
 
+}
+.sub_changed{
+    background-color: #006600;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -451,7 +446,7 @@ height: 32px;
 .sub_activity_bdate{
     white-space: nowrap;
     position: relative;
-    bottom: 3.12vh;
+    bottom: 29px;
 }
 
 
@@ -522,12 +517,7 @@ height: 32px;
     top:-21vh;
 }
 
-#relationship{
-    padding-top: 5%;
-    display:inline-block;
-    padding-left: 5%;
-    width:45%;
-}
+
 #relationship_div{
     background-color: white;
     display: block;
@@ -574,6 +564,162 @@ height: 32px;
     font-size: 125%;
 
 }
+
+/*Relationships*/
+
+#main_relationship{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+#relationship_top{
+    display: block;
+    width: 100%;
+    box-shadow:black 0px .2px 0px 0px ;
+}
+#relationship_title{
+    float: left;
+}
+
+#relationship_bottom{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+#relationship_bottom>div{
+    width:48%;
+    box-shadow:black 0.2px 0px 0px 0px ;
+    display: flex;
+    flex-flow: column;
+
+}
+#relationship_bottom:first-child{
+    box-shadow:black 0.2px 0px 0px 0px ;
+}
+#relationship_bottom h4{
+    position: relative;
+    left: -42%;
+    top: -2%;
+}
+
+
+#relationship_input{
+    width:80%;
+    float: left;
+}
+
+#relationship_button{
+    position: fixed;
+    top: 100%;
+    margin-top: -60px;
+    background-color: white;
+    color: black;
+    opacity: 10%;
+    left: 46.5%;
+  }
+  #relationship_button:hover{
+    opacity:100%
+  }
+
+.relationship{
+    position: fixed;
+    justify-content: center;
+    display: flex;
+    padding: 15px;
+    width: 100%;
+    background-color: #f8f9fa!important;
+    top: 100%;
+    left:0%;
+    transition:all 0.3s;
+    flex-direction:column;
+    row-gap: 20px;
+    opacity: 1;
+
+}
+.relationship:hover{
+    opacity:1
+
+}
+
+.rel_area{
+    display: flex;
+    flex-flow: column;
+    max-height: 200px;
+    overflow-y: scroll;
+    align-items: center;
+    row-gap: 5px;
+
+}
+.rel_change>*{
+    box-shadow: 0px 0px 4px 0px gray;
+    font-weight: bolder;
+
+}
+.rel_row{
+    display: flex;
+    flex-flow: row;
+    column-gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.rel_row
+.rel_left{
+    /* display: flex;
+    flex-flow: column; */
+    width: 70%!important;
+    /* row-gap: 5px; */
+}
+input.rel_left{
+    height: 22px;
+    font-size: 12px;
+    border: 1px solid #ced4da ;
+    border-radius: 0.25rem;
+
+}
+.rel_left{
+    text-align: left;
+}
+
+.rel_mid{
+    width: 15%;
+    font-size: 12px;
+}
+select.rel_mid{
+    border: 1px solid #ced4da ;
+    border-radius: 0.25rem;
+    height: 22px;
+    text-align: center;
+}
+.rel_right{
+    width: 4%;
+}
+input.rel_right{
+    border: 1px solid #ced4da ;
+    border-radius: 0.25rem;
+    height: 22px;
+    font-size: 12px;
+    text-align: center;
+
+}
+.rel_delete_undo{
+    display: block;
+    width:16px
+}
+.rel_delete{
+    pointer-events: none;
+    opacity: .6;
+}
+.rel_title{
+    font-size: 15px;
+}
+
+.pre_suc{
+    margin-top: 10px;
+}
+
 
 
 

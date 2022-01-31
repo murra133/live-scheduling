@@ -468,15 +468,12 @@ $( document ).ready(function() {
         data: 'project_id='+window.project_id,
         success:function(data){
           var rel_data = JSON.parse(data);
-          console.log(rel_data);
           for (let key in rel_data){
             window.relationship_log[key]=rel_data[key]
             
           }
-          console.log(window.relationship_log)
         }
       })
-console.log(window.relationship_log)
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
 });
@@ -2339,20 +2336,29 @@ $(document).on('change','.rel_row',function(){
 })
 
 function update_relationship_log(id){
+  id = id.toString()
   remove_error('rel_errormsg')
   let pre_array = document.getElementsByClassName('rel-0')
   let post_array = document.getElementsByClassName('rel-1')
-  console.log(post_array)
-  var dict = {}
+  let dict=Object.assign({},window.relationship_log)
+  if(dict[id]==undefined){
+    dict[id]={0:{},1:{}}
+  }
+  else if(dict[id][0]==undefined){
+    dict[id][0]={}
+  }
+  else if(dict[id][1]==undefined){
+    dict[id][1]={}
+  }
   var new_=0
-  dict[id]={0:{},1:{}}
+  // dict[id]={0:{},1:{}}
   var pre_id_log = []
   var n_pre_id = []
   var post_id_log = []
   var delete_rel =''
   /////Pre Array//////
   for(var i=0;i<pre_array.length;i++){
-    var pre_id = pre_array[i].children[0].value.split('-')[0]
+        var pre_id = pre_array[i].children[0].value.split('-')[0].toString()
     if(pre_id==''){
       let message = 'All Input Fields must be Filled Prior to Submitting'
       error_message(message,'rel_errormsg')
@@ -2378,49 +2384,97 @@ function update_relationship_log(id){
       else{
         var rel_id = 0
       }
+      /// Add Pre Id to relationship Log if necessary /// 
+      if (dict[pre_id]==undefined){
+        dict[pre_id]={0:{},1:{}}
+      }
+      else if(dict[pre_id][1]==undefined){
+        dict[pre_id][1]={}
+      }
       var relationship = pre_array[i].children[1].value
       var lag = pre_array[i].children[2].value
       if (rel_id==0 & new_==0){
         n_pre_id.push(pre_id)
         dict[id][0][0]=[{'sub_id':pre_id,'Rel':relationship,'Lag':lag}]
+        dict[pre_id][1][-2]=[{'sub_id':id,'Rel':relationship,'Lag':lag}]
         new_=new_+1
-        if (window.relationship_log[pre_id][1]==undefined){
-          window.relationship_log[pre_id][1] = {}
-          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-          console.log(window.relationship_log[pre_id])
-        }
-        else{
-          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-        }
       }
       else if(rel_id==0 & new_!=0){
         dict[id][0][0].push({'sub_id':pre_id,'Rel':relationship,'Lag':lag})
+        dict[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
         n_pre_id.push(pre_id)
-        if (window.relationship_log[pre_id][1]==undefined){
-          window.relationship_log[pre_id][1] = {}
-          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-        }
-        else{
-          window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-        }
 
       }
       else{
         dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+        dict[pre_id][1][rel_id] = {'sub_id':pre_id,'Rel':relationship,'Lag':lag}
       }
+    }
+  }
+    // }
+    // var pre_id = pre_array[i].children[0].value.split('-')[0]
+    // if(pre_id==''){
+    //   let message = 'All Input Fields must be Filled Prior to Submitting'
+    //   error_message(message,'rel_errormsg')
+    //   update_rel_height()
+    //   return
+    // }
+    // else if(pre_id_log.includes(pre_id)){
+    //   let message = "Input '"+pre_id+"' has been inputted twice"
+    //   error_message(message,'rel_errormsg')
+    //   update_rel_height()
+    //   return
+    // }
+    // else{
+    //   pre_id_log.push(pre_id)
+    //   if(pre_array[i].id!=''){
+    //     var rel_id = pre_array[i].id.split('_')[1]
+    //     ////Delete Relationship///
+    //     if(pre_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+    //       delete_rel=delete_rel+rel_id+';'
+    //       continue
+    //   }
+    // }
+    //   else{
+    //     var rel_id = 0
+    //   }
+    //   var relationship = pre_array[i].children[1].value
+    //   var lag = pre_array[i].children[2].value
+    //   if (rel_id==0 & new_==0){
+    //     n_pre_id.push(pre_id)
+    //     dict[id][0][0]=[{'sub_id':pre_id,'Rel':relationship,'Lag':lag}]
+    //     new_=new_+1
+    //     if (window.relationship_log[pre_id][1]==undefined){
+    //       window.relationship_log[pre_id][1] = {}
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+    //     else{
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+    //   }
+    //   else if(rel_id==0 & new_!=0){
+    //     dict[id][0][0].push({'sub_id':pre_id,'Rel':relationship,'Lag':lag})
+    //     n_pre_id.push(pre_id)
+    //     if (window.relationship_log[pre_id][1]==undefined){
+    //       window.relationship_log[pre_id][1] = {}
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+    //     else{
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+
+    //   }
+    //   else{
+    //     dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+    //   }
       
 
-    }
-
-  }
-
-
+    // }
   /////Post Array///////
   var new_=0
   var new_d =0
   for(var i=0;i<post_array.length;i++){
-    var post_id = post_array[i].children[0].value.split('-')[0]
-    console.log(post_array[i].children[0].className)
+    var post_id = post_array[i].children[0].value.split('-')[0].toString()
     if(post_id==''){
       let message = 'All Input Fields must be Filled Prior to Submitting'
       error_message(message,'rel_errormsg')
@@ -2441,37 +2495,75 @@ function update_relationship_log(id){
       else{
         var rel_id = 0
       }
+      if (dict[post_id]==undefined){
+        dict[post_id]={0:{},1:{}}
+      }
+      else if(dict[post_id][0]==undefined){
+        dict[post_id][0]={}
+      }
       var relationship = post_array[i].children[1].value
       var lag = post_array[i].children[2].value
       if (rel_id==0 & new_==0){
         dict[id][1][0]=[{'sub_id':post_id,'Rel':relationship,'Lag':lag}]
+        dict[post_id][0][0]=[{'sub_id':id,'Rel':relationship,'Lag':lag}]
         new_=new_+1
       }
       else if(rel_id==0 & new_!=0){
         dict[id][1][0].push({'sub_id':post_id,'Rel':relationship,'Lag':lag})
-
+        dict[post_id][0][0]=[{'sub_id':id,'Rel':relationship,'Lag':lag}]
       }
       else if(post_array[i].children[0].className.split(' ')[1]=='rel_delete'){
         if(new_d == 0){
           delete_rel=delete_rel+rel_id+';'
           dict[id][1][-1] = {}
           dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag} 
+          delete dict[post_id][0][rel_id]
+          delete dict[id][1][rel_id]
           new_d = 1
         }
         else{
           delete_rel=delete_rel+rel_id+';'
           dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+          delete dict[post_id][0][rel_id]
+          delete dict[id][1][rel_id]
         }
       }
       else{
         dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+        dict[[post_id]][0][rel_id]={'sub_id':id,'Rel':relationship,'Lag':lag}
       }
+      // var relationship = post_array[i].children[1].value
+      // var lag = post_array[i].children[2].value
+      // if (rel_id==0 & new_==0){
+      //   dict[id][1][0]=[{'sub_id':post_id,'Rel':relationship,'Lag':lag}]
+      //   new_=new_+1
+      // }
+      // else if(rel_id==0 & new_!=0){
+      //   dict[id][1][0].push({'sub_id':post_id,'Rel':relationship,'Lag':lag})
+
+      // }
+      // else if(post_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+      //   if(new_d == 0){
+      //     delete_rel=delete_rel+rel_id+';'
+      //     dict[id][1][-1] = {}
+      //     dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag} 
+      //     new_d = 1
+      //   }
+      //   else{
+      //     delete_rel=delete_rel+rel_id+';'
+      //     dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+      //   }
+      // }
+      // else{
+      //   dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+      // }
 
     }
 
   }
   var datelog = {}
-  var array_answer = relationship_date(dict,id.toString(),1,[id.toString()],datelog)
+  var array_answer = relationship_date(dict,id,1,[id],datelog)
+  console.log(array_answer[1])
   for(let i =0;i<n_pre_id.length;i++){
     
     if (Object.keys(window.relationship_log[n_pre_id[i]][1]).length==1){
@@ -2488,13 +2580,10 @@ function update_relationship_log(id){
   }
 
   else{
-    console.log(delete_rel)
     ///Deleting at Server/////
     $.post( "../PHP/delete_relationship.php", { project_id:window.project_id,rel_id:delete_rel});
     for(var z in Object.keys(array_answer[1])){
-      console.log(array_answer[0])
       var sub_id = Object.keys(array_answer[1])[z]
-      console.log(sub_id)
       if(document.getElementById('actualized_'+sub_id).checked == false){
         ////update Date/////
         let date = array_answer[1][sub_id]
@@ -2553,7 +2642,6 @@ function update_relationship_log(id){
         }
       }
     }
-    console.log(pre_id)
     $.ajax({
       url : "../PHP/add_relationship.php",
       type : 'POST',
@@ -2577,6 +2665,9 @@ function update_relationship_log(id){
             rel_area[1].appendChild(rel_title2)
             for(let i in window.relationship_log[parseInt(id)]){
               for(let k in window.relationship_log[parseInt(id)][i]){
+                if(k==-1){
+                  continue
+                }
                 add_predecessor_successor(i,k,id)
               }
             }
@@ -2592,11 +2683,20 @@ function update_relationship_log(id){
 function calculate_max_sdate(pre_id,post_id,rel_dict,datelog){
   var lag = rel_dict['Lag']
   var relationship = rel_dict['Rel']
-  var dates = datelog[pre_id]
+  if (datelog[pre_id]!=undefined){
+    var dates = datelog[pre_id]
+  }
+  else{
+    var dates = window.date_log[pre_id]
+  }
+  
   var sdate = dates.split(' ')[0]
   var edate = dates.split(' ')[2]
   var duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
   var new_sdate = relationship_sdate(sdate,edate,relationship,lag,duration)
+  console.log(pre_id)
+  console.log(post_id)
+  console.log(new_sdate)
   return new Date(new_sdate).getTime()
 
 }
@@ -2624,8 +2724,6 @@ function days_skipped(sdate,edate,weekend_days,holidays_array){
   
 
 function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelog){
-  console.log(original_id)
-  console.log(id_rel_dict)
   if (document.getElementById('actualized_'+sub_id).checked == true){
     return [original_id,datelog]
   }
@@ -2633,7 +2731,6 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
   ///original_id: id where all relationship calculations stem for, carrying date log of all changes///
   //////Predecessor/////////////////
   if(need_prdecessor==1 & id_rel_dict[sub_id][0]!=undefined){
-    console.log(id_rel_dict[sub_id][0])
     if(datelog[sub_id]==null & window.rel_settings==1){
       datelog[sub_id]==window.date_log[sub_id]
       var og_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
@@ -2645,8 +2742,11 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
       var new_sdate = 0
     }
     else{
-      var new_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
-      var og_sdate = new_sdate
+      // var new_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
+      // var og_sdate = new_sdate
+      datelog[sub_id]=0
+      var og_sdate = 0
+      var new_sdate = 0
     }
     
     for(var z in Object.keys(id_rel_dict[sub_id][0])){
@@ -2659,14 +2759,18 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
           if(datelog[pre_id]==null){
             datelog[pre_id]==window.date_log[pre_id]
           }
-          new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc[k],date_log),new_sdate)
+          
+          new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc[k],datelog),new_sdate)
         }
       }
       /////////Existing Predecessor//////
       else{
+        
         let loc = id_rel_dict[sub_id][0][i]
         var pre_id = loc['sub_id']
-        new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc,date_log),new_sdate)
+        console.log(id_rel_dict)
+        console.log(loc)
+        new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc,datelog),new_sdate)
 
       }
       // original_id.push(pre_id)
@@ -2682,18 +2786,18 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
       // }
     }
     if (og_sdate<new_sdate){
-      console.log(new_sdate)
-      console.log(new Date(new_sdate))
       new_sdate = date_format_changer4(new_sdate)
       var duration = parseInt(document.getElementById('duration_'+sub_id).innerHTML)
       var new_edate = return_end_date(new_sdate,duration,[],weekend_value)
       datelog[sub_id] =new_sdate+" - "+new_edate
     }
+    if (datelog[sub_id]==0){
+      datelog[sub_id]=window.date_log[sub_id]
+    }
 
       }
 /////Successor///////////////
   if (id_rel_dict[sub_id]==undefined || !(1 in id_rel_dict[sub_id])){
-    console.log(original_id)
     return [original_id,datelog]
     }
 
@@ -2706,10 +2810,8 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
     //// New Successor or Delete Successor/////////
     if (i==0 || i==-1){
       for(var k in post_loc[i]){
-        console.log(k)
         let loc = post_loc[i][k]
         let post_id = loc['sub_id']
-        console.log(post_id)
         if (original_id.indexOf(post_id.toString())>-1 ){
           let message = "Relationship Loop Created: "
           for(let z=0;z<original_id.length;z++){
@@ -2722,15 +2824,13 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
         }
         ///Delete///
         if (i==-1){
-            var dict_k = window.relationship_log[post_id]
-            delete dict_k[0][k]
-            var dict_n = {}
-            dict_n[post_id]=dict_k
-            console.log(dict_n)
-            var array_answer = relationship_date(dict_n,post_id,1,original_id,datelog)
+            // var dict_k = window.relationship_log[post_id]
+            // delete dict_k[0][k]
+            // var dict_n = {}
+            // dict_n[post_id]=dict_k
+            var array_answer = relationship_date(id_rel_dict,post_id,1,original_id,datelog)
             original_id = array_answer[0]
             datelog=array_answer[1]
-            console.log(original_id)
             original_id=original_id.slice(0,-1)
             if (array_answer[0]=="Error"){
               return array_answer
@@ -2742,7 +2842,7 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
         }
         ///ADD///
         else{
-          var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id)
+          var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id,id_rel_dict)
           if (array_answer[0]=="Error"){
             return array_answer
           }
@@ -2758,7 +2858,6 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
     else{
       let loc = post_loc[i]
       let post_id = loc['sub_id']
-      console.log(original_id.indexOf(post_id.toString()))
       if (original_id.indexOf(post_id.toString())>-1 ){
         let message = "Relationship Loop Created: "
         for(let z=0;z<original_id.length;z++){
@@ -2769,7 +2868,7 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
         message = message+name
         return ["Error",message]
       }
-      var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id)
+      var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id,id_rel_dict)
       if (array_answer[0]=="Error"){
         return array_answer
       }
@@ -2782,36 +2881,35 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
 return [original_id,datelog]
 }
 
-function successor_relationship(sub_id,post_id,loc,datelog,original_id){
-  let npost_sdate = calculate_max_sdate(sub_id,post_id,loc,datelog)
-  // if(new Date(date_log[post_id].split(' ')[0]).getTime()<npost_sdate){
-  //   original_id=original_id.slice(0,-1)
-  //   return [original_id,datelog]
+function successor_relationship(sub_id,post_id,loc,datelog,original_id,dict){
+  // let npost_sdate = calculate_max_sdate(sub_id,post_id,loc,datelog)
+  // // if(new Date(date_log[post_id].split(' ')[0]).getTime()<npost_sdate){
+  // //   original_id=original_id.slice(0,-1)
+  // //   return [original_id,datelog]
+  // // }
+  // if (datelog[post_id]==null  & window.rel_settings==1){
+  //   datelog[post_id]=window.date_log[post_id]
+  //   var post_sdate = (new Date(datelog[post_id].split(' ')[0])).getTime()
   // }
-  if (datelog[post_id]==null  & window.rel_settings==1){
-    datelog[post_id]=window.date_log[post_id]
-    var post_sdate = (new Date(datelog[post_id].split(' ')[0])).getTime()
-  }
-  else if(datelog[post_id]==null  & window.rel_settings==0){
-    var post_sdate = 0
-  }
-  if (post_sdate<npost_sdate){
-    post_sdate=npost_sdate
-    duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
-    post_edate = return_end_date(npost_sdate,duration,[],weekend_value)
-    datelog[post_id] = date_format_changer4(post_sdate)+" - "+post_edate
-    original_id.push(post_id)
-
-    array_answer = relationship_date(window.relationship_log,post_id,1,original_id,datelog)
+  // else if(datelog[post_id]==null  & window.rel_settings==0){
+  //   var post_sdate = 0
+  // }
+  // if (post_sdate<npost_sdate){
+  //   post_sdate=npost_sdate
+  //   duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
+  //   post_edate = return_end_date(npost_sdate,duration,[],weekend_value)
+  //   datelog[post_id] = date_format_changer4(post_sdate)+" - "+post_edate
+  //   original_id.push(post_id)
+    array_answer = relationship_date(dict,post_id,1,original_id,datelog)
     if (array_answer[0]=="Error"){
       return array_answer
     }
     original_id=original_id.slice(0,-1)
     datelog = array_answer[1]
-    console.log(original_id)
+    return [original_id,datelog]
   }
-  return [original_id,datelog]
-}
+//   return [original_id,datelog]
+// }
 
 function relationship_sdate(sdate,edate,relationship,lag,duration){
   lag=parseInt(lag)+1

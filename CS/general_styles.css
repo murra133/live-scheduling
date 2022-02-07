@@ -102,16 +102,13 @@ h5{
 
 .error_message{
   display: block;
-
   color: red;
-
-
+  font-size: 25px;
 }
 .error_div{
-  top:-20px;
   position: relative;
   float:left;
-  left:90px;
+  width:100%
 }
 
 #message{

@@ -2987,6 +2987,10 @@ function days_skipped(sdate,edate,weekend_days,holidays_array){
   
 
 function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelog){
+  if(id_rel_dict[sub_id]==undefined){
+    datelog[sub_id] = window.date_log[sub_id]
+    return [undefined,datelog]
+  }
   if (document.getElementById('actualized_'+sub_id).checked == true){
     return [original_id,datelog]
   }

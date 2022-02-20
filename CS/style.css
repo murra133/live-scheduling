@@ -8,27 +8,7 @@ h1{
     text-align: center;
 }
 
-.website_button {
-    border: none;
-    width: 7vw;
-    height: 5vh;
-    margin: auto;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background: #333;
-    font-size: .8vw!important;
-    color: #fff;
-    vertical-align: middle;
- }
 
-#message{
-    text-align: center;
-    color: red;
-    font-weight: bolder;
-}
 #main_title{
     text-align: center;
     display:block;
@@ -50,13 +30,21 @@ h1{
     padding-left: 10rem;
 }
 
-.start_date{
-    display:inline-block;
-    font-size: 1.5vw;
+.filter h2,.filter input{
+    display: inline-block
 }
-#start_date_div{
-    display:inline-block;
-    width: 50%;
+
+#filter_div{
+    height: 65px;
+    background-color: #f3f7fa!important;
+    position: relative;
+    top:-65px;
+    transition:all .5s;
+    z-index: 98
+}
+
+#filter_div.filter_active{
+    top:0px
 }
 
 #main_page{
@@ -107,7 +95,7 @@ h1{
 /* ---------- Main Activity CSS  ------------*/
 .main_activity{
     display:grid;
-    padding-bottom: 3%;
+    padding-bottom: 5px;
 }
 .main_activity_input{
     text-align: left;
@@ -123,7 +111,8 @@ h1{
     left:1vw;
     font-size: 1.2vw;
     color: rgb(128,128,128);
-    padding-top:-6%;
+    top: 20px;
+    margin-bottom: 250px;
 
 }
 #main_activity_add:hover{
@@ -137,16 +126,16 @@ h1{
 }
 
 .main_activity_title{
-    width:54%;
+    width: 1200px;
     position:relative;
-    left:2%;
+    left: 38px;;
  
 
 }
 .main_activity_title > h2{
 text-align: left;
-font-size: 1vw;
-padding:.8vh;
+font-size: 20px;
+padding: 5px;
 color:white;
 background-color: gray;
 width:90%;
@@ -156,22 +145,31 @@ border-radius: 5px;
 }
 .title{
     display: inline-block!important;
+    float: left;
     
 }
 
-
-
-
-.main_edit{
-    padding-left: 1%;
-    float: right;
-
+.main_add{
+    position: relative;
+    font-size: 23px;
+    top: 4px;
+    left: 5px;
 }
 
+
+input.title{
+    width: 90%;
+    position:relative;
+    height: 32px;
+    margin-bottom:8px;
+}
+
+
 .main_delete{
-    padding-left: 1%;
-    float: right;
-    font-size: 108%;
+    position: relative;
+    font-size: 23px;
+    top: 4px;
+    left:10px
 }
 
 
@@ -231,49 +229,52 @@ border-radius: 5px;
     display: block;
     float:left;
     position: relative;
-    left:1vw;
     text-align: left;
     position: relative;
-    width:50%;
-    font-size: 1vw;
+    width:100%;
+    padding: 10px;
     color: rgb(128,128,128);
 }
+.sub_activity_add i{
+    font-size: 22px;
+}
+
+
+
 .activity_left{
 text-align: center;
 display: block;
 position: relative;
-left:3%;
-width: 54%;
+width: 1025px;
 float:left;
-overflow: inherit;
-transition:width 1s;
+transition:width .5s;
 
 }
 
 .activity_left.collapsed{
-    width:40%;
+    width: 750px;
     text-align:center;
 }
 
 .activity_right{
     display: block;
-    position: relative;
-    width:45%;
     float: left;
 }
 
 .sub{
-    display: block;
+    display: grid;
     float:left;
     position: relative;
 }
+
 .sub h3{
-    font-size: 1vw;
+    font-size: 20px;
+    margin-bottom: 0px;
 }
 
 
 .sub h5{
-    font-size: .85vw;
+    font-size: 15px;
     transition: background-color 500ms;
     padding: 7px;
     margin-bottom: 0px;
@@ -286,53 +287,42 @@ transition:width 1s;
 }
 
 .sub input{
-    font-size: .85vw;
+    font-size: 15px;
 }
 
-.sub i{
-    font-size: .85vw;
-    margin-bottom: 1vh;
+.sub_activity_box{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    left: 3%;
 }
 
 .sub_activity{
     display: flex;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
+    height: 32px;
+    box-shadow: 0px 1px 0px 0px grey;
 
 }
-.sub_activity_id{
-    width:2%;
-    display: none;
-}
-.sub_activity_name{
-    width:45%;
-    transition: width 1s;
-    text-align: left;
-
-}
-.sub_activity_name.collapsed{
-    width:65%;
-}
-.sub_activity_sdate{
-    width:10%;
-    transition: width 1s;
-
-}
-.sub_activity_sdate.collapsed{
-    width:14%;
-}
-.sub_activity_edate{
-    width:10%;
-    transition: width 1s;
-
-}
-.sub_activity_edate.collapsed{
-    width: 14%;
+.sub_activity>h5{
+    font-size: 15px;
+    margin-bottom: 0px;
+    transition: .5s all;
 }
 
-.sub_activity_duration{
-    width: 10%;
-    text-align: center;
+.sub_activity>h3{
+    font-size: 20px;
+    font-weight:500;
+    margin-bottom: 0px;
+}
+
+.sub_name.collapsed,.sub_name_title.collapsed{
+    width:75%;
+}
+
+.sub_changed{
+    background-color: rgb(240, 240, 240);
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -341,133 +331,159 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-.sub_duration{
-    position: relative;
-    width: fit-content;
-    display: block;
-    margin: auto;
-
+.sub_name,.sub_date,.sub_duration,.sub_contractor{
+    height:20px
 }
-
-input.sub_duration{
-    width: -webkit-fill-available!important;
-    width: fit-content;
+.sub_date,.sub_duration,.sub_contractor{
     text-align: center;
+    
 }
-.sub_activity_contractor{
-    width:15%;
+.sub_id,.sub_id_title{
+    display: none;
+}
+.sub_name,.sub_name_title{
+    width: 50%;
+    text-align: left;
+    transition: .5s width;
+    margin:calc()
+
+}
+.sub_date,.sub_date_title{
+    width: 230px;
+    margin:0px calc(20% - 230px);
+    transition: .5s width;
+    transition: 2s background-color;
 
 }
 
-.sub_activity_edit{
-    width:1.2vw;
-
-}
-.sub_activity_delete{
-    width:1.2vw;
-}
-.sub_id{
-    margin-bottom: 22%;
-}
-.sub_name{
-    width:98%;
-
-}
-.sub_sdate{
-    width:95%;
-
-}
-.sub_edate{
-    width:95%;
-
-}
-.sub_contractor{
-height:120%;
-width:95%;
-
-}
-.edit_icon{
-    margin-bottom: 3.399vh;
+.sub_duration,.sub_duration_title{
+    width: 60px;
+    margin:0px calc(9% - 60px);
 }
 
-.edit_sub_icon{
-    display:block !important;
-    padding-bottom: 0.3295vh;
+.sub_contractor,.sub_contractor_title{
+width:15%;
+
+}
+.delete_icon,.sub_delete_title{
+    width:1.5%;
 }
 
-.delete_icon{
-    margin-bottom: 3.399vh;
+.sub_actualized,.sub_actualized_title{
+    width: 3%;
 }
 
-.delete_sub_icon{
-    display:block !important;
-    padding-bottom: 0.3295vh;
-    padding-left: 40%;
-    font-size: 110%;
+h5.sub_name:hover,h5.sub_date:hover,h5.sub_duration:hover,h5.sub_contractor:hover{
+    background-color: rgb(240, 240, 240);
 }
+
+/* .delete_sub_icon{
+    display:block;
+    position: relative;
+    left: 20px;
+    height: 32px;
+    font-size: 15px;
+} */
+
+/* .add_sub_icon{
+    display:block;
+    position: relative;
+    top: 10px;
+    height: 32px;
+    font-size: 15px;
+} */
 .cell_dates{
     position: relative;
-    top:2vh;
+    display: flex;
+}
+.cell_days{
+    position: relative;
+    display: flex;
 }
 .collapsable_button{
-    padding:1vw;
-    display: block;
-    position: relative;
+    width: 1%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
-.date{
-    display:inline-block;
-    border-style: solid;
-    border-width: 0px 1px 0px 1px;
-    padding:.2vw;
-    font-size:.7vw!important;
+.date, .day{
+    /* border-style: solid;
+    border-width: 0px 1px 0px 1px; */
+    box-shadow: 1px 0px 0px 0px gray;
+    font-size:12px!important;
     margin-bottom: auto;
-    width:4vw;
+    height: 16px;
+    width:75px;
     text-align: center;
     }
 
-    .day{
-        display:inline-block;
-        border-style: solid;
-        border-width: 0px 1px 1px 1px;
-        padding:.2vw;
-        font-size:.7vw!important;
-        margin-bottom: auto;
-        width:4vw;
-        text-align: center;
-        }
+
     
 
 .date_box{
     display:inline-block;
-    border-style: solid;
-    border-width: 1px;
-    padding:1.2vh;
+    /* border-style: solid;
+    border-width: 1px; */
+    /* padding:10px; */
+    box-shadow: 1px 0px 1px 0px gray;
+    margin: 11px 0px;
     font-size:small;
     position: relative;
-    width:4vw;
+    width:75px;
+    height: 16px;
+    -webkit-transition:background .2s ease-in;
+    transition: background .2s ease-in ;
+
+}
+
+.schedule{
+    border: rgb(97, 163, 97) solid;
+    background-color: rgb(97, 163, 97);
+}
+
+.schedule_start{
+    border-radius: 15px 0px 0px 15px;
+}
+.schedule_single{
+    border-radius: 15px 15px 15px 15px;
+}
+.schedule_end{
+    border-radius: 0px 15px 15px 0px;
+}
+
+.weekend{
+    background-color: lightgray;
+    pointer-events: none;
 }
 
 .sub_bdate{
-height: 3.087vh;
+height: 32px;
+display: flex;
+align-items: center;
+box-shadow: 0px 1px 0px 0px gray;
 
 }
 
 .sub_activity_bdate{
     white-space: nowrap;
-    overflow: auto;
     position: relative;
-    bottom: 3.12vh;
-    overflow: scroll;
+    bottom: 29px;
 }
 
-
+.sub_titles{
+    display: flex;
+    height: 60px;
+    flex-flow: column;
+    justify-content: end;
+    box-shadow: 0px 1px 0px 0px gray;
+    
+}
 
 
 /*  Add Sub Activity HTML CSS */
 
-.add_sub_activity_button{
-    margin: 4%;
-}
 
 #activity_title {
     display:block;
@@ -531,12 +547,7 @@ height: 3.087vh;
     top:-21vh;
 }
 
-#relationship{
-    padding-top: 5%;
-    display:inline-block;
-    padding-left: 5%;
-    width:45%;
-}
+
 #relationship_div{
     background-color: white;
     display: block;
@@ -583,6 +594,162 @@ height: 3.087vh;
     font-size: 125%;
 
 }
+
+/*Relationships*/
+
+#main_relationship{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+#relationship_top{
+    display: block;
+    width: 100%;
+    box-shadow:black 0px .2px 0px 0px ;
+}
+#relationship_title{
+    float: left;
+}
+
+#relationship_bottom{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+#relationship_bottom>div{
+    width:48%;
+    box-shadow:black 0.2px 0px 0px 0px ;
+    display: flex;
+    flex-flow: column;
+
+}
+#relationship_bottom:first-child{
+    box-shadow:black 0.2px 0px 0px 0px ;
+}
+#relationship_bottom h4{
+    position: relative;
+    left: -42%;
+    top: -2%;
+}
+
+
+#relationship_input{
+    width:80%;
+    float: left;
+}
+
+#relationship_button{
+    position: fixed;
+    top: 100%;
+    margin-top: -60px;
+    background-color: white;
+    color: black;
+    opacity: 10%;
+    left: 46.5%;
+  }
+  #relationship_button:hover{
+    opacity:100%
+  }
+
+.relationship{
+    position: fixed;
+    justify-content: center;
+    display: flex;
+    padding: 15px;
+    width: 100%;
+    background-color: #f8f9fa!important;
+    top: 100%;
+    left:0%;
+    transition:all 0.3s;
+    flex-direction:column;
+    row-gap: 20px;
+    opacity: 1;
+
+}
+.relationship:hover{
+    opacity:1
+
+}
+
+.rel_area{
+    display: flex;
+    flex-flow: column;
+    max-height: 200px;
+    overflow-y: scroll;
+    align-items: center;
+    row-gap: 5px;
+
+}
+.rel_change>*{
+    box-shadow: 0px 0px 4px 0px gray;
+    font-weight: bolder;
+
+}
+.rel_row{
+    display: flex;
+    flex-flow: row;
+    column-gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.rel_row
+.rel_left{
+    /* display: flex;
+    flex-flow: column; */
+    width: 70%!important;
+    /* row-gap: 5px; */
+}
+input.rel_left{
+    height: 22px;
+    font-size: 12px;
+    border: 1px solid #ced4da ;
+    border-radius: 0.25rem;
+
+}
+.rel_left{
+    text-align: left;
+}
+
+.rel_mid{
+    width: 15%;
+    font-size: 12px;
+}
+select.rel_mid{
+    border: 1px solid #ced4da ;
+    border-radius: 0.25rem;
+    height: 22px;
+    text-align: center;
+}
+.rel_right{
+    width: 4%;
+}
+input.rel_right{
+    border: 1px solid #ced4da ;
+    border-radius: 0.25rem;
+    height: 22px;
+    font-size: 12px;
+    text-align: center;
+
+}
+.rel_delete_undo{
+    display: block;
+    width:16px
+}
+.rel_delete{
+    pointer-events: none;
+    opacity: .6;
+}
+.rel_title{
+    font-size: 15px;
+}
+
+.pre_suc{
+    margin-top: 10px;
+}
+
 
 
 
@@ -645,14 +812,11 @@ border-radius: 5px;
 }
 
 /*-------sidebar CSS -----*/
-#sidebar{
-    z-index: 2;
-}
 
 /*-------search bar CSS -----*/
-.navbar{
-    z-index: 1;
-}
+
+
+
 
 .navbar-brand{
     padding-left: 3%

@@ -8192,6 +8192,31 @@ h1, h2, h3, h4, h5,
 .wrapper {
   width: 100%; }
 
+#sidebarCollapse{
+  z-index: 100;
+  position: fixed;
+  top:5px;
+  left:0;
+  transition: left .3s;
+
+}
+#search_navbar{
+  z-index: 99;
+  position: fixed;
+  width: 100%;
+  left:0;
+  transition: left .3s;
+}
+#main_page.active,#sidebarCollapse.active,#search_navbar.active{
+    left:250px;
+
+}
+#main_page{
+  position: relative;
+    left:0;
+    transition: left .3s;
+}
+
 #sidebar {
   min-width: 250px;
   max-width: 250px;
@@ -8200,7 +8225,9 @@ h1, h2, h3, h4, h5,
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
-  position: relative; }
+  position: fixed;
+  z-index: 100;
+  height: 100%; }
   #sidebar .h6 {
     color: #fff; }
   #sidebar.active {

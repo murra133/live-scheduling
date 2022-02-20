@@ -87,89 +87,76 @@ function standarize_dates_to_UTC(date){
   var standard_date = new Date(time+(offset*60000));
   return standard_date;
 }
-
+//////NEEEED TO WORK ON THIS///////
 //----------General Scripts End--------//
 function upload_sub_activity(sub_id,action){
-  var values_array = update_sub_activity(sub_id)
-  var name = values_array[0]
-  var sdate = values_array[1]
-  var edate = values_array[2]
-  var duration = values_array[3]
-  var party_involved = values_array[4]
-  var sub_id = values_array[5];
-  var action = values_array[6]
+  
 if(action == 'add'){
-  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  var parent_id = sub_id.parentElement.parentElement.parentElement.parentElement.id
+  remove_error('error_'+parent_id)
+  var id = sub_id.id.split("_")[1]
+  var array = ['name_','date_','contractor_','duration_','add_'];
+  for(var i = 0; i<array.length;i++){
+    all_sub_activities_to_h5(array[i]+id)
+  }
+  var values_array = update_sub_activity(id)
+  var name = values_array[0]
+  var date = values_array[1]
+  // var edate = values_array[2]
+  var duration = values_array[2]
+  var party_involved = values_array[3]
+  var sub_id = values_array[4];
+  var action = values_array[5]
+  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(parent_id), sub_activity:name , date:date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  var title = document.getElementById('title_'+parent_id);
+  var r_opt = document.createElement('option')
+  r_opt.setAttribute('value',sub_id+'-'+name)
+  r_opt.setAttribute.innerHTML = title
+  document.getElementById('datalistOptions').append(r_opt)
 }
 else{
-  $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(sub_id), sub_activity:name , start_date:sdate, end_date:edate, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  var parent_id = document.getElementById("name_"+sub_id).parentElement.parentElement.parentElement.parentElement.id
+  remove_error('error_'+parent_id)
+  var values_array = update_sub_activity(sub_id)
+  var name = values_array[0]
+  var date = values_array[1]
+  var duration = values_array[2]
+  var party_involved = values_array[3]
+  var sub_id = values_array[4];
+  var action = values_array[5]
+  var actualized = values_array[6]
+  $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(sub_id), sub_activity:name , date:date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id,actualized:actualized} );
+  var r_opt = document.createElement('option')
+  r_opt.setAttribute('value',sub_id+'-'+name)
+  r_opt.setAttribute.innerHTML = title
+  var data_array = document.getElementById('datalistOptions').children
+  for (var i=0;i<data_array.length;i++){
+    if (data_array[i].value.split('-')[0]==sub_id.toString()){
+      data_array[i].replaceWith(r_opt)
+      return
+    }
+  }
 }
 
   
 
   }
-
-function form_to_schedule(this_tag){
-  var parent_element = this_tag.parentElement.parentElement;
-  var id = document.getElementById("main_id").innerHTML;
-  var activity_title = document.getElementById("activity_title_input").value;
-  var start_date = document.getElementById("start_date_input_box").value;
-  var start_date_format = date_format_changer(start_date);// start_date.split("-")[1]+"/"+start_date.split("-")[2];
-  var end_date = document.getElementById("end_date_input_box").value;
-  var end_date_format = date_format_changer(end_date); // end_date.split("-")[1]+"/"+end_date.split("-")[2];
-  var duration = document.getElementById("duration").value;
-  var party_involved = document.getElementById("party_involved_box").value;
-  ////Need to add section for Relationships once relationships are figured out///
-  var id_array= document.getElementById("main_id").getAttribute("name");
-  var main_id = id_array.split("_")[0];
-  
-  //Adds the Main Activity Title
-  document.getElementById("name_"+id).innerHTML=activity_title;
-  document.getElementById("sdate_"+id).innerHTML=start_date_format;
-  document.getElementById("sdate_"+id).setAttribute("value",start_date);
-  document.getElementById("edate_"+id).innerHTML=end_date_format;
-  document.getElementById("edate_"+id).setAttribute("value",end_date);
-  document.getElementById("contractor_"+id).innerHTML=party_involved;
-  document.getElementById("duration_"+id).innerHTML=duration;
-  var action = document.getElementById("box").getAttribute("name");
-  if ( action == "new"){
-  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(main_id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
-  }
-  else{
-    $.post( "../PHP/update_sub_activity.php",{ sub_id: parseInt(id), sub_activity:activity_title , start_date:start_date, end_date:end_date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
-  }
-  
-  removeAllChildNodes(parent_element);
-  $('#main_page').removeAttr('style');
-  return false;
-  }
-  //////////////////////////////////////////////////////////////////////////////////
-  function place_values_in_subactivity_box(values_array){
-    ////////value_array = [activity_title,start_date,end_date,duration,party_involved] format for dates is yyyy-mm-dd;
-    document.getElementById("activity_title_input").value = values_array[0];
-    document.getElementById("start_date_input_box").value=values_array[1];
-    document.getElementById("end_date_input_box").value = values_array[2];
-    document.getElementById("duration").value=values_array[3];
-    document.getElementById("party_involved_box").value=values_array[4];
-  }
-function place_values_in_subactivity_box(values_array){
-  ////////value_array = [activity_title,start_date,end_date,duration,party_involved] format for dates is yyyy-mm-dd;
-  document.getElementById("activity_title_input").value = values_array[0];
-  document.getElementById("start_date_input_box").value=values_array[1];
-  document.getElementById("end_date_input_box").value = values_array[2];
-  document.getElementById("duration").value=values_array[3];
-  document.getElementById("party_involved_box").value=values_array[4];
-}
 
 function update_sub_activity(sub_id){
   ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
   var action = "update"
   var activity_title = document.getElementById("name_"+sub_id).innerHTML;
-  var start_date = document.getElementById("sdate_"+sub_id).getAttribute("value");
-  var end_date = document.getElementById("edate_"+sub_id).getAttribute("value");
+  var date = document.getElementById("date_"+sub_id).getAttribute("value");
   var duration = document.getElementById("duration_"+sub_id).innerHTML;
   var party_involved = document.getElementById("contractor_"+sub_id).innerHTML;
-  var values_array = [activity_title,start_date,end_date,duration,party_involved,sub_id,action];
+  if (document.getElementById('actualized_'+sub_id)!=null && document.getElementById('actualized_'+sub_id).checked == true){
+    var actualized = 1
+    }
+  else{
+    var actualized = 0
+    }
+
+    var values_array = [activity_title,date,duration,party_involved,sub_id,action,actualized];
   return values_array
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -177,6 +164,9 @@ function update_sub_activity(sub_id){
 $( document ).ready(function() {
   window.project_id = cookie_value('project_id');
   window.register_id = cookie_value('Registry_ID');
+  window.relationship_log = {};
+  window.date_log={}
+  window.rel_settings=0
   var admin_level = 1;
   $.ajax({
     url : '../PHP/check_admin_level.php',
@@ -208,103 +198,123 @@ $( document ).ready(function() {
                   var title = document.createElement("h2");
                   title.setAttribute("name",main_title);
                   title.innerHTML = main_title;
-                  title.setAttribute('class','title');
-                  var edit = document.createElement("i");
-                  edit.setAttribute("class","fas fa-edit main_edit title clickable");
-                  edit.setAttribute("id","edit_"+main_id);
-                  edit.setAttribute("onclick","update_main_activity(this)")
+                  title.setAttribute('class','title clickable');
+                  title.setAttribute('id','title_'+main_id)
+                  title.setAttribute('ondblclick','input_edit(this)')
                   
                   var delete_button= document.createElement("i");
                   delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
                   delete_button.setAttribute("id","delete_"+main_id);
                   delete_button.setAttribute("onclick","delete_main_activity_box(this)")
                   divtitle.appendChild(title);
-                  title.appendChild(delete_button);
-                  title.appendChild(edit);
+                  divtitle.appendChild(delete_button);
+                  // title.appendChild(edit);
                   divadd.appendChild(divtitle);
                   var sub_activities_array = js_data[main_id]['sub_activity'];
                   ////////////////////////////// Create all the Empty Divs/////
-                  var empty_divs = create_all_sub_activity_divs();
-                  var id_div = empty_divs[0];
-                  var name_div = empty_divs[1];
-                  var sdate_div = empty_divs[2];
-                  var edate_div = empty_divs[3];
-                  var duration_div = empty_divs[4];
-                  var contractor_div = empty_divs[5];
-                  var bdate = empty_divs[6];
-                  var edit_div = empty_divs[7];
-                  var activity_div = empty_divs[8];
-                  var delete_div = empty_divs[9];
-                  var date_div = document.createElement('div');
-                  date_div.setAttribute('class','activity_right');
-                  var action_div = document.createElement('div');
-                  action_div.setAttribute('class','activity_left uncollapsed')
-                  var collapsable_button = document.createElement('div')
-                  collapsable_button.setAttribute('class','collapsable_button')
-                  var c_button = document.createElement('i')
-                  c_button.setAttribute('class','fas fa-ellipsis-v clickable')
-                  c_button.setAttribute('onclick','collapse_activities(this)')
-                  c_button.setAttribute('type','active')
-                  c_button.setAttribute('id','collapse_'+main_id)
-                  collapsable_button.appendChild(c_button)
+                  // var empty_divs = create_all_sub_activity_divs();
+                  // var id_div = empty_divs[0];
+                  // var name_div = empty_divs[1];
+                  // var dateval_div = empty_divs[2];
+                  // // var edate_div = empty_divs[3];
+                  // var duration_div = empty_divs[3];
+                  // var contractor_div = empty_divs[4];
+                  // var bdate = empty_divs[5];
+                  // var actualized_div = empty_divs[6];
+                  // var activity_div = empty_divs[7];
+                  // var delete_div = empty_divs[8];
+                  // var date_div = document.createElement('div');
+                  // date_div.setAttribute('class','activity_right');
+                  // var action_div = document.createElement('div');
+                  // action_div.setAttribute('class','activity_left uncollapsed')
+                  // var collapsable_button = document.createElement('div')
+                  // collapsable_button.setAttribute('class','collapsable_button')
+                  // var c_button = document.createElement('i')
+                  // c_button.setAttribute('class','fas fa-ellipsis-v clickable')
+                  // c_button.setAttribute('onclick','collapse_activities(this)')
+                  // c_button.setAttribute('type','active')
+                  // c_button.setAttribute('id','collapse_'+main_id)
+                  // collapsable_button.appendChild(c_button)
 
+                  var activity_div = create_title_sub_activity(main_id);
+                  var date_div = activity_div.children[2]
+                  var action_div = activity_div.children[0]
+                  var collapsable_button = activity_div.children[1]
+                  var bdate = date_div.children[0];
 
 
 
                   ///Gets dates from bdate////
-                  dates = bdate.getElementsByClassName("cell_dates")[0];
+                  // var dates = bdate.getElementsByClassName("cell_dates")[0];
+                  var dates = date_div.getElementsByClassName("cell_dates")[0];
 
                   for (var j=0;j<Object.keys(sub_activities_array).length;j++){
                     //// Get All Sub Activities Variables////
                     var sub_id = Object.keys(sub_activities_array)[j];
                     var sub_activity_title = sub_activities_array[sub_id]["Sub_Activity"];
-                    var sub_start_date = sub_activities_array[sub_id]["Start_Date"];
-                    var sub_end_date = sub_activities_array[sub_id]["End_Date"];
+                    var sub_dates = sub_activities_array[sub_id]["Date"];
                     var sub_duration = sub_activities_array[sub_id]["Duration"];
                     var sub_party_involved = sub_activities_array[sub_id]["Party_Involved"];
+                    var sub_actualized = sub_activities_array[sub_id]["Actualized"]
                     ////////// Adds Values to Sub Activity Box/////
 
-                    var filled_divs = download_sub_activity(main_id,sub_id,sub_activity_title,sub_start_date, sub_end_date,sub_duration,sub_party_involved,dates)
-                    var sub_id_div = filled_divs[0];
-                    var sub_name_div = filled_divs[1];
-                    var sub_sdate_div = filled_divs[2];
-                    var sub_edate_div = filled_divs[3];
-                    var sub_duration_div = filled_divs[4];
-                    var sub_contractor_div = filled_divs[5];
-                    var sub_edit_div = filled_divs[6];
-                    var sub_bdate_div = filled_divs[7];
-                    var sub_delete_div = filled_divs[8];
+                    var filled_divs = download_sub_activity2(main_id,sub_id,sub_activity_title,sub_dates,sub_duration,sub_party_involved,dates,sub_actualized)
+                    var sub_bdate_div = filled_divs[1]
+                    let sub_activity = filled_divs[0]
+                    // var sub_id_div = filled_divs[0];
+                    // var sub_name_div = filled_divs[1];
+                    // var sub_date_div = filled_divs[2];
+                    // // var sub_edate_div = filled_divs[3];
+                    // var sub_duration_div = filled_divs[3];
+                    // var sub_contractor_div = filled_divs[4];
+                    // var sub_actualized_div = filled_divs[5];
+                    // var sub_bdate_div = filled_divs[6];
+                    // var sub_delete_div = filled_divs[7];
 
+                    var sub_start_date = date_format_changer3(sub_dates.split(" ")[0])
+                    var sub_end_date = date_format_changer3(sub_dates.split(" ")[2])
                     var date_array = date_filler(sub_start_date, sub_end_date);
                     sub_bdate_div = log_dates_to_schedule(date_array,sub_bdate_div,"new")   
-
-                    id_div.appendChild(sub_id_div);
-                    name_div.appendChild(sub_name_div);
-                    sdate_div.appendChild(sub_sdate_div);
-                    edate_div.appendChild(sub_edate_div);
-                    duration_div.appendChild(sub_duration_div);
-                    contractor_div.appendChild(sub_contractor_div);
+                    
+                    window.date_log[sub_id]=sub_dates;
+                    // id_div.appendChild(sub_id_div);
+                    // name_div.appendChild(sub_name_div);
+                    // dateval_div.appendChild(sub_date_div);
+                    // // edate_div.appendChild(sub_edate_div);
+                    // duration_div.appendChild(sub_duration_div);
+                    // contractor_div.appendChild(sub_contractor_div);
                     bdate.appendChild(sub_bdate_div);
-                    edit_div.appendChild(sub_edit_div);
-                    delete_div.appendChild(sub_delete_div);
-                    action_div.appendChild(id_div);
-                    action_div.appendChild(name_div);
-                    action_div.appendChild(sdate_div);
-                    action_div.appendChild(edate_div);
-                    action_div.appendChild(duration_div);
-                    action_div.appendChild(contractor_div);
-                    action_div.appendChild(edit_div);
-                    action_div.appendChild(delete_div);
+                    // actualized_div.appendChild(sub_actualized_div);
+                    // delete_div.appendChild(sub_delete_div);
+                    // action_div.appendChild(id_div);
+                    // action_div.appendChild(name_div);
+                    // action_div.appendChild(dateval_div);
+                    // // action_div.appendChild(edate_div);
+                    // action_div.appendChild(duration_div);
+                    // action_div.appendChild(contractor_div);
+                    // action_div.appendChild(actualized_div);
+                    // action_div.appendChild(delete_div);
                     date_div.appendChild(bdate);
-                    activity_div.appendChild(action_div)
-                    activity_div.appendChild(collapsable_button)
-                    activity_div.appendChild(date_div);
-                    divadd.appendChild(activity_div);
-
+                    action_div.appendChild(sub_activity)
+                    // activity_div.appendChild(action_div)
+                    // activity_div.appendChild(collapsable_button)
+                    // activity_div.appendChild(date_div);
+                    // divadd.appendChild(activity_div);
+                    //Add Values to relationship box
+                    var r_opt = document.createElement('option')
+                    r_opt.setAttribute('value',sub_id+'-'+sub_activity_title)
+                    r_opt.innerHTML = main_title
+                    document.getElementById('datalistOptions').append(r_opt)
 
                     
 
                   }
+                  var error_div = document.createElement('div')
+                  error_div.setAttribute('class','error_div')
+                  var error_message = document.createElement('h6')
+                  error_message.setAttribute('id','error_'+main_id)
+                  error_message.setAttribute('class','error_message')
+                  error_div.appendChild(error_message)
                   var subadd=document.createElement('div');
                   subadd.setAttribute("class","sub_activity_add clickable");
                   subadd.setAttribute("onclick","add_sub_activity(this)");
@@ -312,7 +322,16 @@ $( document ).ready(function() {
                   subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button");
                   subaddtwo.innerHTML="   Add Sub Activity";
                   subadd.appendChild(subaddtwo);
-                  divadd.appendChild(subadd);
+                  // divadd.appendChild(error_div)
+                  // divadd.appendChild(subadd);
+                  // main_parent.appendChild(divadd)
+                  action_div.appendChild(error_div)
+                  action_div.appendChild(subadd)
+                  ///Add all values to the main schedule
+                  // activity_div.appendChild(action_div)
+                  // activity_div.appendChild(collapsable_button)
+                  // activity_div.appendChild(date_div);
+                  divadd.appendChild(activity_div);
                   main_parent.appendChild(divadd)
                   
               
@@ -461,16 +480,26 @@ $( document ).ready(function() {
         var settings = JSON.parse(data);
         weekend_value = settings['WorkWeek'];
       }})
-
-
+      $.ajax({
+        url : '../PHP/pull_relationship.php',
+        type : 'POST',
+        data: 'project_id='+window.project_id,
+        success:function(data){
+          var rel_data = JSON.parse(data);
+          for (let key in rel_data){
+            window.relationship_log[key]=rel_data[key]
+            
+          }
+        }
+      })
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
 });
 //////////////////////////////////////////////////////////////////////////////
 function delete_main_activity_box(delete_icon_tag){
   var main_id= delete_icon_tag.id.split("_")[1];
-  var main_activity_title = delete_icon_tag.parentElement.getAttribute("name");
-  var main_tag = document.getElementById(main_id);
+  var main_activity = document.getElementById('title_'+main_id)
+  var main_activity_title = main_activity.getAttribute('name')
   var url = "../HTML/delete_confirm.html";
   add_box_blur_background(url);
   var action = "delete_main_activity";
@@ -486,24 +515,7 @@ function delete_main_activity_box(delete_icon_tag){
         parent.removeChild(parent.firstChild);
     }
 }
-//////////////////////////////////////////////////////////////////////////////
-  /* This function changes the input date box int a block element once clicked*/
-  function start_date_block_style(){
-    
-    var start_date_id = document.getElementById("start_date_input");
-    function display_null(){
-      start_date_id.style.display=null;
-      start_date_id.setAttribute("name","yes");
-    }
-    if(start_date_id.getAttribute("name")=="yes"){
-      start_date_id.setAttribute("name","no");
-      start_date_id.style.display="block";
-      return;
-    }
-    else{
-      setTimeout(display_null,328);
-    }
-  };
+/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
  $.ajax({
@@ -531,55 +543,50 @@ $(document).ready(function(){
 
 
         }
-  
+        
+        document.getElementById('party').replaceWith(window.party_list)
+        var input = document.getElementById('party_div').children[1]
+        input.setAttribute('id','party')
+        var show_all = document.createElement('option')
+        show_all.value='All'
+        show_all.innerHTML='Show All'
+        input.appendChild(show_all)
+        input.value = 'All'
   }});
 
 })
 
+function error_message(message,id){
+  document.getElementById(id).innerHTML = message
+}
 
-function date_range_picker(id_,action){
-  console.log(id_)
-  var start_tag = document.getElementById('sdate_'+id_.split('_')[1])
-  var end_tag = document.getElementById('edate_'+id_.split('_')[1])
-  if(action=='update'){
-    var start_date = date_format_changer2(start_tag.getAttribute('value'))
-    var end_date = date_format_changer2(end_tag.getAttribute('value'))
+function remove_error(id){
+  document.getElementById(id).innerHTML = ''
+}
+function date_range_picker(id_,action,value){
+    var date_tag = document.getElementById(id_)
+    var start_date = value.split(' ')[0]
+    var end_date = value.split(' ')[2]
     $("#"+id_).daterangepicker({
       "startDate": start_date,
       "endDate": end_date,
       opens: 'center'
     }, function(start, end, label) {
-      console.log('working_Inside')
-      start_tag.setAttribute('value',start.format("YYYY-MM-DD"))
-      start_tag.innerHTML = date_format_changer(start.format('YYYY-MM-DD'))
-      end_tag.setAttribute('value',end.format("YYYY-MM-DD"))
-      end_tag.innerHTML = date_format_changer(end.format('YYYY-MM-DD'))
       get_duration(start.format("YYYY-MM-DD"),end.format("YYYY-MM-DD"),id_.split('_')[1])
+      var dates_str = start.format("MM/DD/YYYY")+" - "+end.format("MM/DD/YYYY")
+      window.date_log[id_.split('_')[1]]=dates_str
+      date_tag.setAttribute('value',dates_str)
+      date_tag.innerHTML = dates_str
       if(action=='update'){
-        if(id_.split('_')[0]=="sdate"){
-          field_edit(start_tag)
-        }
-        else{
-          field_edit(end_tag)
-        }
+        var datelog={}
+        var array_answer = relationship_date(window.relationship_log,id_.split('_')[1],1,[id_.split('_')[1]],datelog)
+        update_dates_rel(array_answer[1])
+        field_edit(date_tag)
     }
 
     })
   }
-  else{
-    $("#"+id_).daterangepicker({
-      opens: 'center'
-    }, function(start, end, label) {
-      console.log('working_Inside')
-      start_tag.setAttribute('value',start.format("YYYY-MM-DD"))
-      start_tag.innerHTML = date_format_changer(start.format('YYYY-MM-DD'))
-      end_tag.setAttribute('value',end.format("YYYY-MM-DD"))
-      end_tag.innerHTML = date_format_changer(end.format('YYYY-MM-DD'))
-      get_duration(start.format("YYYY-MM-DD"),end.format("YYYY-MM-DD"),id_.split('_')[1])
 
-    })
-  }
-}
 
 //////////////////////////////////////////////////////////////////////
 function input_edit(input_tag){
@@ -596,15 +603,15 @@ function input_edit(input_tag){
     input.value = HTML;
     input_tag.replaceWith(input)
   }
-  else if(class_type=='sub_sdate' || class_type == 'sub_edate'){
-  //   console.log('working')
+  else if(class_type=='sub_date'){
     var input = document.createElement('input');
     input.setAttribute('type','text');
     input.setAttribute('id',id_);
     input.setAttribute('class',class_);
-    input.setAttribute('value',input_tag.getAttribute('value'));
+    var value = input_tag.getAttribute('value')
+    input.setAttribute('value',value);
     input_tag.replaceWith(input)
-    date_range_picker(id_,'update')
+    date_range_picker(id_,'update',value)
   }
   else if(class_type == 'sub_duration'){
     var input = document.createElement('input');
@@ -623,18 +630,73 @@ function input_edit(input_tag){
     input.value = HTML;
     input_tag.replaceWith(input)
   }
+  else if(class_type == 'title'){
+    var input = document.createElement('input');
+    input.setAttribute('type','text');
+    input.setAttribute('id',id_);
+    input.setAttribute('class',class_);
+    input.setAttribute('onChange','field_edit(this)')
+    input.value = input_tag.getAttribute('name');
+    input_tag.replaceWith(input)
+  }
 }
 
 ////////////////////////////////////////////
+function all_sub_activities_to_h5(id_){
+    var input_tag = document.getElementById(id_)
+    var class_ = input_tag.getAttribute('class');
+    var class_type = class_.split(' ')[0]
+    var HTML = input_tag.value
 
+    if (class_type == 'sub_name'){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+    }
+    else if(class_type=='sub_date'){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.setAttribute('value',HTML)
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+  
+    }
+    else if(class_type == 'sub_contractor'){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+    }
+    else if(class_type == "sub_duration"){
+      var input = document.createElement('h5');
+      input.setAttribute('class',class_);
+      input.setAttribute('id',id_);
+      input.setAttribute('onClick','input_edit(this)')
+      input.innerHTML = HTML;
+      input_tag.replaceWith(input)
+    }
+    else if(class_type == "far"){
+      var input = document.createElement('input');
+      input.setAttribute("type","checkbox")
+      input.setAttribute('class','sub_actualized sub_actualized_'+id_.split[1]);
+      input.setAttribute('id','actualized_'+id_.split[1]);
+      input_tag.replaceWith(input)
+
+    }
+}
 //////////////////////////////////////////////////////////////////////
 function field_edit(input_tag){
   var id_ = input_tag.id;
   var class_ = input_tag.getAttribute('class');
   var class_type = class_.split(' ')[0]
   var HTML = input_tag.value
-  console.log(input_tag)
-  console.log(HTML)
   if (class_type == 'sub_name'){
     var input = document.createElement('h5');
     input.setAttribute('class',class_);
@@ -643,15 +705,14 @@ function field_edit(input_tag){
     input.innerHTML = HTML;
     input_tag.replaceWith(input)
   }
-  else if(class_type=='sub_sdate' || class_type == 'sub_edate'){
+  else if(class_type=='sub_date'){
     var HTML = input_tag.getAttribute('value')
-    var date = date_format_changer(HTML)
     var input = document.createElement('h5');
-    input.setAttribute('class',class_);
+    input.setAttribute('class','sub_date');
     input.setAttribute('id',id_);
     input.setAttribute('onClick','input_edit(this)')
     input.setAttribute('value',HTML)
-    input.innerHTML = date;
+    input.innerHTML = HTML;
     input_tag.replaceWith(input)
 
   }
@@ -671,20 +732,259 @@ function field_edit(input_tag){
     input.innerHTML = HTML;
     input_tag.replaceWith(input)
   }
+  else if(class_type == "title"){
+    var input = document.createElement('h2');
+    input.setAttribute('class',class_);
+    input.setAttribute('id',id_);
+    input.setAttribute('onClick','input_edit(this)')
+    input.innerHTML = HTML;
+    input_tag.replaceWith(input)
+    var id = id_.split("_")[1]
+    var input_value = HTML
+    action = "update_main_activity"
+    $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value, action:action, project_id:window.project_id} );
+    return
+  }
   setTimeout(function(){
     upload_sub_activity(id_.split('_')[1])
   },500)
 }
 //////////////////////////////////////////////////////////////////////
 /*Checks for today's date once the document loads and inputs it onto the start date div*/
-  $(document).ready(function start_date_today(){
-    var start_date_input = document.getElementById("start_date_input");
+function set_start_date(){
     var today = new Date();
+    var day = today.getDay()
+    today = new Date(today.getTime()-(parseInt(day)-1)*86400000)
     var dd = today.getDate();
     var mm = today.getMonth()+1;
     var yy = today.getFullYear();
-    document.getElementById("start_date").innerHTML= mm+"/"+dd+"/"+yy;
-  })
+    document.getElementById("start_date").value= mm+"/"+dd+"/"+yy;
+  }
+
+
+////////////////////////////////////////////////////////////////////
+function start_date_picker(date_input_tag){
+  var start_date = date_input_tag.value
+  $('#start_date').daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    'startDate':start_date
+  }, function(start, end, label) {
+    date_input_tag.value = start.format("MM/DD/YYYY")
+    var bdate_array = document.getElementsByClassName('sub_activity_bdate')
+    for(var i=0;i<bdate_array.length;i++){
+      for (let k=0;k<bdate_array[i].children.length;k++){
+        if(k==0){
+          var bdate_days = document.createElement("div");
+          bdate_days.setAttribute("class","cell_days");
+          var bdate_dates = document.createElement("div");
+          bdate_dates.setAttribute("class","cell_dates");
+          var title = document.createElement('div')
+          title.setAttribute('class','sub_titles')
+          bdate_dates, bdate_days = three_week_ahead(bdate_dates,bdate_days);
+          title.appendChild(bdate_dates)
+          title.appendChild(bdate_days)
+          bdate_array[i].children[0].replaceWith(title)
+        }
+        else{
+          let bdate_child =  bdate_array[i].children[k]
+          let id_h = bdate_child.id
+          let id_ = id_h.split('_')[1]
+          var bdate_box = document.createElement("div");
+          bdate_box.setAttribute("class","sub_bdate sub_activity_"+id_.toString());
+          bdate_box.setAttribute("id","bdate_"+id_);
+          bdate_box = date_box(bdate_box,id_,bdate_dates);
+          bdate_child.replaceWith(bdate_box)
+          var dates = document.getElementById('date_'+id_).getAttribute('value')
+          var start_date = date_format_changer3(dates.split(" ")[0])
+          var end_date = date_format_changer3(dates.split(" ")[2])
+          date_array = date_filler(start_date,end_date)
+          log_dates_to_schedule(date_array,id_,'update')
+        }
+      }
+
+      // var bdate_children = bdate_array[i].children
+      // var length_ = bdate_children.length
+      // var id_array =[]
+      // for(var k=2;k<length_;k++){
+      //   id_array.push(bdate_children[k].getAttribute('id').split("_")[1])
+      // }
+      // var id_
+      // removeAllChildNodes(bdate_array[i])
+      // bdate_array[i].appendChild(bdate_dates);
+      // bdate_array[i].appendChild(bdate_days);
+      // for(var k=0;k<length_-2;k++){
+      //   id_ = id_array[k]
+        
+      // }
+
+
+
+    }
+  });
+};
+function remove_filters(remove_button){
+  document.getElementById('date_range').value=''
+  document.getElementById('viewable').value=3
+  document.getElementById('party').value = 'All'
+  apply_filters(remove_button)
+}
+function apply_filters(apply_button){
+  var res_array =[]
+  var count ={}
+  var id_array = document.getElementsByClassName('sub_id')
+  var m_activty = document.getElementsByClassName('main_activity')
+  for(var i=0;i<id_array.length;i++){
+    res_array.push(id_array[i].id)
+  }
+  for(var k=0;k<m_activty.length;k++){
+    count[m_activty[k].id]=0
+  }
+  /////Dates Filter
+  var dates = document.getElementById('date_range').value
+  var return_=filter_dates(dates,res_array,count)
+  res_array=return_[0]
+  count = return_[1]
+  /////Actualized Filter
+  var status = document.getElementById('viewable').value
+  return_= filter_status(status,res_array,count)
+  res_array=return_[0]
+  count = return_[1]
+  ///////Filter by Party
+  var party = document.getElementById('party').value
+  return_ = filter_parties(party,res_array,count)
+  res_array=return_[0]
+  count = return_[1]
+  var m_activty = document.getElementsByClassName('main_activity')
+  for (var i = 0; i< m_activty.length;i++){
+    var parent_id = m_activty[i].id
+    var parent_div = m_activty[i]
+    var child_length = parent_div.getElementsByClassName('sub_id').length
+    if (child_length == count[parent_id]){
+      parent_div.setAttribute('style','display:none')
+    }
+    else{
+      parent_div.removeAttribute('style')
+    }
+  }
+  toggle_filters()
+}
+
+function filter_parties(party,res_array,count){
+  var sres_array = []
+  for(var i=0;i<res_array.length;i++){
+    var party_div = document.getElementById('contractor_'+res_array[i])
+    var value = party_div.innerHTML
+    var activity = document.getElementById('sub_'+res_array[i])
+    if (value!=party&&party!='All'){
+      var parent_id =party_div.parentElement.parentElement.parentElement.parentElement.id
+      activity.setAttribute('style','display:none')
+      count[parent_id]++
+      continue
+    }
+    sres_array.push(res_array[i])
+    activity.removeAttribute('style')
+
+
+  }
+  return [sres_array,count]
+}
+function filter_status(status,res_array,count){
+  var sres_array=[]
+  for(var i=0;i<res_array.length;i++){
+    var act_div = document.getElementById('actualized_'+res_array[i])
+    var parent_id = act_div.parentElement.parentElement.parentElement.parentElement.id
+    var activity = document.getElementById('sub_'+res_array[i])
+    if (status==1&&act_div.checked == true){
+      activity.setAttribute('style','display:none')
+      count[parent_id]++
+      continue
+    }
+    else if(status==2&&act_div.checked == false){
+      activity.setAttribute('style','display:none')
+      count[parent_id]++
+      continue
+    }
+    else if((status==3)||(status==1&&act_div.checked==false)||(status==2&&act_div.checked==true)){
+      activity.removeAttribute('style')
+    }
+    sres_array.push(res_array[i])
+  }
+  return [sres_array,count]
+
+}
+
+
+function filter_dates(dates,res_array,count){
+  if (dates==''){
+    return [res_array, count]
+  }
+  var sres_array = []
+  var start = dates.split(' ')[0]
+  var end = dates.split(' ')[2]
+  var date_array = document.getElementsByClassName('sub_date')
+  var start_val = (new Date(start)).getTime()
+  var end_val = (new Date(end)).getTime()
+  for(var i=0;i<date_array.length;i++){
+    var v_start = (new Date(date_array[i].getAttribute('value').split(' ')[0])).getTime()
+    var v_end = (new Date(date_array[i].getAttribute('value').split(' ')[2])).getTime()
+    var id_ = date_array[i].getAttribute('id').split('_')[1]
+    var activity= document.getElementById('sub_'+id_)
+    if (v_end>=start_val&&v_start<=end_val){
+      activity.removeAttribute('style')
+      sres_array.push(id_)
+    }
+    else{
+      activity.setAttribute('style','display:none')
+      var parent_id = date_array[i].parentElement.parentElement.parentElement.parentElement.id
+      count[parent_id]++
+    }
+  }
+return [sres_array, count]
+}
+
+function filter_date_range(date_input_tag){
+  if(date_input_tag.value==''){
+    $('#date_range').daterangepicker({
+      showDropdowns: true,
+    }, function(start, end, label) {
+      date_input_tag.value=start.format("MM/DD/YYYY")+' - '+end.format("MM/DD/YYYY")
+    });
+  }
+  else{
+    var start_date = date_input_tag.value.split(' ')[0]
+    var end_date = date_input_tag.value.split(' ')[2]
+    $('#date_range').daterangepicker({
+      showDropdowns: true,
+      'startDate':start_date,
+      'endDate':end_date
+    }, function(start, end, label) {
+      date_input_tag.value=start.format("MM/DD/YYYY")+' - '+end.format("MM/DD/YYYY")
+    });
+  }
+}
+////////////////////////////////////////////////////////////////////////////
+
+function toggle_filters(){
+  var filter = document.getElementById('filter_div')
+  var topbar = document.getElementById('topbar')
+  if (filter.getAttribute('class')== 'navbar'){
+    filter.setAttribute('class','navbar filter_active')
+    topbar.setAttribute('class','navbar navbar-light bg-light justify-content-between navbar_active')
+  }
+  else{
+    filter.setAttribute('class','navbar')
+    topbar.setAttribute('class','navbar navbar-light bg-light justify-content-between')
+
+  }
+}
+// $(document).ready(function add_filters(){
+
+
+// }
+
+
+
 ////////////////////////////////////////////////////////////////////////
   function date_transform(date){
     ///takes input mm/dd and outputs yy-mm-dd (Only works if date is part of the current year)///
@@ -698,12 +998,14 @@ function field_edit(input_tag){
 
   /* Creates the dates to go on the three week ahead using the existing start date*/
 function three_week_ahead(bdate_dates,bdate_days){
+  var m = 3
   var n;
-  var date = document.getElementById("start_date").innerHTML;
+  var date = document.getElementById("start_date").value;
+
   var dd = parseInt(date.split("/")[1]);
   var mm = parseInt(date.split("/")[0]); 
   var yy = parseInt(date.split("/")[2]);
-  for(n=0;n<21;n++) {
+  for(n=0;n<m*7;n++) {
     if (dd==32 && (mm==12)){
       dd=1;
       mm=1;
@@ -746,6 +1048,7 @@ function three_week_ahead(bdate_dates,bdate_days){
       bdate_days.appendChild(day_tag);
       dd=dd+1;
   }
+  return bdate_dates , bdate_days
   };
 //////////////////////////////////////////////////////////////////////////////
   /*Takes the start date and end date inputs and fills the respective cells*/
@@ -822,10 +1125,23 @@ function log_dates_to_schedule(date_array,id_handler,action){
     for(var z = 0; z<id_handler.children.length;z++){
       date = id_handler.children[z].id.split("_")[1]
       if (date_array.indexOf(date)>=0){
-        id_handler.children[z].style.backgroundColor ="green";
+        if(date_array.indexOf(date)==0){
+          if(date_array.length==1){
+            id_handler.children[z].className ="date_box schedule schedule_single";
+          }
+          else{
+            id_handler.children[z].className ="date_box schedule schedule_start";
+          }
+        }
+        else if(date_array.indexOf(date)==date_array.length-1){
+          id_handler.children[z].className ="date_box schedule schedule_end";
+        }
+        else{
+          id_handler.children[z].className ="date_box schedule";
+        }
       }
       if (check_if_no_work(date,weekend_date_transform(weekend_value))==false){
-        id_handler.children[z].style.backgroundColor ="gray";
+        id_handler.children[z].className ="date_box weekend";
       }
 
     }
@@ -835,21 +1151,33 @@ function log_dates_to_schedule(date_array,id_handler,action){
   }
   else if (action=='update'){
     var id = id_handler
-    var date_all = document.getElementById("bdate_"+id).children;
-    for (var j = 0; j<date_all.length; j++){
-      var date_j = date_all[j];
-      date_j.style.backgroundColor = "white";
-      if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
-        date_j.style.backgroundColor="gray";
-      }
+    var date_id = document.getElementById("bdate_"+id);
+    let date_all = date_id.getElementsByClassName('schedule')
+    let l = date_all.length
+    let j=0
+    while (date_all.length>0){
+      var dates = date_all[j]
+      dates.className = 'date_box'
     }
     for(var i=0;i<date_array.length;i++){
-      if(document.getElementById(id+"_"+date_array[i])!=null){
-        document.getElementById(id+"_"+date_array[i]).style.backgroundColor = 'green'
-        if (check_if_no_work(date_array[i],weekend_date_transform(weekend_value))==false){
-          document.getElementById(id+"_"+date_array[i]).style.backgroundColor = 'gray'
+      let date_box = document.getElementById(id+"_"+date_array[i])
+      if(date_box!=null && date_box.className!="date_box weekend"){
+        if (i==0){
+          if (date_array.length==1){
+            date_box.className = 'date_box schedule schedule_single'
+
+          }
+          else{
+            date_box.className = 'date_box schedule schedule_start'
+          }
         }
-  
+        else if(i==date_array.length-1){
+          date_box.className = 'date_box schedule schedule_end'
+        }
+        else{
+          date_box.className = 'date_box schedule'
+        }
+
       }
     }
   
@@ -866,7 +1194,12 @@ function log_dates_to_schedule(date_array,id_handler,action){
       box_id = id+"_"+dates[i].innerHTML;
       var box = document.createElement("div");
       box.setAttribute("id",box_id);
-      box.setAttribute("class","date_box")
+      if (check_if_no_work(dates[i].innerHTML,weekend_date_transform(weekend_value))==false){
+        box.setAttribute("class","date_box weekend");
+      }
+      else{
+        box.setAttribute("class","date_box")
+      }
       this_tag.appendChild(box);
     }
     return (this_tag);
@@ -885,6 +1218,41 @@ function date_format_changer2(date){
     var formatted_date = date.split("-")[1]+"/"+date.split("-")[2]+"/"+date.split("-")[0];
     return formatted_date;
   }
+
+  function date_format_changer3(date){
+    ///input date mm/dd/yyyy output yyyy-mm-dd   ///////
+    var formatted_date = date.split("/")[2]+"-"+date.split("/")[0]+"-"+date.split("/")[1];
+    return formatted_date;
+  }
+  function date_format_changer4(date){
+    ///input date value in seconds outputs mm/dd/yyyy
+    date = new Date(date)
+    dd = date.getDate()
+    mm = date.getMonth()+1
+    yyyy=date.getFullYear()
+    if (dd<10){
+      dd="0"+dd
+    }
+    if(mm<10){
+      mm='0'+mm
+    }
+    return mm+"/"+dd+"/"+yyyy
+  }
+
+  function date_standard_to_yyyy_mm_dd_format(date){
+    var dd = (date.getDate()).toString()
+    var mm = (date.getMonth()+1).toString()
+    var yyyy = (date.getFullYear()).toString()
+    if(parseInt(dd)<10){
+      dd="0"+dd
+    }
+    if(parseInt(mm)<10){
+      mm="0"+mm
+    }
+    var formatted_date = yyyy+"-"+mm+"-"+dd
+    return formatted_date
+
+  }
   //////////////////////////////////////////////////////////////////////////////
 /* Adds the Main Activity Line */
   function add_main_activity(){
@@ -896,36 +1264,33 @@ function date_format_changer2(date){
     else{
       n=parseInt(n)+1;
     };
-    
+    var main_div = document.createElement('div')
+    main_div.setAttribute('class','main_activity_title')
+    var input = document.createElement('input');
+    input.setAttribute('class','title clickable');
+    input.setAttribute('id','title_'+n);
+    input.setAttribute('placeholder','Add Main Activity Title');
+    var delete_button= document.createElement("i");
+    delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
+    delete_button.setAttribute("id","delete_"+n);
+    delete_button.setAttribute("onclick","cancel_main_activity(this)")
+    var add_button= document.createElement("i");
+    add_button.setAttribute("class","far fa-plus-square main_add title clickable");
+    add_button.setAttribute("id","add_"+n);
+    add_button.setAttribute("onclick","change_input_to_title(this)")
     var div = document.createElement('div');
     div.setAttribute("id",n);
     div.setAttribute("class","main_activity");
-    var form=document.createElement('form')
-    form.setAttribute("method","post");
-    var inp = document.createElement('input');
-    inp.setAttribute("type","text");
-    inp.setAttribute("class","main_activity_input");
-    inp.setAttribute("name","main_activity"+n);
-    var submit = document.createElement("div");
-    submit.setAttribute("type","submit");
-    submitchild = document.createElement("i");
-    submitchild.setAttribute("class","fa fa-check-square clickable")
-    submitchild.setAttribute("onclick","change_input_to_title(this)")
-    rejectchild = document.createElement("i");
-    rejectchild.setAttribute("class","fa fa-times-circle-o");
-    rejectchild.setAttribute("onclick","cancel_main_activity(this)")
     /*  Adds Div for Dates for Main Activity */
     var div_date_id = document.createElement("div");
     div_date_id.setAttribute("id","date_"+n)
     var cell_date = document.getElementById("cell_dates");
     /* Appends All childs */
-    submit.appendChild(submitchild);
-    submit.appendChild(rejectchild)
-    div.appendChild(form)
-    form.appendChild(inp);
-    form.appendChild(submit);
+    main_div.appendChild(input)
+    main_div.appendChild(add_button)
+    main_div.appendChild(delete_button)
+    div.appendChild(main_div)
     add_cell.appendChild(div);
-    cell_date.appendChild(div_date_id)
   };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -972,76 +1337,40 @@ function cancel_main_activity(cancel_tag){
 }
 //////////////////////////////////////////////////////////////////////////////
 /* Creates the main activity title from an input format to a title*/
-  function change_input_to_title(cancel_tag){
-    var main_parent_element = cancel_tag.parentElement.parentElement.parentElement;
-    var input_parent= cancel_tag.parentElement.parentElement;
+  function change_input_to_title(add_tag){
+    var main_parent_element = add_tag.parentElement.parentElement;
+    var input_parent= add_tag.parentElement;
     var input_value= input_parent.children[0].value;
-    var id = input_parent.parentElement.id;
-    if(input_value!=""){
-      if (main_parent_element.children.length==1){
-      var action = 'add_main_activity'
-      var main_div=input_parent.parentElement;
-      var subadd=document.createElement('div');
-      subadd.setAttribute("class","sub_activity_add clickable");
-      subadd.setAttribute("onclick","add_sub_activity(this)");
-      var subaddtwo=document.createElement("i");
-      subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button");
-      subaddtwo.innerHTML="   Add Sub Activity";
-      subadd.appendChild(subaddtwo);
-      var title = document.createElement("h2");
-      title.setAttribute('class','title')
-      title.setAttribute("name",input_value);
-      var divtitle=document.createElement("div")
-      divtitle.setAttribute("class","main_activity_title")
-      title.innerHTML=input_value;
-      var edit = document.createElement("i");
-      edit.setAttribute("class","fas fa-edit main_edit title clickable");
-      edit.setAttribute("id","edit_"+id);
-      edit.setAttribute("onclick","update_main_activity(this)")
-      
-      var delete_button= document.createElement("i");
-      delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
-      delete_button.setAttribute("id","delete_"+id);
-      delete_button.setAttribute("onclick","delete_main_activity_box(this)")
-      for (i=0;i<main_div.children.length;i++) {
-        child=main_div.children[i];
-        main_div.removeChild(child);
-    }
-  
-    
-    title.appendChild(delete_button);
-    title.appendChild(edit);
-    divtitle.appendChild(title);
-    main_div.appendChild(divtitle);
-    main_div.appendChild(subadd);
-
-    }
-    else{
-      var action = 'update_main_activity'
-      var title = document.createElement("h2");
-      title.setAttribute('class','title')
-      title.setAttribute("name",input_value);
-      var divtitle=document.createElement("div")
-      divtitle.setAttribute("class","main_activity_title")
-      title.innerHTML=input_value;
-      var edit = document.createElement("i");
-      edit.setAttribute("class","fas fa-edit main_edit title clickable");
-      edit.setAttribute("id","edit_"+id);
-      edit.setAttribute("onclick","update_main_activity(this)")
-      
-      var delete_button= document.createElement("i");
-      delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
-      delete_button.setAttribute("id","delete_"+id);
-      delete_button.setAttribute("onclick","delete_main_activity_box(this)")
-      title.appendChild(delete_button);
-      title.appendChild(edit);
-      divtitle.appendChild(title);
-      main_parent_element.replaceChild(divtitle,input_parent);
-
-    }
+    var id=main_parent_element.id;
+    var action = 'add_main_activity'
+    var main_div=input_parent.parentElement;
+    let sub_activity = create_title_sub_activity(id)
+    // var subadd=document.createElement('div');
+    // subadd.setAttribute("class","sub_activity_add clickable");
+    // subadd.setAttribute("onclick","add_sub_activity(this)");
+    // var subaddtwo=document.createElement("i");
+    // subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button clickable");
+    // subaddtwo.innerHTML="   Add Sub Activity";
+    // subadd.appendChild(subaddtwo);
+    var divtitle = document.createElement('div')
+    divtitle.setAttribute('class','main_activity_title')
+    var input = document.createElement('h2');
+    input.setAttribute('class','title clickable');
+    input.setAttribute('id','title_'+id);
+    input.setAttribute('onClick','input_edit(this)')
+    input.setAttribute('name',input_value)
+    input.innerHTML = input_value;
+    var delete_button= document.createElement("i");
+    delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
+    delete_button.setAttribute("id","delete_"+id);
+    delete_button.setAttribute("onclick","delete_main_activity_box(this)")
+    divtitle.appendChild(input)
+    divtitle.appendChild(delete_button)
+    removeAllChildNodes(main_parent_element)
+    main_parent_element.appendChild(divtitle);
+    main_parent_element.appendChild(sub_activity);
     $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value, action:action, project_id:window.project_id} );
 
-  }
   };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1053,6 +1382,90 @@ function cancel_main_activity(cancel_tag){
   }
 
   //////////////////////////////////////////////////////////////////////////////
+
+  function create_title_sub_activity(main_id){
+    var activity_div=document.createElement('div');
+    activity_div.setAttribute("class","sub_activity_box");
+    activity_div.setAttribute('id','subbox_'+main_id)
+    /* Activity Right*/
+    var date_div = document.createElement('div');
+    date_div.setAttribute('class','activity_right');
+    /* Activity Left*/
+    var action_div = document.createElement('div');
+    action_div.setAttribute('class','activity_left')
+    /* Collapse Button*/
+    var collapsable_button = document.createElement('div')
+    collapsable_button.setAttribute('class','collapsable_button')
+    var c_button = document.createElement('i')
+    c_button.setAttribute('class','fas fa-ellipsis-v clickable')
+    c_button.setAttribute('onclick','collapse_activities(this)')
+    c_button.setAttribute('type','active')
+    c_button.setAttribute('id','collapse_'+main_id)
+    collapsable_button.appendChild(c_button)
+    /* Sub Activity Title */
+    var s_activity_div=document.createElement('div');
+    s_activity_div.setAttribute("class","sub_activity sub_title");
+    /* Add Title for ID */
+    var id_title = document.createElement("h3");
+    id_title.setAttribute("class","sub_id_title sub id_title");
+    id_title.innerHTML="Id";
+    s_activity_div.appendChild(id_title);
+    /* Add Title for Activity */
+    var name_title = document.createElement("h3");
+    name_title.setAttribute("class","sub_name_title sub activity_title");
+    name_title.innerHTML="Activity";
+    s_activity_div.appendChild(name_title);
+    /* Add Title for Start Date */
+    var date_title = document.createElement("h3");
+    date_title.setAttribute("class","sub_date_title sub date_title");
+    date_title.innerHTML="Dates";
+    s_activity_div.appendChild(date_title);
+
+    /* Add Duration */
+    var duration_title = document.createElement("h3");
+    duration_title.setAttribute("class","sub_duration_title collapsable");
+    duration_title.innerHTML="Duration";
+    s_activity_div.appendChild(duration_title);
+
+    /* Add Party Invloved */
+    var contractor_title = document.createElement("h3");
+    contractor_title.setAttribute("class","sub_contractor_title collapsable");
+    contractor_title.innerHTML="Party Involved";
+    s_activity_div.appendChild(contractor_title);
+
+    /* Add Dates to the Activity Location */
+    var bdate = document.createElement('div');
+    bdate.setAttribute("class","sub_activity_bdate sub")
+    var bdate_div= document.createElement('div')
+    bdate_div.setAttribute('class','sub_titles')
+    var bdate_days = document.createElement("div");
+    bdate_days.setAttribute("class","cell_days");
+    var bdate_dates = document.createElement("div");
+    bdate_dates.setAttribute("class","cell_dates");
+    bdate_dates,bdate_days= three_week_ahead(bdate_dates,bdate_days);
+    bdate_div.appendChild(bdate_dates);
+    bdate_div.appendChild(bdate_days);
+    bdate.appendChild(bdate_div)
+
+    /* Add edit to the Activity Location */
+    var actualized_title = document.createElement("h3");
+    actualized_title.setAttribute("class","sub_actualized_title collapsable");
+    actualized_title.innerHTML = "A"
+    s_activity_div.appendChild(actualized_title);
+
+    // Adds Delete Icon ///s
+    var delete_empty_title = document.createElement("div");
+    delete_empty_title.setAttribute("class","delete_icon sub_delete_title collapsable");
+    s_activity_div.appendChild(delete_empty_title);
+    action_div.appendChild(s_activity_div)
+    date_div.appendChild(bdate)
+
+    activity_div.appendChild(action_div)
+    activity_div.appendChild(collapsable_button)
+    activity_div.appendChild(date_div)
+
+    return activity_div;
+  }
 
   function create_all_sub_activity_divs(){
     var activity_div=document.createElement('div');
@@ -1072,19 +1485,12 @@ function cancel_main_activity(cancel_tag){
     name_title.innerHTML="Activity";
     name_div.appendChild(name_title);
     /* Add Title for Start Date */
-    var sdate_div = document.createElement('div');
-    sdate_div.setAttribute("class","sub_activity_sdate sub")
-    var sdate_title = document.createElement("h3");
-    sdate_title.setAttribute("class","sdate_title");
-    sdate_title.innerHTML="Start Date";
-    sdate_div.appendChild(sdate_title);
-    /* Add Title for End Date */
-    var edate_div = document.createElement('div');
-    edate_div.setAttribute("class","sub_activity_edate sub")
-    var edate_title = document.createElement("h3");
-    edate_title.setAttribute("class","edate_title");
-    edate_title.innerHTML="End Date";
-    edate_div.appendChild(edate_title);
+    var date_div = document.createElement('div');
+    date_div.setAttribute("class","sub_activity_date sub")
+    var date_title = document.createElement("h3");
+    date_title.setAttribute("class","date_title");
+    date_title.innerHTML="Dates";
+    date_div.appendChild(date_title);
 
     /* Add Duration */
     var duration_div = document.createElement('div');
@@ -1105,20 +1511,24 @@ function cancel_main_activity(cancel_tag){
     /* Add Dates to the Activity Location */
     var bdate = document.createElement('div');
     bdate.setAttribute("class","sub_activity_bdate sub")
+    var bdate_div= document.createElement('div')
+    bdate_div.setAttribute('class','sub_titles')
     var bdate_days = document.createElement("div");
     bdate_days.setAttribute("class","cell_days");
     var bdate_dates = document.createElement("div");
     bdate_dates.setAttribute("class","cell_dates");
-    three_week_ahead(bdate_dates,bdate_days);
-    bdate.appendChild(bdate_dates);
-    bdate.appendChild(bdate_days);
+    bdate_dates,bdate_days= three_week_ahead(bdate_dates,bdate_days);
+    bdate_div.appendChild(bdate_dates);
+    bdate_div.appendChild(bdate_days);
+    bdate.appendChild(bdate_div)
 
     /* Add edit to the Activity Location */
-    var edit_div = document.createElement('div');
-    edit_div.setAttribute("class","sub_activity_edit collapsable sub")
-    var edit_empty_title = document.createElement("div");
-    edit_empty_title.setAttribute("class","edit_icon");
-    edit_div.appendChild(edit_empty_title);
+    var actualized_div = document.createElement('div');
+    actualized_div.setAttribute("class","sub_activity_actualized collapsable sub")
+    var actualized_title = document.createElement("h3");
+    actualized_title.setAttribute("class","actualized");
+    actualized_title.innerHTML = "A"
+    actualized_div.appendChild(actualized_title);
 
     // Adds Delete Icon ///
     var delete_div = document.createElement('div');
@@ -1127,11 +1537,92 @@ function cancel_main_activity(cancel_tag){
     delete_empty_title.setAttribute("class","delete_icon");
     delete_div.appendChild(delete_empty_title);
 
-    return [id_div, name_div, sdate_div, edate_div, duration_div,contractor_div, bdate, edit_div, activity_div, delete_div];
+    return [id_div, name_div, date_div, duration_div,contractor_div, bdate, actualized_div, activity_div, delete_div];
 
   }
 ////////////////////////////////////////////////////////////////////
-function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date,duration,party_involved, dates){
+function download_sub_activity2(main_id,sub_id,activity_title,date,duration,party_involved, dates,actualized){
+
+  var parent_id = main_id;
+  var id = sub_id;
+  var p_id = document.createElement("h5");
+  p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
+  p_id.setAttribute("id",id)
+  if(id-Number(parent_id)*1000 < 10){
+    var attribute_id="00"+(id-Number(parent_id)*1000).toString();
+  }
+  else if (id-Number(parent_id)*1000 < 100){
+    var attribute_id="0"+(id-Number(parent_id)*1000).toString();
+  }
+  else{
+    var attribute_id=(id-Number(parent_id)*1000).toString();
+  }
+  p_id.innerHTML=attribute_id;
+
+  /* Create Activity */
+  var input_activity = document.createElement("h5");
+  input_activity.setAttribute("class","sub_name sub");
+  input_activity.setAttribute("id","name_"+id.toString());
+  input_activity.setAttribute('ondblclick','input_edit(this)')
+  input_activity.innerHTML=activity_title;
+
+   /* Create Date */
+   var input_date = document.createElement("h5");
+   input_date.setAttribute("class","sub_date sub");
+   input_date.setAttribute("id","date_"+id.toString());
+   input_date.setAttribute("value",date);
+   input_date.setAttribute('onclick','input_edit(this)')
+   input_date.innerHTML = date;
+
+   //Create Duration//
+   var input_duration = document.createElement("h5");
+   input_duration.setAttribute("class","sub_duration sub collapsable");
+   input_duration.setAttribute("id","duration_"+id.toString());
+   input_duration.setAttribute('ondblclick','input_edit(this)')
+   input_duration.innerHTML = duration;
+
+     /* Create Contartcor Option */
+   var input_contractor = document.createElement("h5");
+   input_contractor.setAttribute("class","sub_contractor sub collapsable");
+   input_contractor.setAttribute("id","contractor_"+id.toString());
+   input_contractor.setAttribute('ondblclick','input_edit(this)')
+   input_contractor.innerHTML = party_involved
+
+   var input_actualized = document.createElement("input");
+   input_actualized.setAttribute("type","checkbox")
+   input_actualized.setAttribute("class","sub_actualized collapsable");
+   input_actualized.setAttribute("id","actualized_"+id.toString());
+   if(actualized==1){
+     input_actualized.checked = true;
+   }
+   
+   var delete_button= document.createElement("i");
+   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable collapsable");
+   delete_button.setAttribute("id","delete_"+id);
+   delete_button.setAttribute("onclick","delete_sub_activity_box(this)")
+
+   /* Create Date Box */
+   var bdate_box = document.createElement("div");
+   bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
+   bdate_box.setAttribute("id","bdate_"+id);
+   date_box(bdate_box,id,dates);
+
+  //Sub_Activity Div
+  let sub_activity = document.createElement('div')
+  sub_activity.setAttribute('class','sub_activity')
+  sub_activity.setAttribute('id','sub_'+id)
+
+  sub_activity.appendChild(p_id)
+  sub_activity.appendChild(input_activity)
+  sub_activity.appendChild(input_date)
+  sub_activity.appendChild(input_duration)
+  sub_activity.appendChild(input_contractor)
+  sub_activity.appendChild(input_actualized)
+  sub_activity.appendChild(delete_button)
+  return [sub_activity,bdate_box];
+}
+
+function download_sub_activity(main_id,sub_id,activity_title,date,duration,party_involved, dates,actualized){
   var parent_id = main_id;
   var id = sub_id;
   var p_id = document.createElement("h5");
@@ -1156,20 +1647,12 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
   input_activity.innerHTML=activity_title;
 
    /* Create Start Date */
-   var input_sdate = document.createElement("h5");
-   input_sdate.setAttribute("class","sub_sdate sub_activity_"+id.toString());
-   input_sdate.setAttribute("id","sdate_"+id.toString());
-   input_sdate.setAttribute("value",start_date);
-   input_sdate.setAttribute('onclick','input_edit(this)')
-   input_sdate.innerHTML = date_format_changer(start_date);
-
-   /* Create End Date */
-   var input_edate = document.createElement("h5");
-   input_edate.setAttribute("class","sub_edate sub_activity_"+id.toString());
-   input_edate.setAttribute("id","edate_"+id.toString());
-   input_edate.setAttribute("value",end_date)
-   input_edate.setAttribute('onclick','input_edit(this)')
-   input_edate.innerHTML = date_format_changer(end_date);
+   var input_date = document.createElement("h5");
+   input_date.setAttribute("class","sub_date sub_activity_"+id.toString());
+   input_date.setAttribute("id","date_"+id.toString());
+   input_date.setAttribute("value",date);
+   input_date.setAttribute('onclick','input_edit(this)')
+   input_date.innerHTML = date;
 
    //Create Duration//
    var input_duration = document.createElement("h5");
@@ -1185,10 +1668,13 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
    input_contractor.setAttribute('ondblclick','input_edit(this)')
    input_contractor.innerHTML = party_involved
 
-   var edit = document.createElement("i");
-   edit.setAttribute("class","fas fa-edit edit_sub_icon clickable sub_activity_"+id.toString());
-   edit.setAttribute("id","edit_"+id);
-   edit.setAttribute("onclick","update_sub_activity(this)")
+   var input_actualized = document.createElement("input");
+   input_actualized.setAttribute("type","checkbox")
+   input_actualized.setAttribute("class","sub_actualized sub_activity_"+id.toString());
+   input_actualized.setAttribute("id","actualized_"+id.toString());
+   if(actualized==1){
+     input_actualized.checked = true;
+   }
    
    var delete_button= document.createElement("i");
    delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable sub_activity_"+id.toString());
@@ -1201,160 +1687,186 @@ function download_sub_activity(main_id,sub_id,activity_title,start_date,end_date
    bdate_box.setAttribute("id","bdate_"+id);
    date_box(bdate_box,id,dates);
 
-   var filled_divs = [p_id, input_activity,input_sdate,input_edate,input_duration,input_contractor, edit,bdate_box, delete_button];
+   var filled_divs = [p_id, input_activity,input_date,input_duration,input_contractor, input_actualized,bdate_box, delete_button];
     return filled_divs;
   }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+function check_for_active_inputs(main_div){
+  /*This function ensures that all inputs are submitted prior to starting a new activty*/
+var main_id = main_div.id
+var sub_array = main_div.getElementsByClassName('sub_activity')
+if(sub_array[1]!=null){
+  for(var i=1;i<sub_array.length;i++){
+    if(sub_array[i].getElementsByTagName('input')[1]!=null){
+      var message = "Error All Values Must Be Submitted Prior To starting New Activty"
+      error_message(message,'error_'+main_id)
+      return false
+    }
+  }
+}
+return true
+
+}
 
   //////////////////////////////////////////////////////////////////////////////
 /* Adds a sub Activity to the corresponding main activty*/
 function add_sub_activity(this_tag){
-  var parent_div=this_tag.parentElement;
-  var parent_id=parent_div.id;
-  if (parent_div.children.length < 3){
-    empty_divs = create_all_sub_activity_divs();
-    var id_div = empty_divs[0];
-    var name_div = empty_divs[1];
-    var sdate_div = empty_divs[2];
-    var edate_div = empty_divs[3];
-    var duration_div = empty_divs[4];
-    var contractor_div = empty_divs[5];
-    var bdate = empty_divs[6];
-    var edit_div = empty_divs[7];
-    var activity_div = empty_divs[8];
-    var delete_div = empty_divs[9];
-      activity_div.appendChild(id_div);
-      activity_div.appendChild(name_div);
-      activity_div.appendChild(sdate_div);
-      activity_div.appendChild(edate_div);
-      activity_div.appendChild(duration_div);
-      activity_div.appendChild(contractor_div);
-      activity_div.appendChild(edit_div);
-      activity_div.appendChild(delete_div);
-      activity_div.appendChild(bdate);
-      parent_div.appendChild(activity_div);
-      parent_div.appendChild(this_tag);
-  }
-
-  /* Add Id to sub activity number */
-  var current_id=parent_div.getElementsByClassName("sub_id");
-  if( current_id.length>0){
-  var id=Number(current_id[current_id.length-1].id) +1;
+  var parent_div=this_tag.parentElement.parentElement.parentElement;
+  let add_clone = this_tag.cloneNode(true)
+  if (check_for_active_inputs(parent_div)==false){
+    return
   }
   else{
-    var id = parseInt(parent_id)*1000+1;
-  }
-  /*  Create ID */
-  var id_parent= parent_div.getElementsByClassName("sub_activity_id")[0];
-  var p_id = document.createElement('h5');
-  p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
-  p_id.setAttribute("id",id)
-  if(parseInt(id)-Number(parent_id)*1000 < 10){
-    var attribute_id="00"+(id-Number(parent_id)*1000).toString();
-  }
-  else if (parseInt(id)-Number(parent_id)*1000 < 100){
-    var attribute_id="0"+(id-Number(parent_id)*1000).toString();
-  }
-  else{
-    var attribute_id=(parseInt(id)-Number(parent_id)*1000).toString();
-  }
-  p_id.innerHTML=attribute_id;
-  id_parent.appendChild(p_id);
+    var parent_div=this_tag.parentElement.parentElement.parentElement;
+    let parent = this_tag.parentElement
+    var parent_id=parent_div.id;
+    console.log(parent_id)
+    remove_error('error_'+parent_id)
+    if (parent.children.length < 3){
+      var activity_div = create_title_sub_activity(parent_id) 
+      this_tag.replaceWith(activity_div)
 
-  /* Create Activity */
-  var activity_parent= parent_div.getElementsByClassName("sub_activity_name")[0];
-  var input_activity = document.createElement("input");
-  input_activity.setAttribute('type','text')
-  input_activity.setAttribute("class","sub_name sub_activity_"+id.toString());
-  input_activity.setAttribute("id","name_"+id.toString());
-  activity_parent.appendChild(input_activity);
-
-   /* Create Start Date */
-   var sdate_parent= parent_div.getElementsByClassName("sub_activity_sdate")[0];
-   var input_sdate = document.createElement("input");
-   input_sdate.setAttribute('type','text')
-   input_sdate.setAttribute("class","sub_sdate sub_activity_"+id.toString());
-   input_sdate.setAttribute("id","sdate_"+id.toString());
-   input_sdate.setAttribute("onfocus","date_range_picker(this.id,'new')");
-   input.value = 
-   sdate_parent.appendChild(input_sdate);
-
-   /* Create End Date */
-   var edate_parent= parent_div.getElementsByClassName("sub_activity_edate")[0];
-   var input_edate = document.createElement("input");
-   input_edate.setAttribute('type','text')
-   input_edate.setAttribute("class","sub_edate sub_activity_"+id.toString());
-   input_edate.setAttribute("id","edate_"+id.toString());
-   input_edate.setAttribute("onfocus","date_range_picker(this.id,'new')");
-   edate_parent.appendChild(input_edate);
-
-   //Create Duration//
-   var duration_parent= parent_div.getElementsByClassName("sub_activity_duration")[0];
-   var input_duration = document.createElement("input");
-   input_duration.setAttribute('type','number')
-   input_duration.setAttribute("class","sub_duration sub_activity_"+id.toString());
-   input_duration.setAttribute("id","duration_"+id.toString());
-   duration_parent.appendChild(input_duration);
-
-     /* Create Contartcor Option */
-   var contractor_parent= parent_div.getElementsByClassName("sub_activity_contractor")[0];
-   var input_contractor = window.party_list.cloneNode(true)
-   input_contractor.setAttribute("class","sub_contractor sub_activity_"+id.toString());
-   input_contractor.setAttribute("id","contractor_"+id.toString());
-   contractor_parent.appendChild(input_contractor);
-  //// Create Edit Button////
-   var add_parent= parent_div.getElementsByClassName("sub_activity_edit")[0];
-   var add = document.createElement("i");
-   add.setAttribute("class","fas fa-check-square add_sub_icon clickable sub_activity_"+id.toString());
-   add.setAttribute("id","add_"+id);
-   add.setAttribute("onclick","add_sub_activity(this)")
-   add_parent.appendChild(add);
-
-   ////Create Delete Button/////
-   var delete_parent_div = parent_div.getElementsByClassName('sub_activity_delete')[0];
-   var delete_button= document.createElement("i");
-   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable sub_activity_"+id.toString());
-   delete_button.setAttribute("id","delete_"+id);
-   delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
-   delete_parent_div.appendChild(delete_button);
-
-   /* Create Date Box */
-   var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
-   var bdate_box = document.createElement("div");
-   bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
-   bdate_box.setAttribute("id","bdate_"+id);
-   dates=bdate_parent.getElementsByClassName("cell_dates")[0];
-   date_box(bdate_box,id,dates);
-   bdate_parent.appendChild(bdate_box);
-   var action = "new";
-   var id_array = [id,parent_id, action]
-
-
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-function sdate_greater_edate(sdate, edate){
-  //fix sdate>edate scenario
-  var sdate_part = sdate.split("-");
-  var edate_part = edate.split("-");
-  if(parseInt(sdate_part[0])>parseInt(edate_part[0])){
-    return [sdate,edate]
-  }
-  if(parseInt(sdate_part[0])==parseInt(edate_part[0])){
-    if(parseInt(sdate_part[1])>parseInt(edate_part[1])){
-      return [sdate,edate]
+      // empty_divs = create_all_sub_activity_divs();
+      // var id_div = empty_divs[0];
+      // var name_div = empty_divs[1];
+      // var dateval_div = empty_divs[2];
+      // // var edate_div = empty_divs[3];
+      // var duration_div = empty_divs[3];
+      // var contractor_div = empty_divs[4];
+      // var bdate = empty_divs[5];
+      // var actualized_div = empty_divs[6];
+      // var activity_div = empty_divs[7];
+      // var delete_div = empty_divs[8];
+      // var date_div = document.createElement('div');
+      // date_div.setAttribute('class','activity_right');
+      // var action_div = document.createElement('div');
+      // action_div.setAttribute('class','activity_left')
+      // var collapsable_button = document.createElement('div')
+      // collapsable_button.setAttribute('class','collapsable_button')
+      // var c_button = document.createElement('i')
+      // c_button.setAttribute('class','fas fa-ellipsis-v clickable')
+      // c_button.setAttribute('onclick','collapse_activities(this)')
+      // c_button.setAttribute('type','active')
+      // c_button.setAttribute('id','collapse_'+parent_id)
+      //     /// Create Error Div////
+      // var error_div = document.getElementById('error_'+parent_id)
+    //////////////////////////////////////
+      // collapsable_button.appendChild(c_button)
+      //   action_div.appendChild(id_div);
+      //   action_div.appendChild(name_div);
+      //   action_div.appendChild(dateval_div);
+      //   // activity_div.appendChild(edate_div);
+      //   action_div.appendChild(duration_div);
+      //   action_div.appendChild(contractor_div);
+      //   action_div.appendChild(actualized_div);
+      //   action_div.appendChild(delete_div);
+      //   date_div.appendChild(bdate);
+      //   activity_div.appendChild(action_div)
+      //   activity_div.appendChild(collapsable_button)
+      //   activity_div.appendChild(date_div)
+      //   parent_div.appendChild(activity_div);
+      //   parent_div.appendChild(error_div)
+        // parent_div.appendChild(this_tag);
     }
-    if(parseInt(sdate_part[1])==parseInt(edate_part[1])){
-      if(parseInt(sdate_part[2])>parseInt(edate_part[2])){
-        return [sdate,edate]
-      }
-    }
-  }
-  return [];
-}
-//////////////////////////////////////////////////////////////////////////////
-//For Add Sub Activity HTML//
 
+    /* Add Id to sub activity number */
+    var current_id=parent_div.getElementsByClassName("sub_id");
+    if( current_id.length>0){
+    var id=Number(current_id[current_id.length-1].id) +1;
+    }
+    else{
+      var id = parseInt(parent_id)*1000+1;
+    }
+
+    //Create Sub Activity Div//
+    let activity_left = document.getElementById('subbox_'+parent_id).children[0]
+
+    let sub_activity = document.createElement('div')
+    sub_activity.setAttribute('class','sub_activity')
+    sub_activity.setAttribute('id','sub_'+id)
+    /*  Create ID */
+    var p_id = document.createElement('h5');
+    p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
+    p_id.setAttribute("id",id)
+    if(parseInt(id)-Number(parent_id)*1000 < 10){
+      var attribute_id="00"+(id-Number(parent_id)*1000).toString();
+    }
+    else if (parseInt(id)-Number(parent_id)*1000 < 100){
+      var attribute_id="0"+(id-Number(parent_id)*1000).toString();
+    }
+    else{
+      var attribute_id=(parseInt(id)-Number(parent_id)*1000).toString();
+    }
+    p_id.innerHTML=attribute_id;
+    sub_activity.appendChild(p_id);
+
+    
+    /* Create Activity */
+    var input_activity = document.createElement("input");
+    input_activity.setAttribute('type','text')
+    input_activity.setAttribute("class","sub_name");
+    input_activity.setAttribute("id","name_"+id.toString());
+    sub_activity.appendChild(input_activity);
+
+    /* Create Start Date */
+    var input_date = document.createElement("input");
+    input_date.setAttribute('type','text')
+    input_date.setAttribute("class","sub_date");
+    input_date.setAttribute("id","date_"+id.toString());
+    input_date.setAttribute("onfocus","date_range_picker(this.id,'new',this.value)");
+    var today_ = date_format_changer2(date_standard_to_yyyy_mm_dd_format(new Date()))
+    input_date.setAttribute('value',today_+" - "+today_)
+    sub_activity.appendChild(input_date);
+
+    //Create Duration//
+    var input_duration = document.createElement("input");
+    input_duration.setAttribute('type','number')
+    input_duration.setAttribute("class","sub_duration collapsable");
+    input_duration.setAttribute("id","duration_"+id.toString());
+    input_duration.value=1
+    sub_activity.appendChild(input_duration);
+
+      /* Create Contartcor Option */
+    var input_contractor = window.party_list.cloneNode(true)
+    input_contractor.setAttribute("class","sub_contractor collapsable");
+    input_contractor.setAttribute("id","contractor_"+id.toString());
+    sub_activity.appendChild(input_contractor);
+
+    //// Create Add Button////
+    var add = document.createElement("i");
+    add.setAttribute("class","far fa-plus-square add_sub_icon sub_actualized clickable collapsable");
+    add.setAttribute("id","add_"+id);
+    add.setAttribute("onclick","upload_sub_activity(this,'add')")
+    sub_activity.appendChild(add);
+
+    ////Create Delete Button/////
+    var delete_button= document.createElement("i");
+    delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable collapsable");
+    delete_button.setAttribute("id","delete_"+id);
+    delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
+    sub_activity.appendChild(delete_button);
+
+    /* Create Date Box */
+    var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
+    var bdate_box = document.createElement("div");
+    bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
+    bdate_box.setAttribute("id","bdate_"+id);
+    dates=bdate_parent.getElementsByClassName("cell_dates")[0];
+    date_box(bdate_box,id,dates);
+    bdate_parent.appendChild(bdate_box);
+    var action = "new";
+    var id_array = [id,parent_id, action]
+    let error_div = activity_left.getElementsByClassName('error_div')[0].cloneNode(true)
+    activity_left.getElementsByClassName('error_div')[0].replaceWith(sub_activity)
+    activity_left.getElementsByClassName('sub_activity_add')[0].replaceWith(error_div)
+    activity_left.appendChild(add_clone)
+
+    ///
+
+
+  }
+}
 //////////////////////////////////////////////////////////////////////////////
 function number_of_days_from_date(date){
   //Input in yyyy-mm-dd//
@@ -1405,29 +1917,6 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
     if(day>6){
       day=0
     }
-    
-
-    // var flag = 0;
-    // for (var w=0;w<workweek.length;w++){
-    //   for(var h=0;h<holidays_array.length;h++){
-    //     var hol_date = (new Date(holidays_array[h])).getTime();
-    //     if (day ==workweek[w]||date == hol_date){
-    //       flag++;
-    //     }
-    //   }
-    // }
-    // if (flag == 0){
-    //   duration = duration + 1;
-    // }
-
-    // date = date + 86400000;
-    // if((date+3600000==e_date)){
-    //   date = date+3600000
-    // }
-    // else if((date-3600000==e_date)){
-    //   date = date-3600000
-    // }
-    // day = (new Date(date)).getDay();
   }
 
   return (duration);
@@ -1438,43 +1927,48 @@ function return_end_date(start_date, duration, holidays_array, weekend_days){
     var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
     var weekend = weekend_date_transform(weekend_days);
     var date = (new Date(start_date)).getTime();
-    var d = 1;
-
-    while(d<=parseInt(duration)){
-      date = date+86400000;
-      if(weekend.indexOf(day)>=0){
-        day = day+1
+    if(duration>0){
+      var d = 1;
+      while(d<parseInt(duration)){
+        date = date+86400000;
+        if(day==6){
+          day=0
+        }
+        else{
+          day = day+1
+        }
+        if(weekend[0] == day || weekend[1]==day){
+        }
+        else{
+          d=d+1
+        }
       }
-      else{
-        d=d+1
-        day = day+1
-      }
-      if(day>6){
-        day=0
-      }
-
-      // var flag = 0;
-      // for (var w=0;w<workweek.length;w++){
-      //   for(var h=0;h<holidays_array.length;h++){
-      //     var hol_date = (new Date(holidays_array[h])).getTime();
-      //     if (day ==workweek[w]||date == hol_date){
-      //       flag++;
-      //     }
-      //   }
-      // }
-      // if (flag == 0){
-      //   d=d+1;
-      // }
-      //         date = date = date + 86400000;
-      //   day = (new Date(date)).getDay();
     }
-    console.log(date)
-    date = new Date(date);
-    console.log(date)
+    else if(duration==0){
+      return start_date
+    }
+    else{
+      d=-1
+      while(d>parseInt(duration)){
+        date = date-86400000;
+        if(day==0){
+          day=6
+        }
+        else{
+          day = day-1
+        }
+        if(weekend[0] == day || weekend[1]==day){
+        }
+        else{
+          d=d-1
+        }
+      }
+    }
+    date = new Date(date)
     var dd = String(date.getDate()).padStart(2, '0');
     var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = date.getFullYear();
-    var end_date = yyyy+"-"+mm+"-"+dd;
+    var end_date = mm+"/"+dd+"/"+yyyy;
     return end_date;
 
 }
@@ -1482,122 +1976,40 @@ function return_end_date(start_date, duration, holidays_array, weekend_days){
 $(document).on('change','.sub_duration', function(){
   var duration = this.value;
   var id = this.id.split("_")[1]
-  var start_date_tag = document.getElementById("sdate_"+id)
-  var start_date = start_date_tag.getAttribute('value')
-  if(start_date == null){
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    start_date_tag.setAttribute('value',today);
-    start_date = start_date_tag.getAttribute('value')
-  }
-
+  var date_tag = document.getElementById("date_"+id)
+  var dates = date_tag.getAttribute('value')
+  var start_date = dates.split(" ")[0]
+  var holidays_date_array = []
   var end_date = return_end_date(start_date,duration,holidays_date_array,weekend_value);
-  document.getElementById("edate_"+id).setAttribute('value',end_date);
-  document.getElementById("edate_"+id).innerHTML = date_format_changer(end_date)
-  
+  dates = start_date+" - "+end_date  
+  window.date_log[id]=dates
+  date_tag.setAttribute('value',dates)
+  date_tag.innerHTML = dates
+  var datelog={}
+  var array_answer = relationship_date(window.relationship_log,id,1,[id],datelog)
+  update_dates_rel(array_answer[1])
 
-  // var id=document.getElementById("main_id").innerHTML;
-  // var date_all = document.getElementById("bdate_"+id).children;
-  // for (var j = 0; j<date_all.length; j++){
-  //   var date_j = date_all[j];
-  //   date_j.style.backgroundColor = "white";
-  //   if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
-  //     date_j.style.backgroundColor="gray";
-  //   }
-  // }
-  var date_array = date_filler(start_date,end_date);
-  log_dates_to_schedule(date_array,this,'update')
+  // var date_array = date_filler(date_format_changer3(start_date),date_format_changer3(end_date));
+  // log_dates_to_schedule(date_array,id,'update')
 
-})
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-///Checks for Errors between the start date and end date box once the start date box is populated
-///Checks for Errors between the start date and end date box once the end date box is populated
-$(document).on('change ','.sub_edate', function(){
-  var end_date = getAttribute('value');
-  var id = this.id.split("_")[1]
-  var start_date_tag = document.getElementById("sdate_"+id);
-  if (start_date_tag.getAttribute('value')==null){
-    start_date_tag.setAttribute('value',end_date);
-    start_date_tag.innerHTML = date_format_changer(end_date)
-  }
-
-  date = sdate_greater_edate(start_date_tag.getAttribute('value'),end_date);
-
-  if (date.length>1){
-    start_date_tag.setAttribute('value',date[1]);
-    start_date_tag.innerHTML = date_format_changer(date[1])
-  }
-  var duration_tag = document.getElementById("duration_"+id);
-  var duration = return_duration(start_date_tag.getAttribute('value'),end_date,holidays_date_array,weekend_value);
-  duration_tag.setAttribute('value',duration);
-  duration_tag.innerHTML=duration
-
-  //Fills In Cells corresponding to dates
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
-      date_j.style.backgroundColor="gray";
-    }
-  }
-  var date_array = date_filler(start_date_tag.getAttribute('value'),end_date);
-  log_dates_to_schedule(date_array,this.id.split('_')[1],'update')
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function get_duration(start_date,end_date,id){
+  var holidays_date_array = []
   var duration = return_duration(start_date,end_date,holidays_date_array,weekend_value);
   var duration_tag = document.getElementById("duration_"+id);
   duration_tag.setAttribute('value',duration);
+  duration_tag.value = duration
   duration_tag.innerHTML = duration
-
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
-      date_j.style.backgroundColor="gray";
-    }
-  }
   var date_array = date_filler(start_date,end_date);
   log_dates_to_schedule(date_array,id,'update')
 }
 
+//////////////////////////////////////////////////////////////////////
 
-$(document).on('change','.sub_sdate', function(){
-  var start_date = this.value;
-  var id = this.id.split("_")[1]
-  var end_date_tag = document.getElementById("edate_"+id);
-
-  if (end_date_tag.value==""){
-    end_date_tag.setAttribute('value',start_date);
-    end_date_tag.innerHTML = date_format_changer(start_date)
-  }
-  date = sdate_greater_edate(start_date,end_date_tag.getAttribute('value'));
-  if (date.length>1){
-    end_date_tag.setAttribute('value',date[0]);
-    end_date_tag.innerHTML = date_format_changer(date[0])
-  }
-  var duration = return_duration(start_date,end_date_tag.getAttribute('value'),holidays_date_array,weekend_value);
-  var duration_tag = document.getElementById("duration_"+id);
-  duration_tag.setAttribute('value',duration);
-  duration_tag.innerHTML = duration
-
-  var date_all = document.getElementById("bdate_"+id).children;
-  for (var j = 0; j<date_all.length; j++){
-    var date_j = date_all[j];
-    date_j.style.backgroundColor = "white";
-    if (check_if_no_work(date_j.id.split('_')[1],weekend_date_transform(weekend_value))==false){
-      date_j.style.backgroundColor="gray";
-    }
-  }
-  var date_array = date_filler(start_date,end_date_tag.getAttribute('value'));
-  log_dates_to_schedule(date_array,this.id.split('_')[1],'update')
-
+$(document).on('change','.sub_actualized',function(){
+  var id = this.getAttribute('id').split("_")[1]
+  upload_sub_activity(id,'update')
 })
 /////////////////////////////////////////////////////////////////////////
 function addDays(date, add_days) {
@@ -1626,30 +2038,21 @@ function transform_duration(start_date,duration,days_off){
 }
 }
 
-
-
-
-
-
-////
-
-
 /////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////////////////////////////////////////
 function get_all_sub_tags_with_id(sub_id){
   //////This function gets all the sub tags with the sub id provided////
-  id_tag = document.getElementById(sub_id);
-  activity_tag = document.getElementById("name_"+sub_id);
-  sdate_tag = document.getElementById("sdate_"+sub_id);
-  edate_tag = document.getElementById("edate_"+sub_id);
-  duration_tag = document.getElementById("duration_"+sub_id);
-  party_involved_tag = document.getElementById("contractor_"+sub_id);
-  edit_tag = document.getElementById("edit_"+sub_id);
-  delete_tag = document.getElementById("delete_"+sub_id)
-  bdate_tag = document.getElementById("bdate_"+sub_id);
-  return [id_tag,activity_tag,sdate_tag,edate_tag,duration_tag,party_involved_tag,edit_tag,delete_tag,bdate_tag]
+  var id_tag = document.getElementById(sub_id);
+  var activity_tag = document.getElementById("name_"+sub_id);
+  var date_tag = document.getElementById("date_"+sub_id);
+  var duration_tag = document.getElementById("duration_"+sub_id);
+  var party_involved_tag = document.getElementById("contractor_"+sub_id);
+  var actualized_tag = document.getElementById("actualized_"+sub_id);
+  var delete_tag = document.getElementById("delete_"+sub_id)
+  var bdate_tag = document.getElementById("bdate_"+sub_id);
+  return [id_tag,activity_tag,date_tag,duration_tag,party_involved_tag,actualized_tag,delete_tag,bdate_tag]
 }
 
 function add_value_to_message_box(message){
@@ -1661,9 +2064,15 @@ function add_value_to_message_box(message){
 
 //////////////////////////////////////////////////////////////////////////////
 function delete_sub_activity_box(delete_icon_tag){
+  let parent = delete_icon_tag.parentElement
+  if(parent.getElementsByTagName('input').length>=3){
+    parent.remove()
+    return
+  }
+
   var sub_id= delete_icon_tag.id.split("_")[1];
-  var sub_tags_array = get_all_sub_tags_with_id(sub_id);
-  var sub_activity_title = sub_tags_array[1].innerHTML;
+  // var sub_tags_array = get_all_sub_tags_with_id(sub_id);
+  var sub_activity_title = document.getElementById('name_'+sub_id).inne;
   var url = "../HTML/delete_confirm.html";
   add_box_blur_background(url);
   var parent_id = delete_icon_tag.parentElement.parentElement.parentElement.id;
@@ -1677,25 +2086,14 @@ function delete_sub_activity_box(delete_icon_tag){
 function delete_selected_items(delete_button_tag){
   ////This function deletes any item that needs to be deleted. Input is the delete button. Use If statements to add other items to be deleted/////
   
-  var action = document.getElementsByClassName("box")[0].getAttribute("name");
+  var action = document.getElementById("delete_box").getAttribute("name");
   var id = document.getElementById("main_id").innerHTML; ////this should be in the respective format ex id = 1001 for sub_id id=1 for main id/////
   var delete_button_parent = document.getElementById('delete_'+id).parentElement;
 
   if (action == 'delete_sub_activity'){
   ///Removes the deleted sub Activity////
-  var sub_tags_array = get_all_sub_tags_with_id(id);
-  if (delete_button_parent.children.length==2){
-    for(var i = 0;i<sub_tags_array.length;i++){
-      sub_tags_array[i].parentElement.remove();
-  }
-}
-  else {   
-    
-    for(var i = 0;i<sub_tags_array.length;i++){
-      sub_tags_array[i].remove();
-      };
-
-  }
+  let sub_act = document.getElementById('sub_'+id)
+  sub_act.remove()
 }
 else if(action=='delete_main_activity') {
   var main_activity_parent = document.getElementById(id);
@@ -1718,74 +2116,120 @@ return false;
 
 }
 
-function add_title(){
-  document.getElementById("search_bar_title").innerHTML += " Schedule";
-}
+// function add_title(){
+//   document.getElementById("search_bar_title").innerHTML += " Schedule";
+// }
 
-function search_activity() { 
+// function search_activity() { 
+//   let input = document.getElementById('searchbar').value;
+//   input=input.toLowerCase(); 
+//   let x = document.getElementsByClassName('main_activity_title'); 
+//   let y = document.getElementsByClassName('sub_name'); 
+//   let contractor = document.getElementsByClassName('sub_contractor');
+//   /*for (i = 0; i < x.length; i++) {  
+//   } */
+//   if(input==""){
+//     for(var l=0;l<x.length;l++){
+//       x[l].parentElement.removeAttribute('style');
+//     }
+//     for (var m = 0; m < y.length; m++){
+//         y[m].parentElement.parentElement.parentElement.removeAttribute('style','display');
+//         var split = y[m].id.split("_")[1];
+//         var row = document.getElementsByClassName("sub_activity_"+split);
+//         for (var k3=0;k3<row.length;k3++){
+//           row[k3].style.display = "";
+//         }
+//     }
+//   }
+//   else{
+//     for (var i = 0; i < x.length; i++) {  
+//       if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
+//           x[i].parentElement.style.display="none"; 
+//           for (var j = 0; j < y.length; j++){
+//             if (y[j].textContent.toLowerCase().includes(input)||
+//                 contractor[j].textContent.toLowerCase().includes(input)){
+//               var split = y[j].id.split("_")[1];
+//               y[j].parentElement.parentElement.parentElement.removeAttribute('style','display'); 
+//               var row = document.getElementsByClassName("sub_activity_"+split);
+//               for (var p=0;p<row.length;p++){
+//                 row[p].style.removeAttribute('style');
+//               }
+//             }
+//             else{
+//               if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
+//                 var split = y[j].id.split("_")[1];
+//                 var row = document.getElementsByClassName("sub_activity_"+split);
+//                 for (var k=0;k<row.length;k++){
+//                   row[k].style.display = "none";
+//                 }
+//               }
+//               else{
+//                 var split = y[j].id.split("_")[1];
+//                 var row = document.getElementsByClassName("sub_activity_"+split);
+//                 for (var k2=0;k2<row.length;k2++){
+//                   row[k2].style.removeAttribute('style');
+//                 }
+//               }
+//             }
+//           }
+//       } 
+//       else { 
+//           x[i].parentElement.removeAttribute('style');                  
+//       } 
+//     } 
+//   }
+
+// } 
+
+
+function search_activity(){
   let input = document.getElementById('searchbar').value;
-  input=input.toLowerCase(); 
-  let x = document.getElementsByClassName('main_activity_title'); 
-  let y = document.getElementsByClassName('sub_name'); 
-  let sdate = document.getElementsByClassName('sub_sdate'); 
-  let edate = document.getElementsByClassName('sub_edate'); 
-  let contractor = document.getElementsByClassName('sub_contractor');
-  /*for (i = 0; i < x.length; i++) {  
-  } */
-  if(input==""){
-    for(var l=0;l<x.length;l++){
-      x[l].parentElement.style.display="inline-block";
-    }
-    for (var m = 0; m < y.length; m++){
-        y[m].parentElement.parentElement.parentElement.style.display="inline-block";
-        var split = y[m].id.split("_")[1];
-        var row = document.getElementsByClassName("sub_activity_"+split);
-        for (var k3=0;k3<row.length;k3++){
-          row[k3].style.display = "";
-        }
-    }
+  if(input==''){
+    remove_filters(input)
+    toggle_filters()
+    return
   }
-  else{
-    for (var i = 0; i < x.length; i++) {  
-      if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
-          x[i].parentElement.style.display="none"; 
-          for (var j = 0; j < y.length; j++){
-            if (y[j].textContent.toLowerCase().includes(input)||
-                sdate[j].textContent.includes(input)||
-                edate[j].textContent.includes(input)||
-                contractor[j].textContent.toLowerCase().includes(input)){
-              var split = y[j].id.split("_")[1];
-              y[j].parentElement.parentElement.parentElement.style.display="inline-block"; 
-              var row = document.getElementsByClassName(" sub_activity_"+split);
-              for (var p=0;p<row.length;p++){
-                row[p].style.display = "";
-              }
-            }
-            else{
-              if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
-                var split = y[j].id.split("_")[1];
-                var row = document.getElementsByClassName("sub_activity_"+split);
-                for (var k=0;k<row.length;k++){
-                  row[k].style.display = "none";
-                }
-              }
-              else{
-                var split = y[j].id.split("_")[1];
-                var row = document.getElementsByClassName("sub_activity_"+split);
-                for (var k2=0;k2<row.length;k2++){
-                  row[k2].style.display = "";
-                }
-              }
-            }
+  input = input.toLowerCase()
+  let main_title = document.getElementsByClassName('title')
+  for(var i=0;i<main_title.length;i++){
+    if(main_title[i].tagName=='I'){
+      continue
+    }
+    var main_id = main_title[i].id.split("_")[1]
+    let title = main_title[i].textContent.toLowerCase()
+    if(title.includes(input)){
+      var main_div = document.getElementById(main_id)
+      main_div.removeAttribute('style')
+      continue
+    }
+    else{
+      count = 0
+      let sub_name = document.getElementById(main_id).getElementsByClassName('sub_name')
+      for(var k=0;k<sub_name.length;k++){
+        let activity = sub_name[k].textContent.toLowerCase()
+        let id_ = sub_name[k].id.split("_")[1]
+        let activity_array = document.getElementsByClassName('sub_activity_'+id_)
+        if(activity.includes(input)){
+          for(let z=0;z<activity_array.length;z++){
+            activity_array[z].removeAttribute('style')
           }
-      } 
-      else { 
-          x[i].parentElement.style.display="inline-block";                  
-      } 
-    } 
+        }
+        else{
+          for(let z=0;z<activity_array.length;z++){
+            activity_array[z].setAttribute('style','display:none')
+          }
+          count++
+        }
+      }
+      if(count==sub_name.length){
+        document.getElementById(main_id).setAttribute('style','display:none')
+      }
+      else{
+        document.getElementById(main_id).removeAttribute('style')
+      }
+    }
   }
-
-} 
+}
 
 
 
@@ -1819,43 +2263,959 @@ return false;
 
 //////////////////////////////////////////////////////////////////////
 function collapse_activities(collapse_button){
-  var action = collapse_button.getAttribute('type');
-  var id = collapse_button.getAttribute('id').split('_')[1];
-  var parent_div = document.getElementById(id);
-  var children_array = parent_div.getElementsByClassName('collapsable')
-  var activities_div = parent_div.getElementsByClassName('activity_left')[0];
-  var name_div = parent_div.getElementsByClassName('sub_activity_name')[0]
-  var sdate_div = parent_div.getElementsByClassName('sub_activity_sdate')[0]
-  var edate_div = parent_div.getElementsByClassName('sub_activity_edate')[0]
-  if (action == 'active'){
-    collapse_button.setAttribute('type','hidden');
-    activities_div.setAttribute('class','activity_left collapsed')
-    name_div.setAttribute('class','sub_activity_name sub collapsed')
-    sdate_div.setAttribute('class','sub_activity_sdate sub collapsed')
-    edate_div.setAttribute('class','sub_activity_edate sub collapsed')
-    setTimeout(function (){
-      for (var i =0; i<children_array.length;i++){
-        children_array[i].style.display = 'none'
-    }},0);
-
-    // activities_div.style.width = '40%'
-    // name_div.style.width = '65%'
-    // sdate_div.style.width='14%'
-    // edate_div.style.width='14%'
+  // var action = collapse_button.getAttribute('type');
+  // var id = collapse_button.getAttribute('id').split('_')[1];
+  // var parent_div = document.getElementById(id);
+  // var children_array = parent_div.getElementsByClassName('collapsable')
+  // var activities_div = parent_div.getElementsByClassName('activity_left')[0];
+  // var name_div = parent_div.getElementsByClassName('sub_name')
+  // var date_div = parent_div.getElementsByClassName('sub_date')
+  // var edate_div = parent_div.getElementsByClassName('sub_activity_edate')[0]
+  let activities_div = document.getElementsByClassName('activity_left')
+  if (activities_div[0].className.split(' ').length>1){
+    var action = 'not_active'
   }
   else{
-    collapse_button.setAttribute('type','active');
-    activities_div.setAttribute('class','activity_left')
-    name_div.setAttribute('class','sub_activity_name sub')
-    sdate_div.setAttribute('class','sub_activity_sdate sub')
-    edate_div.setAttribute('class','sub_activity_edate sub')
-    setTimeout(function (){
+    var action='active'
+  }
+  let name_div = document.getElementsByClassName('sub_name')
+  let date_div = document.getElementsByClassName('sub_date')
+  let name_title = document.getElementsByClassName('sub_name_title')
+  let children_array = document.getElementsByClassName('collapsable')
+  if (action == 'active'){
+    // collapse_button.setAttribute('type','hidden');
+    for(var i =0; i<activities_div.length;i++){
+      activities_div[i].setAttribute('class','activity_left collapsed')
+  }
+  for(var i =0; i<name_title.length;i++){
+    name_title[i].setAttribute('class','sub_name_title sub activity_title collapsed')
+}
+
+    for(var i =0; i<name_div.length;i++){
+        date_div[i].setAttribute('class','sub_date sub collapsed')
+        name_div[i].setAttribute('class','sub_name sub collapsed')
+    }
+    for (var i =0; i<children_array.length;i++){
+      children_array[i].style.display = 'none'
+    }
+  }
+  else{
+    // collapse_button.setAttribute('type','active');
+    for(var i =0; i<activities_div.length;i++){
+      activities_div[i].setAttribute('class','activity_left')
+  }
+  for(var i =0; i<name_title.length;i++){
+    name_title[i].setAttribute('class','sub_name_title sub activity_title')
+}
+    for(var i =0; i<name_div.length;i++){
+        date_div[i].setAttribute('class','sub_date sub')
+        name_div[i].setAttribute('class','sub_name sub')
+    }
+    setTimeout(() => {
       for (var i =0; i<children_array.length;i++){
-        children_array[i].style.display = 'inline-block'
-    }},1050);
-    // name_div.style.width = '45%'
-    // sdate_div.style.width='10%'
-    // edate_div.style.width='10%'
+        children_array[i].removeAttribute('style')
+      }
+    }, 600);
   }
    
+}
+
+////////////////   Relationship   //////////////////////
+function relationship_active(relationship_tag){
+  var relationship_box = document.getElementById('relationship')
+  if (relationship_tag.getAttribute('class').split(' ')[1]=='r_active'){
+    relationship_tag.setAttribute('class','website_button')
+    relationship_box.setAttribute('class','relationship')
+    relationship_box.removeAttribute('style')
+    relationship_tag.removeAttribute('style')
+  }
+  else{
+    relationship_tag.setAttribute('class','website_button r_active')
+    relationship_box.setAttribute('class','relationship r_active')
+    update_rel_height()
+
+  }
+}
+
+function update_rel_height(){
+  var relationship_box = document.getElementById('relationship')
+  var relationship_tag = document.getElementById('relationship_button')
+  height = relationship_box.offsetHeight
+  height_button = height+15
+  relationship_box.setAttribute('style','top:calc(100% - '+height+'px);left:0%')
+  relationship_tag.setAttribute('style','top:calc(100% - '+height_button+'px)')
+}
+
+
+function relationship_continue(continue_tag){
+  var input = document.getElementById('relationship_input')
+  var sub_id = input.value.split('-')[0]
+  if (sub_id==''){
+    let message = 'Activty Has Not Been Chosen'
+    error_message(message,'rel_errormsg')
+    update_rel_height()
+    return
+  }
+  remove_error('rel_errormsg')
+  var sub_activity = input.value.split('-')[1]
+  document.getElementById('relationship_title').innerHTML=sub_activity
+  document.getElementById('relationship_title').setAttribute('id','rel_'+sub_id)
+  /////////Relationship Boxes////////////////////////////
+  var activity_h5 = document.createElement('h5')
+  activity_h5.innerHTML='Activity'
+  activity_h5.setAttribute('class','rel_title rel_left')
+  var relationship_h5 = document.createElement('h5')
+  relationship_h5.innerHTML = 'Relationship'
+  relationship_h5.setAttribute('class','rel_title rel_mid')
+  var lag_h5 = document.createElement('h5')
+  lag_h5.innerHTML = 'lag'
+  lag_h5.setAttribute('class','rel_title rel_right')
+  var undo_h5 = document.createElement('div')
+  undo_h5.setAttribute('class','rel_title rel_delete_undo')
+  var title_div = document.createElement('div')
+  title_div.setAttribute('class','rel_row')
+  title_div.appendChild(activity_h5)
+  title_div.appendChild(relationship_h5)
+  title_div.appendChild(lag_h5)
+  title_div.appendChild(undo_h5)
+  var relationship_area = document.createElement('div')
+  relationship_area.setAttribute('class','rel_area')
+  relationship_area.append(title_div)
+  var relationship_area2 = relationship_area.cloneNode(true)
+  /////// Existing Relationships//
+
+
+  ///////Prdecessor//////
+  var div_pre = document.createElement('div')
+  var pre_title = document.createElement('h4')
+  pre_title.innerHTML = 'Predecessor'
+  var add_pre = document.createElement('i')
+  add_pre.setAttribute('class','far fa-plus-square clickable pre_suc')
+  add_pre.setAttribute('onclick','add_predecessor_successor(0,0,'+sub_id+')')
+  add_pre.innerHTML='Add Predecessor'
+  div_pre.append(pre_title)
+  div_pre.append(relationship_area2)
+  div_pre.append(add_pre)
+  /////Successor//////////////
+  var div_suc = document.createElement('div')
+  var suc_title = document.createElement('h4')
+  suc_title.innerHTML = 'Successor'
+  var add_suc = document.createElement('i')
+  add_suc.setAttribute('class','far fa-plus-square clickable pre_suc')
+  add_suc.setAttribute('onclick','add_predecessor_successor(1,0,'+sub_id+')')
+  add_suc.innerHTML='Add Successor'
+  div_suc.append(suc_title)
+  div_suc.append(relationship_area)
+  div_suc.append(add_suc)
+  var rel_bot_div = document.getElementById('relationship_bottom')
+  window.rel_data = rel_bot_div.children[1].cloneNode(true)
+  removeAllChildNodes(rel_bot_div)
+  rel_bot_div.append(div_pre)
+  rel_bot_div.append(div_suc)
+  rel_bot_div.append(window.rel_data)
+
+  ////Buttons////////////////
+  var submit = document.createElement('button')
+  submit.setAttribute('class','website_button clickable')
+  submit.innerHTML = "Submit"
+  submit.setAttribute('onclick','update_relationship_log('+sub_id+')')
+  var cancel = document.createElement('button')
+  cancel.setAttribute('class','website_button clickable')
+  cancel.innerHTML = "Cancel"
+  cancel.setAttribute('onclick','rel_cancel(1)')
+  continue_tag.parentElement.append(cancel)
+  continue_tag.replaceWith(submit)
+  if(window.relationship_log[parseInt(sub_id)]!=null){
+    for(let i in window.relationship_log[parseInt(sub_id)]){
+      for(let k in window.relationship_log[parseInt(sub_id)][i]){
+        add_predecessor_successor(i,k,sub_id)
+      }
+
+    }
+  }
+
+
+  ////////Update Relationship Box/////////////
+  update_rel_height()
+}
+
+function rel_del_undo(action,undo_tag,loc,id){
+  var rel_row = undo_tag.parentElement
+  rel_row.className = 'rel_row rel-'+loc
+  var activity = rel_row.children[0]
+  var rel_inp = rel_row.children[1]
+  var lag_inp = rel_row.children[2]
+  if (rel_row.id==''){
+    if(loc ==0){
+      loc_a= 1
+    }
+    else{
+      loc_a=0
+    }
+    rel_row.remove()
+    return
+  }
+  else{
+    var rel_id = rel_row.id.split('_')[1]
+  }
+  var child_id = window.relationship_log[id][loc][rel_id]['sub_id']
+  var child = child_id+'-'+document.getElementById('name_'+child_id).innerHTML
+  var rel = window.relationship_log[id][loc][rel_id]['Rel']
+  var lag = window.relationship_log[id][loc][rel_id]['Lag']
+  activity.value = child
+  rel_inp.value = rel
+  lag_inp.value = lag
+  if(action=='Delete'){
+    activity.className=activity.className+' rel_delete'
+    rel_inp.className=rel_inp.className+' rel_delete'
+    lag_inp.className=lag_inp.className+' rel_delete'
+    undo_tag.className = 'fas fa-undo-alt rel_delete_undo clickable'
+    undo_tag.setAttribute('onclick','rel_del_undo("Undo",this,'+loc+','+id+')')
+  }
+  else{
+    activity.className='rel_left'
+    rel_inp.className='rel_mid'
+    lag_inp.className='rel_right'
+    undo_tag.setAttribute('class','far fa-minus-square rel_delete_undo clickable')
+    undo_tag.setAttribute('onclick','rel_del_undo("Delete",this,'+loc+','+id+')')
+  }
+
+}
+function add_predecessor_successor(loc,relationship_id,id){
+/////Takes inputs for box whether predecessor:0 or successor:1, relationship_id... 0 if none, and id of activity
+  ///Activity////
+  var activity = document.createElement('input')
+  activity.setAttribute('list','datalistOptions')
+  activity.setAttribute('class','rel_left')
+  ///Relationship////
+  var relationship = document.createElement('select')
+  relationship.setAttribute('class','rel_mid')
+  var fs = document.createElement('option')
+  var sf = fs.cloneNode(true)
+  var ff = fs.cloneNode(true)
+  var ss = fs.cloneNode(true)
+  fs.value=0
+  fs.innerHTML = "Finsih Start"
+  sf.value = 1
+  sf.innerHTML = "Start Finish"
+  ff.value = 2
+  ff.innerHTML = "Finish Finish"
+  ss.value = 3
+  ss.innerHTML = "Start Start"
+  relationship.append(fs,sf,ff,ss)
+  ////Lag/////
+  var lag = document.createElement('input')
+  lag.setAttribute('class','rel_right')
+  lag.setAttribute('type','number')
+  var undo = document.createElement('i')
+  undo.setAttribute('class','far fa-minus-square rel_delete_undo clickable')
+  undo.setAttribute('onclick','rel_del_undo("Delete",this,'+loc+','+id+')')
+  let row = document.createElement('div')
+  row.setAttribute('class','rel_row')
+
+
+  if(relationship_id!=0){
+    let sub_id = window.relationship_log[id][loc][relationship_id]['sub_id']
+    let rel_type = window.relationship_log[id][loc][relationship_id]['Rel']
+    let lag_val = window.relationship_log[id][loc][relationship_id]['Lag']
+    row.setAttribute('id','rel_'+relationship_id)
+    activity.setAttribute('id','relact_'+sub_id)
+    activity.value = sub_id+'-'+document.getElementById('name_'+sub_id).innerHTML
+    lag.value = lag_val
+    relationship.value = rel_type
+  }
+  else{
+
+    lag.value=0
+  }
+  row.setAttribute('class','rel_row rel-'+loc)
+  row.append(activity)
+  row.append(relationship)
+  row.append(lag)
+  row.append(undo)
+  var relationship_area = document.getElementsByClassName('rel_area')[loc]
+  // var mid = document.getElementsByClassName('rel_mid')[loc]
+  // var right = document.getElementsByClassName('rel_right')[loc]
+  // left.append(activity)
+  // mid.append(relationship)
+  // right.append(lag)
+  relationship_area.appendChild(row)
+  // if (left.offsetHeight>250){
+  //   var top = left.offsetHeight-230
+  //   left.setAttribute('style','top:36px')
+  //   mid.setAttribute('style','top:'+top+"px")
+  //   right.setAttribute('style','top:'+top+"px")
+  // }
+  update_rel_height()
+}
+
+function rel_cancel(action){
+  if (document.getElementsByClassName('rel_0')!=null & action==0){
+  }
+  let top = document.createElement('h3')
+  top.id = 'relationship_title'
+  top.innerHTML = "Choose an Activity"
+  let datalist = document.getElementById('datalistOptions').cloneNode(true)
+  let input = document.createElement('input')
+  input.setAttribute('id','relationship_input')
+  input.setAttribute('class','form-control')
+  input.setAttribute('placeholder','Type to search...')
+  input.setAttribute('list','datalistOptions')
+  let apply = document.createElement('button')
+  apply.setAttribute('class','website_button')
+  apply.setAttribute('onclick','relationship_continue(this)')
+  apply.innerHTML='Continue'
+  let top_div = document.getElementById('relationship_top')
+  let bot_div = document.getElementById('relationship_bottom')
+  let button_div = document.getElementById('relationship_apply')
+  removeAllChildNodes(top_div)
+  removeAllChildNodes(bot_div)
+  removeAllChildNodes(button_div)
+  top_div.appendChild(top)
+  bot_div.appendChild(input)
+  bot_div.appendChild(datalist)
+  button_div.appendChild(apply)
+  remove_error('rel_errormsg')
+  update_rel_height()
+
+}
+
+$(document).on('change','.rel_row',function(){
+  this.className = this.className+' rel_change'
+})
+
+function update_relationship_log(id){
+  id = id.toString()
+  remove_error('rel_errormsg')
+  let pre_array = document.getElementsByClassName('rel-0')
+  let post_array = document.getElementsByClassName('rel-1')
+  let dict=Object.assign({},window.relationship_log)
+  if(dict[id]==undefined){
+    dict[id]={0:{},1:{}}
+  }
+  else if(dict[id][0]==undefined){
+    dict[id][0]={}
+  }
+  else if(dict[id][1]==undefined){
+    dict[id][1]={}
+  }
+  var new_=0
+  // dict[id]={0:{},1:{}}
+  var pre_id_log = []
+  var n_pre_id = []
+  var post_id_log = []
+  var delete_rel =''
+  /////Pre Array//////
+  for(var i=0;i<pre_array.length;i++){
+        var pre_id = pre_array[i].children[0].value.split('-')[0].toString()
+    if(pre_id==''){
+      let message = 'All Input Fields must be Filled Prior to Submitting'
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else if(pre_id_log.includes(pre_id)){
+      let message = "Input '"+pre_id+"' has been inputted twice"
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else{
+      pre_id_log.push(pre_id)
+      if(pre_array[i].id!=''){
+        var rel_id = pre_array[i].id.split('_')[1]
+        ////Delete Relationship///
+        if(pre_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+          delete_rel=delete_rel+rel_id+';'
+          continue
+      }
+    }
+      else{
+        var rel_id = 0
+      }
+      /// Add Pre Id to relationship Log if necessary /// 
+      if (dict[pre_id]==undefined){
+        dict[pre_id]={0:{},1:{}}
+      }
+      else if(dict[pre_id][1]==undefined){
+        dict[pre_id][1]={}
+      }
+      var relationship = pre_array[i].children[1].value
+      var lag = pre_array[i].children[2].value
+      if (rel_id==0 & new_==0){
+        n_pre_id.push(pre_id)
+        dict[id][0][0]=[{'sub_id':pre_id,'Rel':relationship,'Lag':lag}]
+        dict[pre_id][1][-2]=[{'sub_id':id,'Rel':relationship,'Lag':lag}]
+        new_=new_+1
+      }
+      else if(rel_id==0 & new_!=0){
+        dict[id][0][0].push({'sub_id':pre_id,'Rel':relationship,'Lag':lag})
+        dict[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+        n_pre_id.push(pre_id)
+
+      }
+      else{
+        dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+        dict[pre_id][1][rel_id] = {'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+      }
+    }
+  }
+    // }
+    // var pre_id = pre_array[i].children[0].value.split('-')[0]
+    // if(pre_id==''){
+    //   let message = 'All Input Fields must be Filled Prior to Submitting'
+    //   error_message(message,'rel_errormsg')
+    //   update_rel_height()
+    //   return
+    // }
+    // else if(pre_id_log.includes(pre_id)){
+    //   let message = "Input '"+pre_id+"' has been inputted twice"
+    //   error_message(message,'rel_errormsg')
+    //   update_rel_height()
+    //   return
+    // }
+    // else{
+    //   pre_id_log.push(pre_id)
+    //   if(pre_array[i].id!=''){
+    //     var rel_id = pre_array[i].id.split('_')[1]
+    //     ////Delete Relationship///
+    //     if(pre_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+    //       delete_rel=delete_rel+rel_id+';'
+    //       continue
+    //   }
+    // }
+    //   else{
+    //     var rel_id = 0
+    //   }
+    //   var relationship = pre_array[i].children[1].value
+    //   var lag = pre_array[i].children[2].value
+    //   if (rel_id==0 & new_==0){
+    //     n_pre_id.push(pre_id)
+    //     dict[id][0][0]=[{'sub_id':pre_id,'Rel':relationship,'Lag':lag}]
+    //     new_=new_+1
+    //     if (window.relationship_log[pre_id][1]==undefined){
+    //       window.relationship_log[pre_id][1] = {}
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+    //     else{
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+    //   }
+    //   else if(rel_id==0 & new_!=0){
+    //     dict[id][0][0].push({'sub_id':pre_id,'Rel':relationship,'Lag':lag})
+    //     n_pre_id.push(pre_id)
+    //     if (window.relationship_log[pre_id][1]==undefined){
+    //       window.relationship_log[pre_id][1] = {}
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+    //     else{
+    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
+    //     }
+
+    //   }
+    //   else{
+    //     dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+    //   }
+      
+
+    // }
+  /////Post Array///////
+  var new_=0
+  var new_d =0
+  for(var i=0;i<post_array.length;i++){
+    var post_id = post_array[i].children[0].value.split('-')[0].toString()
+    if(post_id==''){
+      let message = 'All Input Fields must be Filled Prior to Submitting'
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else if(post_id_log.includes(post_id)){
+      let message = "Input '"+post_id+"' has been inputted twice"
+      error_message(message,'rel_errormsg')
+      update_rel_height()
+      return
+    }
+    else{
+      post_id_log.push(post_id)
+      if(post_array[i].id!=''){
+        var rel_id = post_array[i].id.split('_')[1]
+      }
+      else{
+        var rel_id = 0
+      }
+      if (dict[post_id]==undefined){
+        dict[post_id]={0:{},1:{}}
+      }
+      else if(dict[post_id][0]==undefined){
+        dict[post_id][0]={}
+      }
+      var relationship = post_array[i].children[1].value
+      var lag = post_array[i].children[2].value
+      if (rel_id==0 & new_==0){
+        dict[id][1][0]=[{'sub_id':post_id,'Rel':relationship,'Lag':lag}]
+        dict[post_id][0][0]=[{'sub_id':id,'Rel':relationship,'Lag':lag}]
+        new_=new_+1
+      }
+      else if(rel_id==0 & new_!=0){
+        dict[id][1][0].push({'sub_id':post_id,'Rel':relationship,'Lag':lag})
+        dict[post_id][0][0]=[{'sub_id':id,'Rel':relationship,'Lag':lag}]
+      }
+      else if(post_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+        if(new_d == 0){
+          delete_rel=delete_rel+rel_id+';'
+          dict[id][1][-1] = {}
+          dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag} 
+          delete dict[post_id][0][rel_id]
+          delete dict[id][1][rel_id]
+          new_d = 1
+        }
+        else{
+          delete_rel=delete_rel+rel_id+';'
+          dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+          delete dict[post_id][0][rel_id]
+          delete dict[id][1][rel_id]
+        }
+      }
+      else{
+        dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+        dict[[post_id]][0][rel_id]={'sub_id':id,'Rel':relationship,'Lag':lag}
+      }
+      // var relationship = post_array[i].children[1].value
+      // var lag = post_array[i].children[2].value
+      // if (rel_id==0 & new_==0){
+      //   dict[id][1][0]=[{'sub_id':post_id,'Rel':relationship,'Lag':lag}]
+      //   new_=new_+1
+      // }
+      // else if(rel_id==0 & new_!=0){
+      //   dict[id][1][0].push({'sub_id':post_id,'Rel':relationship,'Lag':lag})
+
+      // }
+      // else if(post_array[i].children[0].className.split(' ')[1]=='rel_delete'){
+      //   if(new_d == 0){
+      //     delete_rel=delete_rel+rel_id+';'
+      //     dict[id][1][-1] = {}
+      //     dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag} 
+      //     new_d = 1
+      //   }
+      //   else{
+      //     delete_rel=delete_rel+rel_id+';'
+      //     dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+      //   }
+      // }
+      // else{
+      //   dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
+      // }
+
+    }
+
+  }
+  var datelog = {}
+  var array_answer = relationship_date(dict,id,1,[id],datelog)
+  console.log(array_answer[1])
+  for(let i =0;i<n_pre_id.length;i++){
+    
+    if (Object.keys(window.relationship_log[n_pre_id[i]][1]).length==1){
+      delete window.relationship_log[n_pre_id[i]][1]
+    }
+    else{
+      delete window.relationship_log[n_pre_id[i]][1][-2]
+    }
+
+  }
+  if (array_answer[0]=="Error"||array_answer[0]=="Erro"){
+    error_message(array_answer[1],'rel_errormsg')
+    return
+  }
+
+  else{
+    ///Deleting at Server/////
+    $.post( "../PHP/delete_relationship.php", { project_id:window.project_id,rel_id:delete_rel});
+   update_dates_rel(array_answer[1])
+    ////Update Relationship////
+    var rel_id = ""
+    var relationship = ""
+    var post_id = ""
+    var pre_id = ""
+    var lag=""
+
+
+    for(var z in Object.keys(dict[id])){
+      loc = dict[id][z]
+      for(var k in Object.keys(loc)){
+        n = Object.keys(loc)[k]
+        i=loc[n]
+        if (n==0){
+          for(var g in Object.keys(i)){
+            rel_id = rel_id+'0;'
+            relationship=relationship+i[g]['Rel']+';'
+            lag = lag+i[g]['Lag']+';'
+            if (z==0){
+              post_id = post_id+id+';'
+              pre_id=pre_id+(i[g]['sub_id'])+';'
+            }
+            else{
+              post_id = post_id+(i[g]['sub_id'])+';'
+              pre_id = pre_id+(id)+';'
+            }
+          }
+        }
+        else{
+          rel_id = rel_id+n+';'
+          relationship=relationship+i['Rel']+';'
+          lag = lag+i['Lag']+';'
+            if (z==0){
+              post_id = post_id+id+';'
+              pre_id=pre_id+(i['sub_id'])+';'
+            }
+            else{
+              post_id = post_id+(i['sub_id'])+';'
+              pre_id = pre_id+(id)+';'
+            }
+          }
+        }
+      }
+    }
+    $.ajax({
+      url : "../PHP/add_relationship.php",
+      type : 'POST',
+      data:{rel_id: rel_id, project_id: window.project_id, relationship:relationship ,parent_id:pre_id, child_id:post_id,lag:lag},
+      success:function(data){
+        $.ajax({
+          url : "../PHP/pull_relationship.php",
+          type : 'POST',
+          data:'project_id='+window.project_id,
+          success:function(data){
+            var rel_data = JSON.parse(data)
+            for (let key in rel_data){
+              window.relationship_log[key]=rel_data[key]
+            }
+            var rel_area = document.getElementsByClassName('rel_area')
+            var rel_title = rel_area[0].children[0]
+            var rel_title2 = rel_title.cloneNode(true)
+            removeAllChildNodes(rel_area[0])
+            removeAllChildNodes(rel_area[1])
+            rel_area[0].appendChild(rel_title)
+            rel_area[1].appendChild(rel_title2)
+            for(let i in window.relationship_log[parseInt(id)]){
+              for(let k in window.relationship_log[parseInt(id)][i]){
+                if(k==-1){
+                  continue
+                }
+                add_predecessor_successor(i,k,id)
+              }
+            }
+          }
+        })
+
+      }
+    })
+    }
+
+
+
+function update_dates_rel(date_changes){
+  let doc = []
+  console.log(date_changes)
+  for(var z in Object.keys(date_changes)){
+    var sub_id = Object.keys(date_changes)[z]
+    if(document.getElementById('actualized_'+sub_id).checked == false){
+      ////update Date/////
+      let date = date_changes[sub_id]
+      window.date_log[sub_id]=date
+      let doc_date = document.getElementById('date_'+sub_id)
+      doc.push(doc_date)
+      doc_date.setAttribute('class','sub_date sub_changed')
+      doc_date.innerHTML = date
+      doc_date.setAttribute('value',date)
+      date_log[sub_id]=date
+      upload_sub_activity(sub_id,'update')
+      let date_array = date_filler(date_format_changer3(date.split(' ')[0]),date_format_changer3(date.split(' ')[2]))
+      log_dates_to_schedule(date_array,sub_id,'update')
+      // doc_date.setAttribute('class','sub_date')
+    }
+  }
+  console.log(doc)
+  setTimeout(() => {
+    for (let k=0;k<doc.length;k++){
+      doc[k].setAttribute('class','sub_date')
+    }
+  }, 500);
+
+}
+function calculate_max_sdate(pre_id,post_id,rel_dict,datelog){
+  var lag = rel_dict['Lag']
+  var relationship = rel_dict['Rel']
+  if (datelog[pre_id]!=undefined){
+    var dates = datelog[pre_id]
+  }
+  else{
+    var dates = window.date_log[pre_id]
+  }
+  
+  var sdate = dates.split(' ')[0]
+  var edate = dates.split(' ')[2]
+  var duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
+  var new_sdate = relationship_sdate(sdate,edate,relationship,lag,duration)
+  console.log(pre_id)
+  console.log(post_id)
+  console.log(new_sdate)
+  return new Date(new_sdate).getTime()
+
+}
+
+function days_skipped(sdate,edate,weekend_days,holidays_array){
+  var day = (new Date(sdate)).getDay();
+  var weekend = weekend_date_transform(weekend_days);
+  var sdate = (new Date(sdate)).getTime()
+  var edate = (new Date(edate)).getTime()
+  var skipped_days = 0
+  while(sdate<edate){
+    sdate = sdate+86400000;
+    if(day==6){
+      day=0
+    }
+    else{
+      day = day+1
+    }
+    if(weekend[0] == day || weekend[1]==day){
+      skipped_days=skipped_days+1
+    }
+      }
+      return skipped_days
+}
+  
+
+function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelog){
+  if(id_rel_dict[sub_id]==undefined){
+    datelog[sub_id] = window.date_log[sub_id]
+    return [undefined,datelog]
+  }
+  if (document.getElementById('actualized_'+sub_id).checked == true){
+    return [original_id,datelog]
+  }
+  ///input id_rel_dict: dictionary of current id where calculations are to be made, sub_id: id tied to id_rel_dict need predecessor: 1 for need to calculate from predecessor 0 for no need
+  ///original_id: id where all relationship calculations stem for, carrying date log of all changes///
+  //////Predecessor/////////////////
+  if(need_prdecessor==1 & id_rel_dict[sub_id][0]!=undefined){
+    if(datelog[sub_id]==null & window.rel_settings==1){
+      datelog[sub_id]==window.date_log[sub_id]
+      var og_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
+      var new_sdate = 0
+    }
+    else if(datelog[sub_id]==null & window.rel_settings==0){
+      datelog[sub_id]=0
+      var og_sdate = 0
+      var new_sdate = 0
+    }
+    else{
+      // var new_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
+      // var og_sdate = new_sdate
+      datelog[sub_id]=0
+      var og_sdate = 0
+      var new_sdate = 0
+    }
+    
+    for(var z in Object.keys(id_rel_dict[sub_id][0])){
+      var i = Object.keys(id_rel_dict[sub_id][0])[z]
+      //////New Predecessor/////////////
+      if (i==0){
+        for(var k in Object.keys(id_rel_dict[sub_id][0][0])){
+          let loc = id_rel_dict[sub_id][0][0]
+          var pre_id = loc[k]['sub_id']
+          if(datelog[pre_id]==null){
+            datelog[pre_id]==window.date_log[pre_id]
+          }
+          
+          new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc[k],datelog),new_sdate)
+        }
+      }
+      /////////Existing Predecessor//////
+      else{
+        
+        let loc = id_rel_dict[sub_id][0][i]
+        var pre_id = loc['sub_id']
+        console.log(id_rel_dict)
+        console.log(loc)
+        new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc,datelog),new_sdate)
+
+      }
+      // original_id.push(pre_id)
+      // if (original_id.indexOf(pre_id)>-1 ){
+      //   let message = "Relationship Loop Created: "
+      //   for(let z=0;z<original_id.length-1;z++){
+      //     var name = document.getElementById('name_'+original_id[z]).innerHTML
+      //     message = message+name+" => "
+      //   }
+      //   var name = document.getElementById('name_'+original_id[z]).innerHTML
+      //   message = message+name
+      //   return ["Error",message]
+      // }
+    }
+    if (og_sdate<new_sdate){
+      new_sdate = date_format_changer4(new_sdate)
+      var duration = parseInt(document.getElementById('duration_'+sub_id).innerHTML)
+      var new_edate = return_end_date(new_sdate,duration,[],weekend_value)
+      datelog[sub_id] =new_sdate+" - "+new_edate
+    }
+    if (datelog[sub_id]==0){
+      datelog[sub_id]=window.date_log[sub_id]
+    }
+
+      }
+/////Successor///////////////
+  if (id_rel_dict[sub_id]==undefined || !(1 in id_rel_dict[sub_id])){
+    return [original_id,datelog]
+    }
+
+  if(datelog[sub_id]==null || datelog[sub_id]==0){
+    datelog[sub_id]=window.date_log[sub_id]
+  }
+  for(var z in Object.keys(id_rel_dict[sub_id][1])){
+    var post_loc = id_rel_dict[sub_id][1]
+    var i = Object.keys(post_loc)[z]
+    //// New Successor or Delete Successor/////////
+    if (i==0 || i==-1){
+      for(var k in post_loc[i]){
+        let loc = post_loc[i][k]
+        let post_id = loc['sub_id']
+        if (original_id.indexOf(post_id.toString())>-1 ){
+          let message = "Relationship Loop Created: "
+          for(let z=0;z<original_id.length;z++){
+            var name = document.getElementById('name_'+original_id[z]).innerHTML
+            message = message+name+" => "
+          }
+          var name = document.getElementById('name_'+post_id).innerHTML
+          message = message+name
+          return ["Error",message]
+        }
+        ///Delete///
+        if (i==-1){
+            // var dict_k = window.relationship_log[post_id]
+            // delete dict_k[0][k]
+            // var dict_n = {}
+            // dict_n[post_id]=dict_k
+            var array_answer = relationship_date(id_rel_dict,post_id,1,original_id,datelog)
+            original_id = array_answer[0]
+            datelog=array_answer[1]
+            original_id=original_id.slice(0,-1)
+            if (array_answer[0]=="Error"){
+              return array_answer
+            }
+            
+          
+
+        
+        }
+        ///ADD///
+        else{
+          var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id,id_rel_dict)
+          if (array_answer[0]=="Error"){
+            return array_answer
+          }
+          original_id = array_answer[0]
+          datelog=array_answer[1]
+          original_id=original_id.slice(0,-1)
+        }
+
+
+      }
+    }
+    ///Existing Successor////////
+    else{
+      let loc = post_loc[i]
+      let post_id = loc['sub_id']
+      if (original_id.indexOf(post_id.toString())>-1 ){
+        let message = "Relationship Loop Created: "
+        for(let z=0;z<original_id.length;z++){
+          var name = document.getElementById('name_'+original_id[z]).innerHTML
+          message = message+name+" => "
+        }
+        var name = document.getElementById('name_'+post_id).innerHTML
+        message = message+name
+        return ["Error",message]
+      }
+      var array_answer = successor_relationship(sub_id,post_id,loc,datelog,original_id,id_rel_dict)
+      if (array_answer[0]=="Error"){
+        return array_answer
+      }
+      original_id = array_answer[0]
+      datelog=array_answer[1]
+      original_id=original_id.slice(0,-1)
+      
+  }
+}
+return [original_id,datelog]
+}
+
+function successor_relationship(sub_id,post_id,loc,datelog,original_id,dict){
+  // let npost_sdate = calculate_max_sdate(sub_id,post_id,loc,datelog)
+  // // if(new Date(date_log[post_id].split(' ')[0]).getTime()<npost_sdate){
+  // //   original_id=original_id.slice(0,-1)
+  // //   return [original_id,datelog]
+  // // }
+  // if (datelog[post_id]==null  & window.rel_settings==1){
+  //   datelog[post_id]=window.date_log[post_id]
+  //   var post_sdate = (new Date(datelog[post_id].split(' ')[0])).getTime()
+  // }
+  // else if(datelog[post_id]==null  & window.rel_settings==0){
+  //   var post_sdate = 0
+  // }
+  // if (post_sdate<npost_sdate){
+  //   post_sdate=npost_sdate
+  //   duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
+  //   post_edate = return_end_date(npost_sdate,duration,[],weekend_value)
+  //   datelog[post_id] = date_format_changer4(post_sdate)+" - "+post_edate
+  //   original_id.push(post_id)
+    array_answer = relationship_date(dict,post_id,1,original_id,datelog)
+    if (array_answer[0]=="Error"){
+      return array_answer
+    }
+    original_id=original_id.slice(0,-1)
+    datelog = array_answer[1]
+    return [original_id,datelog]
+  }
+//   return [original_id,datelog]
+// }
+
+function relationship_sdate(sdate,edate,relationship,lag,duration){
+  lag=parseInt(lag)+1
+    ///relationship must equal FS,SF,SS,FF, lag must be numeric interger, 
+    ///dates to be inputted in mm/dd/yyyy and be from the predecessor, duration is for the successor.
+    if (relationship == 0){//SF
+      return return_end_date(edate,lag,[],weekend_value)
+    }
+    else if (relationship == 3){//SS
+      return return_end_date(sdate,lag,[],weekend_value)
+    }
+    else if (relationship == 1){//SF
+      var finish_date = return_end_date(sdate,lag,[],weekend_value)
+      return return_end_date(finish_date,duration*-1,[],weekend_value)
+    }
+    else if (relationship == 2){//FF
+      var finish_date = return_end_date(edate,lag,[],weekend_value)
+      return return_end_date(finish_date,duration*-1,[],weekend_value)
+    }
+  }
+function convert_to_FS(relationship,lag,parent_sdate, parent_edate,child_duration,skipped_days){
+  ///relationship must equal FS,SF,SS,FF, lag must be numeric interger, dates to be inputted in mm/dd/yyyy.
+  var sdate = new Date(parent_sdate);
+  var edate = new Date(parent_edate);
+  var diff = sdate.getTime()-edate.getTime();
+  var date_diff = diff/(1000*3600*24)+1;
+  if (relationship == 0){
+    return parseInt(lag)+1
+  }
+  else if (relationship == 3){
+    new_lag = parseInt(lag)+date_diff;
+    return new_lag
+  }
+  else if (relationship == 1){
+    new_lag = (parseInt(lag)-parseInt(child_duration)+date_diff);
+    return new_lag
+  }
+  else if (relationship == 2){
+    new_lag = parseInt(lag)-parseInt(child_duration)+1;
+    return new_lag
+  }
 }

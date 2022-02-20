@@ -130,6 +130,21 @@ $(document).ready(function(){
         })
 
     }
+function loading(tag,action){
+    if (action == 'load'){
+        let loader = document.createElement('div')
+        loader.setAttribute('class','loader')
+        console.log(tag)
+        console.log(loader)
+        tag.replaceWith(loader)
+        return
+    }
+    else{
+        let loader = document.getElementsByClassName('loader')[0]
+        loader.replaceWith(tag)
+        return
+    }
+}
 
 function update_project_info(){
     var address = document.getElementById('address').value;
@@ -142,10 +157,11 @@ function update_project_info(){
     return false;
 }
 
-function update_admin(){
-
-    var email_array = document.getElementsByClassName('email');
-    var admin_level = document.getElementsByClassName('admin_level');
+function update_admin(this_tag){
+    let parent = this_tag.parentElement
+    loading(parent,'load')
+    var email_array = parent.getElementsByClassName('email');
+    var admin_level = parent.getElementsByClassName('admin_level');
     var post_emails = new Array;
     var post_admin = new Array;
     for (var k=0; k<email_array.length;k++){
@@ -159,12 +175,9 @@ function update_admin(){
     post_emails=post_emails.toString();
     post_admin=post_admin.toString();
 
-    console.log(post_emails)
-    console.log(post_admin)
-
 
     $.post('../PHP/update_admin_level.php',{emails:post_emails,admin_levels:post_admin,project_id:window.project_id});
-
+    setTimeout(loading,1000,parent,'unload')
 
 }
 

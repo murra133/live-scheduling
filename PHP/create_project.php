@@ -1,20 +1,21 @@
 <?php
 require_once("db_link.php");
 
-/*$project_name =$_GET['project_name'];
-$first_name_array = explode(',',$_GET['first_name']);
-$last_name_array =explode(',',$_GET['last_name']);
-$email_array = explode(',',$_GET['email']);
-$admin_level_array= explode(',',$_GET['admin_level']);*/
+// $project_name =$_GET['project_name'];
+// $first_name_array = explode(',',$_GET['first_name']);
+// $last_name_array =explode(',',$_GET['last_name']);
+// $email_array = explode(',',$_GET['email']);
+// $admin_level_array= explode(',',$_GET['admin_level']);
 
 $project_name =$_POST['project_name'];
 $first_name_array = explode(',',$_POST['first_name']);
 $last_name_array =explode(',',$_POST['last_name']);
 $email_array = explode(',',$_POST['email']);
 $admin_level_array= explode(',',$_POST['admin_level']);
+$workweek = 1;
 
-$stmt = $link->prepare("INSERT INTO project_database (ProjectName) VALUE (?)");
-$stmt->bind_param("s",$project_name);
+$stmt = $link->prepare("INSERT INTO project_database (ProjectName,WorkWeek) VALUES (?,?)");
+$stmt->bind_param("si",$project_name,$workweek);
 $stmt->execute();
 sleep(1);
 $stmt = $link->prepare("SELECT Project_id FROM project_database WHERE ProjectName = ?");
@@ -54,10 +55,10 @@ $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."(
                 Sub_ID int NOT NULL,
                 Main_ID int NOT NULL,
                 Sub_Activity varchar(255) NOT NULL,
-                Start_Date varchar(255) Not NULL,
-                End_Date varchar(255) Not NULL,
+                Date varchar(255) Not NULL,
                 Duration int NOT NULL,
                 Party_Involved varchar(255) Not NULL,
+                Actualized int NOT NULL,
                 PRIMARY KEY (Sub_ID),
                 FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
                 ON UPDATE CASCADE ON DELETE CASCADE)");
@@ -91,10 +92,10 @@ $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."_General(
                 Sub_ID int NOT NULL,
                 Main_ID int NOT NULL,
                 Sub_Activity varchar(255) NOT NULL,
-                Start_Date varchar(255) Not NULL,
-                End_Date varchar(255) Not NULL,
+                Date varchar(255) Not NULL,
                 Duration int NOT NULL,
                 Party_Involved varchar(255) Not NULL,
+                Actualized int NOT NULL,
                 PRIMARY KEY (Sub_ID),
                 FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
                 ON UPDATE CASCADE ON DELETE CASCADE)");

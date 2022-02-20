@@ -104,8 +104,8 @@
                     <label for="address">Address</label>
                     <input type="text" class="form-control" id="address" placeholder="Enter the Project's Address">
                   </div>
-                  <button type="button" class="btn btn-primary" onclick="update_project_info()">Update Profile</button>
-                  <button type="reset" class="btn btn-light" onclick="pull_project_info()">Reset Changes</button>
+                  <button type="button" class="btn btn-primary" onclick="update_project_info(this)">Update Profile</button>
+                  <button type="reset" class="btn btn-light" onclick="pull_project_info(this)">Reset Changes</button>
                 </form>
               </div>
               <div class="tab-pane" id="administrator">
@@ -139,7 +139,7 @@
                   </div>
               </div>
                 <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_admin_input(this)"> Add User</i>
-                    <button type="button" class="btn btn-primary" onclick="update_admin()">Update Administrators</button>
+                    <button type="button" class="btn btn-primary" onclick="update_admin(this)">Update Administrators</button>
                     <button type="reset" class="btn btn-light" onclick="reset_changes('admin_settings')">Reset Changes</button>
                  </form>
               </div>
@@ -185,7 +185,7 @@
                       </div>
                     </div>
                       <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_holidays(this)"> Add Holiday</i>
-                  <button type="button" class="btn btn-primary" onclick="update_settings()">Update Settings</button>
+                  <button type="button" class="btn btn-primary" onclick="update_settings(this)">Update Settings</button>
                   <button type="reset" class="btn btn-light">Reset Changes</button>
                 </form>
               </div>

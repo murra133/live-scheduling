@@ -1,0 +1,14 @@
+#added_party_cell{
+    display: block;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.party_card{
+    width:100%;
+    display: block;
+}
+
+.col-sm-2{
+    display: grid!important;
+    width: 100%!important;;
+}

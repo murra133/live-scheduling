@@ -18,5 +18,8 @@ $stmt = $link->prepare("INSERT INTO sub_activities_".$project_id." (Sub_ID, Main
 $stmt->bind_param("iissis",$sub_id,$main_id,$sub_activity,$date,$duration,$party_involved);
 $stmt->execute();
 
+
+echo("INSERT INTO sub_activities_".$project_id." (Sub_ID, Main_ID, Sub_Activity,Date, Duration,Party_Involved) VALUES(".$sub_id.",".$main_id.",".$sub_activity.",".$date.",".$duration.",".$party_involved.")");
+
 require_once("db_link_close.php")
 ?>

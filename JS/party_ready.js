@@ -253,21 +253,31 @@ function create_card_personel(person_id, person_fname, person_lname, person_titl
  // add_persone1.className = 'personel_box list-group list-group-flush';
  // add_persone1.style.display = "block";
 
- var person_info = document.createElement('ul');
- var name_text = document.createElement('text');
- name_text.value = person_fname + " " + person_lname;
- name_text.contenteditable="true";
+ var person_info = document.createElement('div');
+ person_info.id = person_id;
+ person_info.className = "personel_info";
+
+ var fname_text = document.createElement('h5');
+ fname_text.className = "personel_info_fname";
+ fname_text.innerHTML = person_fname;
  //name_text.readOnly = true;
 
- var title_text = document.createElement('input');
- title_text.value = person_title;
- title_text.readOnly = true;
+ var lname_text = document.createElement('h5');
+ lname_text.className = "personel_info_lname";
+ lname_text.innerHTML = person_lname;
 
- var email_text = document.createElement('input');
- email_text.value = person_email;
- email_text.readOnly = true;
+ var title_text = document.createElement('h5');
+ title_text.className = "personel_info_title";
+ title_text.innerHTML = person_title;
 
- person_info.appendChild(name_text);
+
+ var email_text = document.createElement('h5');
+ email_text.className = "personel_info_email";
+ email_text.innerHTML = person_email;
+
+
+ person_info.appendChild(fname_text);
+ person_info.appendChild(lname_text);
  person_info.appendChild(title_text);
  person_info.appendChild(email_text);
   return person_info;

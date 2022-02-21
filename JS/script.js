@@ -463,15 +463,17 @@ $( document ).ready(function() {
     data : 'project_id='+window.project_id,     
     success:function(data){
       var holidays_data = JSON.parse(data);
-      holidays_date_array = new Array();
-      holidays_name_array = new Array();
-      holidays_id_array = new Array();
+      window.holidays = {};
+      // window.holiday_val = {}
       for (var h=0;h<Object.keys(holidays_data).length;h++){
-        holidays_date_array[h] =holidays_data[Object.keys(holidays_data)[h]][0]['HolidayDate'];
-        holidays_name_array[h] =holidays_data[Object.keys(holidays_data)[h]][0]['HolidayName'];
-        holidays_id_array[h] =Object.keys(holidays_data)[h];
+        let dt = holidays_data[Object.keys(holidays_data)[h]][0]['HolidayDate']
+        let hname = holidays_data[Object.keys(holidays_data)[h]][0]['HolidayName']
+        let h_id = Object.keys(holidays_data)[h]
+        window.holidays[dt] = {0:hname,1:h_id};
+        // window.holiday_val[new Date(dt).getTime] = {0:hname,1:h_id};
       }
     }})
+    
     $.ajax({
       url : '../PHP/pull_project_settings.php',
       type : 'POST',
@@ -567,10 +569,18 @@ function date_range_picker(id_,action,value){
     var date_tag = document.getElementById(id_)
     var start_date = value.split(' ')[0]
     var end_date = value.split(' ')[2]
+
     $("#"+id_).daterangepicker({
       "startDate": start_date,
       "endDate": end_date,
-      opens: 'center'
+      opens: 'center',
+      "isInvalidDate" : function(date){
+        for(var ii = 0; ii < Object.keys(window.holidays).length; ii++){
+          if (date.format('YYYY-MM-DD') == Object.keys(window.holidays)[ii]){
+            return true;
+          }
+        }
+      }
     }, function(start, end, label) {
       get_duration(start.format("YYYY-MM-DD"),end.format("YYYY-MM-DD"),id_.split('_')[1])
       var dates_str = start.format("MM/DD/YYYY")+" - "+end.format("MM/DD/YYYY")
@@ -998,7 +1008,7 @@ function toggle_filters(){
 
   /* Creates the dates to go on the three week ahead using the existing start date*/
 function three_week_ahead(bdate_dates,bdate_days){
-  var m = 3
+  var m = 6
   var n;
   var date = document.getElementById("start_date").value;
 
@@ -1140,7 +1150,13 @@ function log_dates_to_schedule(date_array,id_handler,action){
           id_handler.children[z].className ="date_box schedule";
         }
       }
-      if (check_if_no_work(date,weekend_date_transform(weekend_value))==false){
+      if (window.holidays[date_format_changer3(date)]!=undefined){
+        id_handler.children[z].className ="date_box holiday";
+        id_handler.children[z].setAttribute('name',window.holidays[date_format_changer3(date)][0])
+        id_handler.c
+      }
+      else if (check_if_no_work(date,weekend_date_transform(weekend_value))==false){
+
         id_handler.children[z].className ="date_box weekend";
       }
 
@@ -1161,7 +1177,7 @@ function log_dates_to_schedule(date_array,id_handler,action){
     }
     for(var i=0;i<date_array.length;i++){
       let date_box = document.getElementById(id+"_"+date_array[i])
-      if(date_box!=null && date_box.className!="date_box weekend"){
+      if(date_box!=null && (date_box.className!="date_box holiday" && date_box.className!="date_box weekend")){
         if (i==0){
           if (date_array.length==1){
             date_box.className = 'date_box schedule schedule_single'
@@ -1587,13 +1603,29 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
    input_contractor.setAttribute("id","contractor_"+id.toString());
    input_contractor.setAttribute('ondblclick','input_edit(this)')
    input_contractor.innerHTML = party_involved
+  //Sub_Activity Div
+  let sub_activity = document.createElement('div')
+  sub_activity.setAttribute('id','sub_'+id)
 
+    /* Create Date Box */
+   var bdate_box = document.createElement("div");
+   bdate_box.setAttribute("id","bdate_"+id);
+   date_box(bdate_box,id,dates);
+
+  // Actualized
    var input_actualized = document.createElement("input");
    input_actualized.setAttribute("type","checkbox")
    input_actualized.setAttribute("class","sub_actualized collapsable");
    input_actualized.setAttribute("id","actualized_"+id.toString());
    if(actualized==1){
      input_actualized.checked = true;
+     sub_activity.setAttribute('class','sub_activity sub_activity_actualized')
+     bdate_box.setAttribute("class","sub_bdate bdate_actualized");
+   }
+   else{
+    sub_activity.setAttribute('class','sub_activity')
+    bdate_box.setAttribute("class","sub_bdate");
+
    }
    
    var delete_button= document.createElement("i");
@@ -1601,16 +1633,7 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
    delete_button.setAttribute("id","delete_"+id);
    delete_button.setAttribute("onclick","delete_sub_activity_box(this)")
 
-   /* Create Date Box */
-   var bdate_box = document.createElement("div");
-   bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
-   bdate_box.setAttribute("id","bdate_"+id);
-   date_box(bdate_box,id,dates);
 
-  //Sub_Activity Div
-  let sub_activity = document.createElement('div')
-  sub_activity.setAttribute('class','sub_activity')
-  sub_activity.setAttribute('id','sub_'+id)
 
   sub_activity.appendChild(p_id)
   sub_activity.appendChild(input_activity)
@@ -1907,7 +1930,12 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
       date = date+3600000
       continue
     }
-    if(weekend.indexOf(day)>=0){
+    else if((date-3600000==e_date)){
+      date = date-3600000
+      continue
+    }
+    let date_n = date_format_changer3(date_format_changer4(date))
+    if(weekend.indexOf(day)>=0||holidays_array[date_n]!=undefined){
       day = day+1
     }
     else{
@@ -1922,7 +1950,7 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
   return (duration);
 }
 
-function return_end_date(start_date, duration, holidays_array, weekend_days){
+function return_end_date(start_date, duration, holidays, weekend_days){
     //Input is start_date in yyyy-mm-dd, duration in number of days, holidays_array in yyyy-mm-dd, weekend_days
     var day = (standarize_dates_to_UTC((new Date (start_date)))).getDay();
     var weekend = weekend_date_transform(weekend_days);
@@ -1937,7 +1965,8 @@ function return_end_date(start_date, duration, holidays_array, weekend_days){
         else{
           day = day+1
         }
-        if(weekend[0] == day || weekend[1]==day){
+        let date_n = date_format_changer3(date_format_changer4(date))
+        if(weekend.indexOf(day)>=0||holidays[date_n]!=undefined){
         }
         else{
           d=d+1
@@ -1957,7 +1986,8 @@ function return_end_date(start_date, duration, holidays_array, weekend_days){
         else{
           day = day-1
         }
-        if(weekend[0] == day || weekend[1]==day){
+        let date_n = date_format_changer3(date_format_changer4(date))
+        if(weekend.indexOf(day)>=0||holidays[date_n]!=undefined){
         }
         else{
           d=d-1
@@ -1980,7 +2010,7 @@ $(document).on('change','.sub_duration', function(){
   var dates = date_tag.getAttribute('value')
   var start_date = dates.split(" ")[0]
   var holidays_date_array = []
-  var end_date = return_end_date(start_date,duration,holidays_date_array,weekend_value);
+  var end_date = return_end_date(start_date,duration,window.holidays,weekend_value);
   dates = start_date+" - "+end_date  
   window.date_log[id]=dates
   date_tag.setAttribute('value',dates)
@@ -1995,8 +2025,7 @@ $(document).on('change','.sub_duration', function(){
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function get_duration(start_date,end_date,id){
-  var holidays_date_array = []
-  var duration = return_duration(start_date,end_date,holidays_date_array,weekend_value);
+  var duration = return_duration(start_date,end_date,window.holidays,weekend_value);
   var duration_tag = document.getElementById("duration_"+id);
   duration_tag.setAttribute('value',duration);
   duration_tag.value = duration
@@ -2009,6 +2038,15 @@ function get_duration(start_date,end_date,id){
 
 $(document).on('change','.sub_actualized',function(){
   var id = this.getAttribute('id').split("_")[1]
+  if (this.checked==true){
+    this.parentElement.className='sub_activity sub_activity_actualized'
+    document.getElementById('bdate_'+id).className='sub_bdate bdate_actualized'
+  }
+  else{
+    this.parentElement.className='sub_activity'
+    document.getElementById('bdate_'+id).className='sub_bdate'
+
+  }
   upload_sub_activity(id,'update')
 })
 /////////////////////////////////////////////////////////////////////////
@@ -3055,7 +3093,7 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
     if (og_sdate<new_sdate){
       new_sdate = date_format_changer4(new_sdate)
       var duration = parseInt(document.getElementById('duration_'+sub_id).innerHTML)
-      var new_edate = return_end_date(new_sdate,duration,[],weekend_value)
+      var new_edate = return_end_date(new_sdate,duration,window.holidays,weekend_value)
       datelog[sub_id] =new_sdate+" - "+new_edate
     }
     if (datelog[sub_id]==0){
@@ -3183,18 +3221,18 @@ function relationship_sdate(sdate,edate,relationship,lag,duration){
     ///relationship must equal FS,SF,SS,FF, lag must be numeric interger, 
     ///dates to be inputted in mm/dd/yyyy and be from the predecessor, duration is for the successor.
     if (relationship == 0){//SF
-      return return_end_date(edate,lag,[],weekend_value)
+      return return_end_date(edate,lag,window.holidays,weekend_value)
     }
     else if (relationship == 3){//SS
-      return return_end_date(sdate,lag,[],weekend_value)
+      return return_end_date(sdate,lag,window.holidays,weekend_value)
     }
     else if (relationship == 1){//SF
-      var finish_date = return_end_date(sdate,lag,[],weekend_value)
-      return return_end_date(finish_date,duration*-1,[],weekend_value)
+      var finish_date = return_end_date(sdate,lag,window.holidays,weekend_value)
+      return return_end_date(finish_date,duration*-1,window.holidays,weekend_value)
     }
     else if (relationship == 2){//FF
-      var finish_date = return_end_date(edate,lag,[],weekend_value)
-      return return_end_date(finish_date,duration*-1,[],weekend_value)
+      var finish_date = return_end_date(edate,lag,window.holidays,weekend_value)
+      return return_end_date(finish_date,duration*-1,window.holidays,weekend_value)
     }
   }
 function convert_to_FS(relationship,lag,parent_sdate, parent_edate,child_duration,skipped_days){
@@ -3218,4 +3256,19 @@ function convert_to_FS(relationship,lag,parent_sdate, parent_edate,child_duratio
     new_lag = parseInt(lag)-parseInt(child_duration)+1;
     return new_lag
   }
+}
+
+function print_PDF(){
+  let p_body = document.getElementById('added_cell').cloneNode(true)
+  p_body.className="PDF"
+  var opt = {
+    margin: 0.5,
+    filename: 'schedule.pdf',
+    image: {type:'jpeg',quality:0.2},
+    html2canvas: {scale:10},
+    jsPDF: {unit:"in", format:"letter",orientation:"landscape",precision:"12"}
+  }
+
+
+  html2pdf().set(opt).from(p_body).toPdf().save();
 }

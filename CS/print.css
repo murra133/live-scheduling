@@ -1,0 +1,198 @@
+
+#sidebar, .colapsable_button,.clickable, input, button, .website_button,#main_relationship{
+    display: none !important;
+}
+
+@page {
+    size: A4 landscape;
+  }
+
+.main_activity_title{
+    width: 100%!important;
+    left: 0px!important;;
+    position:relative;
+    left: 38px;;
+ 
+
+}
+.main_activity_title > h2{
+text-align: left;
+font-size: 20px;
+padding: 5px!important;
+color:white!important;
+background-color: gray!important;
+width:100%!important;
+border-style: solid;
+border:black!important;
+border-radius: 5px;
+}
+h2.title{
+    display: inline-block!important;
+    float: left;
+}
+
+    
+/*-----Sub Activity-----*/
+
+.sub_activity_box{
+    display: flex!important;
+    flex-direction: row;
+    position: relative;
+    width: 100%!important;
+}
+.activity_left{
+    text-align: center;
+    display: block!important;
+    position: relative;
+    width: 30%!important;
+    float:left;
+    
+    }
+.activity_right{
+    text-align: center;
+    display: block!important;
+    position: relative;
+    width: 65%!important;
+    float:left;
+    }
+
+.sub_activity{
+    display: flex!important;
+    flex-direction: row;
+    align-items: center;
+    height: 32px;
+    box-shadow: 0px 1px 0px 0px grey!important;
+
+}
+.sub_activity>h5{
+    font-size: 1.2vw;
+    margin-bottom: 0px;
+}
+
+.sub_activity>h3{
+    font-size: 1vw;
+    font-weight:500;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.sub_name,.sub_date,.sub_duration,.sub_contractor{
+    height:1vw!important
+}
+.sub_date,.sub_duration,.sub_contractor{
+    text-align: center;
+    
+}
+.sub_id,.sub_id_title{
+    display: none;
+}
+.sub_name,.sub_name_title{
+    width: 50%;
+    text-align: left;
+    margin:calc()
+
+}
+.sub_date,.sub_date_title{
+    width: 20%;
+    margin:0px calc(20% - 230px);
+    transition: .5s width;
+    transition: 2s background-color;
+
+}
+
+.sub_duration,.sub_duration_title{
+    width: 10%;
+    margin:0px calc(9% - 60px);
+}
+
+.sub_contractor,.sub_contractor_title{
+width:10%;
+
+}
+
+  /*------Schedule ------*/
+
+.cell_dates{
+    position: relative;
+    display: flex;
+}
+.cell_days{
+    position: relative;
+    display: flex;
+}
+.date, .day{
+    /* border-style: solid;
+    border-width: 0px 1px 0px 1px; */
+    box-shadow: 1px 0px 0px 0px gray!important;
+    font-size:12px!important;
+    margin-bottom: auto;
+    height: 16px;
+    width:75px;
+    text-align: center;
+    }
+
+
+    
+
+.date_box{
+    display:inline-block!important;
+    /* border-style: solid;
+    border-width: 1px; */
+    /* padding:10px; */
+    box-shadow: 1px 0px 1px 0px gray!important;
+    margin: 11px 0px!important;
+    font-size:small!important;
+    position: relative!important;
+    width:75px!important;
+    height: 16px!important;
+
+}
+
+.schedule{
+    border: rgb(97, 163, 97) solid!important;
+    background-color: rgb(97, 163, 97)!important;
+}
+
+.schedule_start{
+    border-radius: 15px 0px 0px 15px!important;
+}
+.schedule_single{
+    border-radius: 15px 15px 15px 15px!important;
+}
+.schedule_end{
+    border-radius: 0px 15px 15px 0px!important;
+}
+
+.weekend{
+    background-color: rgb(211,211,211)!important;
+ 
+}
+
+.holiday{
+    background-color: rgb(170, 170, 170)!important;
+}
+.sub_bdate{
+height: 32px!important;
+display: flex!important;
+align-items: center!important;
+box-shadow: 0px 1px 0px 0px gray!important;
+
+}
+
+.sub_activity_bdate{
+    white-space: nowrap!important;
+    position: relative!important;
+    bottom: 29px!important;
+}
+
+.sub_titles{
+    display: flex!important;
+    height: 60px!important;
+    flex-flow: column!important;
+    justify-content: end!important;
+    box-shadow: 0px 1px 0px 0px gray!important;
+    
+}

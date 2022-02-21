@@ -124,6 +124,11 @@ h5{
     width: 60px;
     height: 34px;
   }
+
+  input, select{
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+  }
   
   /* Hide default HTML checkbox */
   .switch input {

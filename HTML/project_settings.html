@@ -14,14 +14,23 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../JS/server_script.js"></script>
     <script src="../JS/settings_script.js"></script>
+    <script src="../JS/server_script.js"></script>
+    <script src="../JS/side_bar.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../CS/settings_styles.css">
     <link rel="stylesheet" href="../CS/general_styles.css">
+    <link rel="stylesheet" href="../CS/side_bar_style.css">
+    <link rel="stylesheet" href="../CS/settings_styles.css">
 
 
 </head>
 <body>
+  <div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar" class = "active" onclick="toggle_side_bar()">
+
+</nav>
 <div class="container">
 
       <!-- Breadcrumb -->
@@ -179,10 +188,12 @@
 
                   <div class="form-group">
                     <label id="holiday_label">Add Days Off</label>
+                    <div class="holidays_form">
                       <div id="sample_holidays" style="display:none">
-                        <input style="width:49%; display:inline-block" class = "holiday_input holidayname form-control" type="text" placeholder="Holiday">
-                        <input style="width:49%; display:inline-block" type="date" class="form-control holidaydate" >
+                        <input class = "holidays holidayname form-control" type="text" placeholder="Holiday">
+                        <input type="date" class="form-control holidays holidaydate" >
                       </div>
+                    </div>
                     </div>
                       <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_holidays(this)"> Add Holiday</i>
                   <button type="button" class="btn btn-primary" onclick="update_settings(this)">Update Settings</button>
@@ -268,9 +279,12 @@
       </div>
 
     </div>
+    </div>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+
+  $('#sidebar').load('side_bar_nav.html');
 	
 </script>
 </body>

@@ -56,24 +56,29 @@ body{
     box-shadow: none!important;
 }
 
-.user_admin_input{
+.user_admin{
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.user_admin_input,.user_admin{
     margin-bottom: 2%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items:center;
 }
-.admin_input{
+.user_admin_input>*,.user_admin>*{
     width: 23.8%;
-    font-size: 1vw;
-
+    font-size: 15px;
+    height: 30px;
 }
-.user_admin h7{
-    width: 23.8%;
-    display: inline-block;
-    font-size: 1vw;
-
-}
-.user_admin h5{
-    width: 23.8%;
-    display: inline-block;
-    font-size: 1.2vw;
+.user_admin_input i{
+    width: 0%;
+    position: relative;
+    top: 7px;
+    justify-self: center;
 }
 
 .add_user{
@@ -86,7 +91,13 @@ body{
     display:block;
     width:100%;
 }
+
+.holidays_form{
+    max-height: 300px;
+    overflow-y: scroll;
+}
 .holidays{
     display:inline-block;
+    width: 49%;
 }
 

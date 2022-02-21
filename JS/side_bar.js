@@ -65,13 +65,26 @@ function toggle_side_bar(){
 	var navbar = document.getElementById("search_navbar")
 	if (side_bar.getAttribute('class')=='btn btn-primary'){
 		side_bar.setAttribute('class','btn btn-primary active')
-		main_page.setAttribute('class','active')
-		navbar.setAttribute('class','active')
+
+		if (navbar!=undefined){
+			navbar.setAttribute('class','active')
+
+		}
+		if (main_page!=undefined){
+			main_page.setAttribute('class','active')
+		}
+		
 	}
 	else{
 	  side_bar.setAttribute('class','btn btn-primary')
-	  main_page.removeAttribute('class')
-	  navbar.removeAttribute('class')
+
+	  if (navbar!=undefined){
+		navbar.removeAttribute('class')
+	}
+	if (main_page!=undefined){
+		main_page.removeAttribute('class')
+	}
+
 
 	}
   $('#sidebar').toggleClass('active');

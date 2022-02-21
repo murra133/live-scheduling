@@ -24,6 +24,8 @@ h1{
 #upload_button button{
     float: right;
     margin-right: .5vw;
+    z-index: 10000;
+    position: relative;
 }
 
 .submit_button{
@@ -53,6 +55,12 @@ h1{
 /* -----Styles for Activity Headers----  */
 #cell{
     display:block;
+    position: relative;
+    top: 50px
+}
+#header{
+    top: 100px;
+    position: relative;
 }
 
 #cell_header{
@@ -232,11 +240,10 @@ input.title{
     text-align: left;
     position: relative;
     width:100%;
-    padding: 10px;
     color: rgb(128,128,128);
 }
 .sub_activity_add i{
-    font-size: 22px;
+    font-size: 17px;
 }
 
 
@@ -294,7 +301,7 @@ transition:width .5s;
     display: flex;
     flex-direction: row;
     position: relative;
-    left: 3%;
+    left: 1.5%;
 }
 
 .sub_activity{
@@ -304,6 +311,11 @@ transition:width .5s;
     height: 32px;
     box-shadow: 0px 1px 0px 0px grey;
 
+}
+
+.sub_activity_actualized h5, .sub_activity_actualized i{
+    opacity: .6;
+    pointer-events:none;
 }
 .sub_activity>h5{
     font-size: 15px;
@@ -375,6 +387,7 @@ width:15%;
 
 h5.sub_name:hover,h5.sub_date:hover,h5.sub_duration:hover,h5.sub_contractor:hover{
     background-color: rgb(240, 240, 240);
+    cursor: pointer;
 }
 
 /* .delete_sub_icon{
@@ -433,8 +446,9 @@ h5.sub_name:hover,h5.sub_date:hover,h5.sub_duration:hover,h5.sub_contractor:hove
     position: relative;
     width:75px;
     height: 16px;
-    -webkit-transition:background .2s ease-in;
-    transition: background .2s ease-in ;
+    -webkit-transition:all .2s ease-in;
+    transition: all .2s ease-in ;
+
 
 }
 
@@ -454,8 +468,17 @@ h5.sub_name:hover,h5.sub_date:hover,h5.sub_duration:hover,h5.sub_contractor:hove
 }
 
 .weekend{
-    background-color: lightgray;
+    background-color: rgb(211,211,211);
     pointer-events: none;
+ 
+}
+
+.holiday{
+    background-color: rgb(170, 170, 170);
+}
+
+.holiday:hover{
+    opacity: .5;
 }
 
 .sub_bdate{
@@ -464,6 +487,11 @@ display: flex;
 align-items: center;
 box-shadow: 0px 1px 0px 0px gray;
 
+}
+
+.bdate_actualized>.schedule, .bdate_actualized>.schedule_start, .bdate_actual_end{
+    background-color: rgb(54, 98, 54);
+    border-color:rgb(54, 98, 54);
 }
 
 .sub_activity_bdate{
@@ -764,42 +792,6 @@ input.rel_right{
 
 /*-------Project - personel CSS -----*/
 
-/*.project_title{
-    width:55%;
-    position:relative;
-    left:2%;
- 
-
-}
-.project_title > h2{
-text-align: left;
-font-size: 100%;
-padding:.8vh;
-color:white;
-background-color: gray;
-width:90%;
-border-style: solid;
-border:black;
-border-radius: 5px;
-}
-.title{
-    display: inline-block!important;
-    
-}*/
-/*
-.personel_box{
-
-    left:3%;
-    width: 55%;
-    position: relative;
-    }
-
-.personel_box > h5{
-
-    display: inline-block;
-    width: 18%;
-    }   */
-
 .card{
     width: 18rem;
     height: 25rem;
@@ -815,9 +807,208 @@ border-radius: 5px;
 
 /*-------search bar CSS -----*/
 
-
-
-
 .navbar-brand{
     padding-left: 3%
+}
+
+
+/*--------Print----------*/
+
+.PDF .colapsable_button,.PDF .clickable, .PDF input,.PDF  button,.PDF  .website_button,.PDF #main_relationship{
+    display: none !important;
+}
+
+.PDF{
+    width: 11in!important;
+    height: 8.5in!important;
+    border: 1px solid black
+}
+
+
+.PDF .main_activity_title{
+    width: 11in!important;
+    left: 0px!important;;
+    position:relative;
+    left: 38px;;
+ 
+
+}
+.PDF .main_activity_title > h2{
+text-align: left;
+font-size: 6px;
+padding: 2px!important;
+color:white!important;
+background-color: gray!important;
+width:30%!important;
+border-style: solid;
+border:black!important;
+border-radius: 5px;
+}
+.PDF h2.title{
+    display: inline-block!important;
+    float: left;
+}
+
+    
+/*-----Sub Activity-----*/
+
+.PDF .sub_activity_box{
+    display: flex!important;
+    flex-direction: row;
+    position: relative;
+    width: 11in!important;
+}
+.PDF .activity_left{
+    text-align: center;
+    display: block!important;
+    position: relative;
+    width: 30%!important;
+    float:left;
+    
+    }
+.PDF .activity_right{
+    text-align: center;
+    display: block!important;
+    position: relative;
+    width: 65%!important;
+    float:left;
+    }
+.PDF .sub_activity{
+    display: flex!important;
+    flex-direction: row;
+    align-items: center;
+    height: 10px;
+    box-shadow: 0px 1px 0px 0px grey!important;
+
+}
+.PDF .sub_activity>h5{
+    font-size: 5px;
+    margin-bottom: 0px;
+}
+
+.PDF .sub_activity>h3{
+    font-size: 5px;
+    font-weight:500;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.PDF .sub_name,.PDF .sub_date,.PDF .sub_duration,.PDF .sub_contractor{
+    height:1vw!important
+}
+.PDF .sub_date,.PDF .sub_duration,.PDF .sub_contractor{
+    text-align: center;
+    
+}
+.PDF .sub_id,.PDF .sub_id_title{
+    display: none;
+}
+.PDF .sub_name,.PDF .sub_name_title{
+    width: 50%;
+    text-align: left;
+
+}
+.PDF .sub_date,.PDF .sub_date_title{
+    width: 20%;
+    margin:0px 0px;
+    transition: .5s width;
+    transition: 2s background-color;
+
+}
+
+.PDF .sub_duration,.PDF .sub_duration_title{
+    width: 10%;
+    margin:0px 0px
+}
+
+.PDF .sub_contractor,.PDF .sub_contractor_title{
+width:10%;
+
+}
+
+  /*------Schedule ------*/
+
+.PDF .cell_dates{
+    position: relative;
+    display: flex;
+}
+.PDF .cell_days{
+    position: relative;
+    display: flex;
+}
+.PDF.date,.PDF>.day{
+    /* border-style: solid;
+    border-width: 0px 1px 0px 1px; */
+    box-shadow: 1px 0px 0px 0px gray!important;
+    font-size:12px!important;
+    margin-bottom: auto;
+    height: 16px;
+    width:75px;
+    text-align: center;
+    }
+
+
+    
+
+.PDF>.date_box{
+    display:inline-block!important;
+    /* border-style: solid;
+    border-width: 1px; */
+    /* padding:10px; */
+    box-shadow: 1px 0px 1px 0px gray!important;
+    margin: 11px 0px!important;
+    font-size:small!important;
+    position: relative!important;
+    width:75px!important;
+    height: 16px!important;
+
+}
+
+.PDF>.schedule{
+    border: rgb(97, 163, 97) solid!important;
+    background-color: rgb(97, 163, 97)!important;
+}
+
+.PDF>.schedule_start{
+    border-radius: 15px 0px 0px 15px!important;
+}
+.PDF>.schedule_single{
+    border-radius: 15px 15px 15px 15px!important;
+}
+.PDF>.schedule_end{
+    border-radius: 0px 15px 15px 0px!important;
+}
+
+.PDF>.weekend{
+    background-color: rgb(211,211,211)!important;
+ 
+}
+
+.PDF>.holiday{
+    background-color: rgb(170, 170, 170)!important;
+}
+.PDF>.sub_bdate{
+height: 32px!important;
+display: flex!important;
+align-items: center!important;
+box-shadow: 0px 1px 0px 0px gray!important;
+
+}
+
+.PDF>.sub_activity_bdate{
+    white-space: nowrap!important;
+    position: relative!important;
+    bottom: 29px!important;
+}
+
+.PDF>.sub_titles{
+    display: flex!important;
+    height: 60px!important;
+    flex-flow: column!important;
+    justify-content: end!important;
+    box-shadow: 0px 1px 0px 0px gray!important;
+    
 }

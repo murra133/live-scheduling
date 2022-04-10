@@ -48,6 +48,7 @@ for($i =0; $i<sizeof($email_array); $i++){
 $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."(
                 Main_ID int NOT NULL,
                 Main_Activity varchar(255) NOT NULL,
+                Position int NOT NULL,
                 PRIMARY KEY (Main_ID))");
                 mysqli_query($link,$stmt);
 
@@ -58,6 +59,7 @@ $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."(
                 Date varchar(255) Not NULL,
                 Duration int NOT NULL,
                 Party_Involved varchar(255) Not NULL,
+                Position int Not NULL,
                 Actualized int DEFAULT 0,
                 PRIMARY KEY (Sub_ID),
                 FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
@@ -85,6 +87,7 @@ $stmt = ("CREATE TABLE Personel_".$project_id['Project_id']." (
 $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."_General(
                 Main_ID int NOT NULL,
                 Main_Activity varchar(255) NOT NULL,
+                Position int NOT NULL,
                 PRIMARY KEY (Main_ID))");
                 mysqli_query($link,$stmt);
 
@@ -96,6 +99,7 @@ $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."_General(
                 Duration int NOT NULL,
                 Party_Involved varchar(255) Not NULL,
                 Actualized int NOT NULL,
+                Position int Not NULL,
                 PRIMARY KEY (Sub_ID),
                 FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
                 ON UPDATE CASCADE ON DELETE CASCADE)");

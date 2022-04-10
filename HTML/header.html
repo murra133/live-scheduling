@@ -27,7 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
-<body>
+<body onscroll="hide_searchbar(this)">
         <!-- CHECKS to See if User is connected-->
         <script>
                     login_check();
@@ -47,7 +47,7 @@
                         <div id="filter_button"></div>
                         <div id="upload_button">
                             
-                            <button class="website_button" type="clickable" id="push_all_button" onclick="print_PDF()">Push to All</button>
+                            <button class="website_button" type="clickable" id="push_all_button" style="display: none!important;">Push to All</button>
                         </div>
                 </div>
                 </div>

@@ -11,7 +11,11 @@
   position: fixed;
   width: 100%;
   left:0;
-  transition: left .3s;
+  transition: all .3s ease;
+}
+.hide_nav{
+  top: -200px !important;
+  
 }
 #main_page.active,#sidebarCollapse.active,#search_navbar.active{
     left:250px;

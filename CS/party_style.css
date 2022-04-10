@@ -1,0 +1,50 @@
+#added_party_cell{
+    display: block;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.party_card{
+    width:100%;
+    display: block;
+}
+
+.col-sm-2{
+    display: grid!important;
+    width: 100%!important;;
+}
+
+.personel_info_fname{
+    width: 20%;
+    text-align: left;
+    transition: .5s width;
+
+}
+
+.personel_info_lname{
+    width: 20%;
+    text-align: left;
+    transition: .5s width;
+
+}
+
+.personel_info_title{
+    width: 20%;
+    text-align: left;
+    transition: .5s width;
+
+}
+
+.personel_info_email{
+    width: 30%;
+    text-align: left;
+    transition: .5s width;
+
+}
+
+.personel_info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 32px;
+    box-shadow: 0px 1px 0px 0px grey;
+}

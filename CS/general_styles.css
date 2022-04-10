@@ -184,3 +184,9 @@ h5{
   .slider.round:before {
     border-radius: 50%;
   }
+
+  .card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+}

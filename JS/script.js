@@ -36,10 +36,18 @@ return false;
 }
 };
 
-function add_box_blur_background(url){
+function did(id_){
+  return document.getElementById(id_)
+}
+
+function create_delete_box(id,delete_item){
+
+}
+
+function add_box_blur_background(box){
   //////Submit URL for page to load as if you were pulling it from the javascript Ex. "../HTML/add_sub_activity.html"////
   document.getElementById("main_page").style.blur = "10px";
-  $('#content_box').load(url);
+  did('content_box').appendChild(box)
   $("#main_page").css({
     "-webkit-filter": "blur(3px)", 
     "-moz-filter": "blur(3px)", 
@@ -48,6 +56,7 @@ function add_box_blur_background(url){
     "filter": "blur(3px)", 
   }
 );
+return did("content_box");
 }
 
 function weekend_date_transform(server_value){
@@ -136,12 +145,69 @@ else{
       return
     }
   }
+} 
+
 }
 
-  
 
+function quicksort_jointlists(list_array,l,r){
+
+  if(l==r-1||l==r){
+    if(list_array[0][l]>list_array[0][r]){
+      for(let k=0;k<n;k++){
+        let temp = list_array[k][r]
+        list_array[k][r]=list_array[k][l]
+        list_array[k][r]=temp
+      }
+    }
+    return list_array
+  }
+  //// List array is all joint lists inputted as an array with the value list on index 0////
+  /// Example: [[position_array],[ids],[string]] innitiate left right as 0 and length of first list
+  let n = list_array.length;
+  let i = l+1;
+  let j = r-1;
+  let c=0
+
+  while (i<j){
+    if(list_array[0][i]>list_array[0][l]&&list_array[0][j]<list_array[0][l]){
+        for(let k=0;k<n;k++){
+          let temp = list_array[k][i]
+          list_array[k][i]=list_array[k][j]
+          list_array[k][j]=temp
+        }
+        j=j-1
+
+      }
+    else if (list_array[0][i]>=list_array[0][l]&&list_array[0][j]>=list_array[0][l]){
+      j=j-1
+    }
+    else if(list_array[0][i]<=list_array[0][l]&&list_array[0][j]<=list_array[0][l]){
+      i=i+1
+    }
+    else{
+      i=i+1
+      j=j-1
+    }
+  }
+  if(list_array[0][i]>list_array[0][l]){
+    i=i-1
+  }
+  for(let k=0;k<n;k++){
+    let temp = list_array[k][i]
+    list_array[k][i]=list_array[k][l]
+    list_array[k][l]=temp
   }
 
+  ///left////
+  list_array = quicksort_jointlists(list_array,l,i)
+  //right////
+  list_array = quicksort_jointlists(list_array,i+1,r)
+
+  return list_array
+
+
+}
 function update_sub_activity(sub_id){
   ////Once the Edit button is clicked, it takes the tag where the edit button is located as an input, you can use this to find the ID///////////////
   var action = "update"
@@ -182,125 +248,63 @@ $( document ).ready(function() {
             success:function(data){
               var js_data = JSON.parse(data);
                 var main_parent = document.getElementById("added_cell");
-                var divadd = document.createElement('div');
+                var main_div_array = []
+                var main_div_position = []
                 for (var i=0; i<Object.keys(js_data).length;i++){
                   /// Sets Variables///
                   var location = Object.keys(js_data)[i];
                   var main_id = js_data[location]["Main_ID"];
                   var main_title = js_data[main_id]['Main_Activity'];
                   /////Creates the Divs for the Main Title////
-
-                  divadd = document.createElement('div');
-                  divadd.setAttribute("id",main_id);
-                  divadd.setAttribute("class","main_activity");
-                  var divtitle=document.createElement("div")
-                  divtitle.setAttribute("class","main_activity_title")
-                  var title = document.createElement("h2");
-                  title.setAttribute("name",main_title);
-                  title.innerHTML = main_title;
-                  title.setAttribute('class','title clickable');
-                  title.setAttribute('id','title_'+main_id)
-                  title.setAttribute('ondblclick','input_edit(this)')
-                  
-                  var delete_button= document.createElement("i");
-                  delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
-                  delete_button.setAttribute("id","delete_"+main_id);
-                  delete_button.setAttribute("onclick","delete_main_activity_box(this)")
-                  divtitle.appendChild(title);
-                  divtitle.appendChild(delete_button);
-                  // title.appendChild(edit);
-                  divadd.appendChild(divtitle);
+                  main_div_position.push(parseInt(js_data[main_id]["Position"]))
+                  var divadd = create_main_activity(main_id,js_data[main_id]["Position"],main_title)
+                  /////////////Create Sub Activities/////////////////////
                   var sub_activities_array = js_data[main_id]['sub_activity'];
                   ////////////////////////////// Create all the Empty Divs/////
-                  // var empty_divs = create_all_sub_activity_divs();
-                  // var id_div = empty_divs[0];
-                  // var name_div = empty_divs[1];
-                  // var dateval_div = empty_divs[2];
-                  // // var edate_div = empty_divs[3];
-                  // var duration_div = empty_divs[3];
-                  // var contractor_div = empty_divs[4];
-                  // var bdate = empty_divs[5];
-                  // var actualized_div = empty_divs[6];
-                  // var activity_div = empty_divs[7];
-                  // var delete_div = empty_divs[8];
-                  // var date_div = document.createElement('div');
-                  // date_div.setAttribute('class','activity_right');
-                  // var action_div = document.createElement('div');
-                  // action_div.setAttribute('class','activity_left uncollapsed')
-                  // var collapsable_button = document.createElement('div')
-                  // collapsable_button.setAttribute('class','collapsable_button')
-                  // var c_button = document.createElement('i')
-                  // c_button.setAttribute('class','fas fa-ellipsis-v clickable')
-                  // c_button.setAttribute('onclick','collapse_activities(this)')
-                  // c_button.setAttribute('type','active')
-                  // c_button.setAttribute('id','collapse_'+main_id)
-                  // collapsable_button.appendChild(c_button)
 
                   var activity_div = create_title_sub_activity(main_id);
                   var date_div = activity_div.children[2]
                   var action_div = activity_div.children[0]
                   var collapsable_button = activity_div.children[1]
                   var bdate = date_div.children[0];
-
-
-
-                  ///Gets dates from bdate////
-                  // var dates = bdate.getElementsByClassName("cell_dates")[0];
                   var dates = date_div.getElementsByClassName("cell_dates")[0];
+
+
+                  let sub_position_array =[]
+                  let sub_id_array = []
+                  let sub_date_array = []
 
                   for (var j=0;j<Object.keys(sub_activities_array).length;j++){
                     //// Get All Sub Activities Variables////
+                    // let subbox = activity_div.getElementsByClassName("sub_activity_box")[0]
+                    action_div.getElementsByClassName('sub_title')[0].removeAttribute('style')
+                    date_div.getElementsByClassName('sub_titles')[0].removeAttribute('style')
                     var sub_id = Object.keys(sub_activities_array)[j];
                     var sub_activity_title = sub_activities_array[sub_id]["Sub_Activity"];
                     var sub_dates = sub_activities_array[sub_id]["Date"];
                     var sub_duration = sub_activities_array[sub_id]["Duration"];
                     var sub_party_involved = sub_activities_array[sub_id]["Party_Involved"];
                     var sub_actualized = sub_activities_array[sub_id]["Actualized"]
+                    var sub_position = sub_activities_array[sub_id]["Position"]
                     ////////// Adds Values to Sub Activity Box/////
 
                     var filled_divs = download_sub_activity2(main_id,sub_id,sub_activity_title,sub_dates,sub_duration,sub_party_involved,dates,sub_actualized)
                     var sub_bdate_div = filled_divs[1]
                     let sub_activity = filled_divs[0]
-                    // var sub_id_div = filled_divs[0];
-                    // var sub_name_div = filled_divs[1];
-                    // var sub_date_div = filled_divs[2];
-                    // // var sub_edate_div = filled_divs[3];
-                    // var sub_duration_div = filled_divs[3];
-                    // var sub_contractor_div = filled_divs[4];
-                    // var sub_actualized_div = filled_divs[5];
-                    // var sub_bdate_div = filled_divs[6];
-                    // var sub_delete_div = filled_divs[7];
-
+                    sub_activity.setAttribute('data-index',sub_position)
+                    sub_activity = filter_start(sub_activity,sub_bdate_div)
                     var sub_start_date = date_format_changer3(sub_dates.split(" ")[0])
                     var sub_end_date = date_format_changer3(sub_dates.split(" ")[2])
                     var date_array = date_filler(sub_start_date, sub_end_date);
                     sub_bdate_div = log_dates_to_schedule(date_array,sub_bdate_div,"new")   
                     
                     window.date_log[sub_id]=sub_dates;
-                    // id_div.appendChild(sub_id_div);
-                    // name_div.appendChild(sub_name_div);
-                    // dateval_div.appendChild(sub_date_div);
-                    // // edate_div.appendChild(sub_edate_div);
-                    // duration_div.appendChild(sub_duration_div);
-                    // contractor_div.appendChild(sub_contractor_div);
-                    bdate.appendChild(sub_bdate_div);
-                    // actualized_div.appendChild(sub_actualized_div);
-                    // delete_div.appendChild(sub_delete_div);
-                    // action_div.appendChild(id_div);
-                    // action_div.appendChild(name_div);
-                    // action_div.appendChild(dateval_div);
-                    // // action_div.appendChild(edate_div);
-                    // action_div.appendChild(duration_div);
-                    // action_div.appendChild(contractor_div);
-                    // action_div.appendChild(actualized_div);
-                    // action_div.appendChild(delete_div);
-                    date_div.appendChild(bdate);
-                    action_div.appendChild(sub_activity)
-                    // activity_div.appendChild(action_div)
-                    // activity_div.appendChild(collapsable_button)
-                    // activity_div.appendChild(date_div);
-                    // divadd.appendChild(activity_div);
-                    //Add Values to relationship box
+                    // bdate.appendChild(sub_bdate_div);
+                    sub_position_array.push(parseInt(sub_position))
+                    sub_id_array.push(sub_activity)
+                    sub_date_array.push(sub_bdate_div)
+                    // date_div.appendChild(bdate);
+                    // action_div.appendChild(sub_activity)
                     var r_opt = document.createElement('option')
                     r_opt.setAttribute('value',sub_id+'-'+sub_activity_title)
                     r_opt.innerHTML = main_title
@@ -309,6 +313,13 @@ $( document ).ready(function() {
                     
 
                   }
+                  let list_array = [sub_position_array,sub_id_array,sub_date_array]
+                  list_array = quicksort_jointlists(list_array,0,list_array[0].length)
+                  for(let i=0;i<list_array[0].length;i++){
+                    bdate.appendChild(list_array[2][i]);
+                    action_div.appendChild(list_array[1][i])
+                  } 
+
                   var error_div = document.createElement('div')
                   error_div.setAttribute('class','error_div')
                   var error_message = document.createElement('h6')
@@ -322,22 +333,18 @@ $( document ).ready(function() {
                   subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button");
                   subaddtwo.innerHTML="   Add Sub Activity";
                   subadd.appendChild(subaddtwo);
-                  // divadd.appendChild(error_div)
-                  // divadd.appendChild(subadd);
-                  // main_parent.appendChild(divadd)
                   action_div.appendChild(error_div)
                   action_div.appendChild(subadd)
-                  ///Add all values to the main schedule
-                  // activity_div.appendChild(action_div)
-                  // activity_div.appendChild(collapsable_button)
-                  // activity_div.appendChild(date_div);
                   divadd.appendChild(activity_div);
-                  main_parent.appendChild(divadd)
+                  main_div_array.push(divadd)
                   
-              
-
-                  //Adds Div for Dates for Main Activity 
                 }
+
+                let list_array = [main_div_position,main_div_array]
+                list_array = quicksort_jointlists(list_array,0,list_array[0].length)
+                for(let i=0;i<list_array[0].length;i++){
+                  main_parent.appendChild(list_array[1][i]);
+                } 
                   
                 }
 
@@ -455,15 +462,24 @@ $( document ).ready(function() {
       });
       }
     }
-  });  
+  });
 
+  let date_array = document.getElementsByClassName('date')
+let day_array = document.getElementsByClassName('day')
+for (let i=0; i<date_array.length;i++){
+  let odate = date_array[i].innerHTML
+  let oday = day_array[i].innerHTML
+  let ndate_day =  change_dates_title(odate,oday)
+  date_array[i].innerHTML = ndate_day[0]
+  day_array[i].innerHTML = ndate_day[1]
+}
+window.holidays = {};
   $.ajax({
     url : '../PHP/pull_holidays.php',
     type : 'POST',
     data : 'project_id='+window.project_id,     
     success:function(data){
       var holidays_data = JSON.parse(data);
-      window.holidays = {};
       // window.holiday_val = {}
       for (var h=0;h<Object.keys(holidays_data).length;h++){
         let dt = holidays_data[Object.keys(holidays_data)[h]][0]['HolidayDate']
@@ -496,6 +512,7 @@ $( document ).ready(function() {
       })
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
+
 });
 //////////////////////////////////////////////////////////////////////////////
 function delete_main_activity_box(delete_icon_tag){
@@ -575,9 +592,11 @@ function date_range_picker(id_,action,value){
       "endDate": end_date,
       opens: 'center',
       "isInvalidDate" : function(date){
-        for(var ii = 0; ii < Object.keys(window.holidays).length; ii++){
-          if (date.format('YYYY-MM-DD') == Object.keys(window.holidays)[ii]){
-            return true;
+        if (window.date!=null){
+          for(var ii = 0; ii < Object.keys(window.holidays).length; ii++){
+            if (date.format('YYYY-MM-DD') == Object.keys(window.holidays)[ii]){
+              return true;
+            }
           }
         }
       }
@@ -592,25 +611,88 @@ function date_range_picker(id_,action,value){
         var array_answer = relationship_date(window.relationship_log,id_.split('_')[1],1,[id_.split('_')[1]],datelog)
         update_dates_rel(array_answer[1])
         field_edit(date_tag)
+        console.log(document.getElementsByClassName("daterangepicker")[0])
     }
 
     })
   }
 
+//////////////////////////////////////////////////////////////////////
+function sub_undo(undo_tag){
+  let id = undo_tag.id.split('_')[1];
+  let sub = did('sub_'+id);
+  let inputs = sub.querySelectorAll('input');
+  let selects = sub.querySelectorAll('select')
+  let h5;
+  console.log("Running")
+
+  ///Inputs
+  inputs.forEach(input=>{
+    h5 = document.createElement('h5')
+    h5.className = input.className;
+    h5.id = input.id;
+    h5.innerHTML = input.getAttribute('name');
+    if(h5.classList.contains('sub_date')){
+      h5.setAttribute('onclick','input_edit(this)')
+      h5.setAttribute('value',input.getAttribute('name'))
+    }
+    else{      
+      h5.setAttribute('ondblclick','input_edit(this)')
+    }
+    input.replaceWith(h5)
+  });
+  ////Selects
+  selects.forEach(input=>{
+    h5 = document.createElement('h5')
+    h5.className = input.className;
+    h5.id = input.id;
+    h5.innerHTML = input.getAttribute('name');
+    if(h5.classList.contains('sub_date')){
+      h5.setAttribute('onclick','input_edit(this)')
+      h5.setAttribute('value',input.getAttribute('name'))
+    }
+    else{      
+      h5.setAttribute('ondblclick','input_edit(this)')
+    }
+    input.replaceWith(h5)
+  });
+
+
+  let actualized_i = document.createElement('input');
+  actualized_i.setAttribute('class','sub_actualized collapsable clickable');
+  actualized_i.setAttribute('type','checkbox');
+  actualized_i.setAttribute('id','actualized_'+id);
+  undo_tag.replaceWith(actualized_i)
+}
 
 //////////////////////////////////////////////////////////////////////
 function input_edit(input_tag){
   var id_ = input_tag.id;
+  let sub_id = id_.split('_')[1]
+  let sub = did("sub_"+sub_id)
+  sub.setAttribute('draggable','false')
+  sub.parentElement.parentElement.parentElement.setAttribute('draggable','false')
   var class_ = input_tag.getAttribute('class');
   var class_type = class_.split(' ')[0]
   var HTML = input_tag.innerHTML
+
   if (class_type == 'sub_name'){
+    if (did('relationship_button').classList.contains('r_active')){
+      if (did('relationship_title')!=undefined){
+        did('relationship_input').value = input_tag.id.split('_')[1]+"-"+input_tag.innerHTML;
+      }
+      else(
+        change_rel(input_tag.id.split('_')[1]+"-"+input_tag.innerHTML)
+      )
+      return
+    }
     var input = document.createElement('input');
     input.setAttribute('type','text');
     input.setAttribute('id',id_);
     input.setAttribute('class',class_);
     input.setAttribute('onChange','field_edit(this)')
     input.value = HTML;
+    input.setAttribute('name',HTML)
     input_tag.replaceWith(input)
   }
   else if(class_type=='sub_date'){
@@ -621,6 +703,7 @@ function input_edit(input_tag){
     var value = input_tag.getAttribute('value')
     input.setAttribute('value',value);
     input_tag.replaceWith(input)
+    input.setAttribute('name',HTML)
     date_range_picker(id_,'update',value)
   }
   else if(class_type == 'sub_duration'){
@@ -630,6 +713,7 @@ function input_edit(input_tag){
     input.setAttribute('class',class_);
     input.setAttribute('onChange','field_edit(this)')
     input.value = HTML
+    input.setAttribute('name',HTML)
     input_tag.replaceWith(input)
   }
   else if(class_type == 'sub_contractor'){
@@ -638,6 +722,7 @@ function input_edit(input_tag){
     input.setAttribute('class',class_);
     input.setAttribute('onChange','field_edit(this)')
     input.value = HTML;
+    input.setAttribute('name',HTML)
     input_tag.replaceWith(input)
   }
   else if(class_type == 'title'){
@@ -648,6 +733,16 @@ function input_edit(input_tag){
     input.setAttribute('onChange','field_edit(this)')
     input.value = input_tag.getAttribute('name');
     input_tag.replaceWith(input)
+  }
+
+  //// Creates Undo to be replaced with actualized ///
+  if (class_type.split('_')[0]=='sub'){
+    let actualized_div = did('actualized_'+sub_id)
+    let undo_i = document.createElement('i');
+    undo_i.setAttribute('class','fas fa-undo-alt sub_undo collapsable clickable');
+    undo_i.setAttribute('id','actualized_'+sub_id);
+    undo_i.setAttribute('onclick','sub_undo(this)')
+    actualized_div.replaceWith(undo_i)
   }
 }
 
@@ -704,9 +799,16 @@ function all_sub_activities_to_h5(id_){
 //////////////////////////////////////////////////////////////////////
 function field_edit(input_tag){
   var id_ = input_tag.id;
+  ///
+  let sub = did("sub_"+id_.split('_')[1])
+  sub.setAttribute('draggable','true')
+  sub.parentElement.parentElement.parentElement.setAttribute('draggable','true')
   var class_ = input_tag.getAttribute('class');
   var class_type = class_.split(' ')[0]
   var HTML = input_tag.value
+
+
+  
   if (class_type == 'sub_name'){
     var input = document.createElement('h5');
     input.setAttribute('class',class_);
@@ -755,9 +857,19 @@ function field_edit(input_tag){
     $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value, action:action, project_id:window.project_id} );
     return
   }
+  if(sub.querySelectorAll("input").length==0 && sub.querySelectorAll("select").length==0){
+    let undo_tag = did('actualized_'+id_.split('_')[1]);
+    let actualized_i = document.createElement('input');
+    actualized_i.setAttribute('class','sub_actualized collapsable clickable');
+    actualized_i.setAttribute('type','checkbox');
+    actualized_i.setAttribute('id','actualized_'+id_.split('_')[1]);
+    undo_tag.replaceWith(actualized_i)
+  }
   setTimeout(function(){
     upload_sub_activity(id_.split('_')[1])
   },500)
+    /////Revert actualized /////
+
 }
 //////////////////////////////////////////////////////////////////////
 /*Checks for today's date once the document loads and inputs it onto the start date div*/
@@ -833,6 +945,24 @@ function start_date_picker(date_input_tag){
     }
   });
 };
+
+
+function filter_start(sub_activity,bdate){
+  let filter_party = "1"
+  let filter_date = ""
+  if (filter_party =='1' && sub_activity.getElementsByClassName('sub_actualized')[0].checked){
+    sub_activity.classList.add('filter-out')
+    bdate.classList.add('filter-out')
+  }
+  else{
+    sub_activity.classList.add('filter-in')
+    bdate.classList.add('filter-in')
+
+  }
+
+  return sub_activity
+
+}
 function remove_filters(remove_button){
   document.getElementById('date_range').value=''
   document.getElementById('viewable').value=3
@@ -871,10 +1001,15 @@ function apply_filters(apply_button){
     var parent_div = m_activty[i]
     var child_length = parent_div.getElementsByClassName('sub_id').length
     if (child_length == count[parent_id]){
-      parent_div.setAttribute('style','display:none')
+      parent_div.classList.add('filter-out')
+      parent_div.classList.remove('filter-in')
+
     }
     else{
-      parent_div.removeAttribute('style')
+      parent_div.classList.remove('filter-out')
+      parent_div.classList.add('filter-in')
+
+
     }
   }
   toggle_filters()
@@ -888,12 +1023,18 @@ function filter_parties(party,res_array,count){
     var activity = document.getElementById('sub_'+res_array[i])
     if (value!=party&&party!='All'){
       var parent_id =party_div.parentElement.parentElement.parentElement.parentElement.id
-      activity.setAttribute('style','display:none')
+      activity.classList.add('filter-out')
+      did('bdate_'+res_array[i]).classList.add('filter-out')
+      activity.classList.remove('filter-in')
+      did('bdate_'+res_array[i]).classList.remove('filter-in')
       count[parent_id]++
       continue
     }
     sres_array.push(res_array[i])
-    activity.removeAttribute('style')
+    activity.classList.remove('filter-out')
+    did('bdate_'+res_array[i]).classList.remove('filter-out')
+    activity.classList.add('filter-in')
+    did('bdate_'+res_array[i]).classList.add('filter-in')
 
 
   }
@@ -906,17 +1047,26 @@ function filter_status(status,res_array,count){
     var parent_id = act_div.parentElement.parentElement.parentElement.parentElement.id
     var activity = document.getElementById('sub_'+res_array[i])
     if (status==1&&act_div.checked == true){
-      activity.setAttribute('style','display:none')
+      activity.classList.add('filter-out')
+      did('bdate_'+res_array[i]).classList.add('filter-out')
+      activity.classList.remove('filter-in')
+      did('bdate_'+res_array[i]).classList.remove('filter-in')
       count[parent_id]++
       continue
     }
     else if(status==2&&act_div.checked == false){
-      activity.setAttribute('style','display:none')
+      activity.classList.add('filter-out')
+      did('bdate_'+res_array[i]).classList.add('filter-out')
+      activity.classList.remove('filter-in')
+      did('bdate_'+res_array[i]).classList.remove('filter-in')
       count[parent_id]++
       continue
     }
     else if((status==3)||(status==1&&act_div.checked==false)||(status==2&&act_div.checked==true)){
-      activity.removeAttribute('style')
+      activity.classList.remove('filter-out')
+      did('bdate_'+res_array[i]).classList.remove('filter-out')
+      activity.classList.add('filter-in')
+      did('bdate_'+res_array[i]).classList.add('filter-in')
     }
     sres_array.push(res_array[i])
   }
@@ -941,11 +1091,13 @@ function filter_dates(dates,res_array,count){
     var id_ = date_array[i].getAttribute('id').split('_')[1]
     var activity= document.getElementById('sub_'+id_)
     if (v_end>=start_val&&v_start<=end_val){
-      activity.removeAttribute('style')
+      activity.classList.remove('filter-out')
+      did('bdate_'+res_array[i]).classList.remove('filter-out')
       sres_array.push(id_)
     }
     else{
-      activity.setAttribute('style','display:none')
+      activity.classList.add('filter-out')
+      did('bdate_'+res_array[i]).classList.add('filter-out')
       var parent_id = date_array[i].parentElement.parentElement.parentElement.parentElement.id
       count[parent_id]++
     }
@@ -1048,12 +1200,16 @@ function three_week_ahead(bdate_dates,bdate_days){
     } 
       var date = document.createElement("h3");
       date.setAttribute("class","date");
+      let odate = nmm+'/'+ndd+'/'+nyy 
       date.innerHTML = nmm+'/'+ndd+'/'+nyy;
       var day_value = (standarize_dates_to_UTC(new Date(nyy+"-"+nmm+"-"+ndd))).getDay();
       var day = weekday_name(day_value);
+      let ndate_day = change_dates_title(odate,day)
       var day_tag = document.createElement("h3");
       day_tag.setAttribute("class","day");
       day_tag.innerHTML =day;
+      // date.innerHTML = ndate_day[0]
+      // day_tag.innerHTML=ndate_day[1]
       bdate_dates.appendChild(date);
       bdate_days.appendChild(day_tag);
       dd=dd+1;
@@ -1270,43 +1426,74 @@ function date_format_changer2(date){
 
   }
   //////////////////////////////////////////////////////////////////////////////
+  /*Creates Main Activity Div */
+  function create_main_activity(id,index,html){
+    main_activity = document.createElement('div');
+    main_activity.setAttribute("id",id);
+    main_activity.setAttribute('draggable',"true")
+    main_activity.setAttribute('ondrag','main_draggables(this)')
+    main_activity.setAttribute("class","main_activity");
+    main_activity.setAttribute('data-index',index)
+    // main_div_position.push(parseInt(js_data[main_id]["Position"]))
+    var divtitle=document.createElement("div")
+    divtitle.setAttribute("class","main_activity_title")
+    var title = document.createElement("h2");
+    title.setAttribute("name",html);
+    title.innerHTML = html;
+    title.setAttribute('class','title clickable');
+    title.setAttribute('id','title_'+id)
+    title.setAttribute('ondblclick','input_edit(this)')
+    var delete_button= document.createElement("i");
+    delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
+    delete_button.setAttribute("id","delete_"+id);
+    delete_button.setAttribute("onclick","delete_main_activity_box(this)")
+    divtitle.appendChild(title);
+    divtitle.appendChild(delete_button);
+    main_activity.appendChild(divtitle)
+    return(main_activity)
+
+  }
+  //////////////////////////////////////////////////////////////////////////////
 /* Adds the Main Activity Line */
   function add_main_activity(){
     var add_cell = document.getElementById('added_cell');
-    var n =add_cell.lastChild.id;
-    if(n == null){
-      n=1;
-    }
-    else{
-      n=parseInt(n)+1;
-    };
-    var main_div = document.createElement('div')
-    main_div.setAttribute('class','main_activity_title')
-    var input = document.createElement('input');
-    input.setAttribute('class','title clickable');
-    input.setAttribute('id','title_'+n);
-    input.setAttribute('placeholder','Add Main Activity Title');
-    var delete_button= document.createElement("i");
-    delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
-    delete_button.setAttribute("id","delete_"+n);
-    delete_button.setAttribute("onclick","cancel_main_activity(this)")
-    var add_button= document.createElement("i");
-    add_button.setAttribute("class","far fa-plus-square main_add title clickable");
-    add_button.setAttribute("id","add_"+n);
-    add_button.setAttribute("onclick","change_input_to_title(this)")
-    var div = document.createElement('div');
-    div.setAttribute("id",n);
-    div.setAttribute("class","main_activity");
-    /*  Adds Div for Dates for Main Activity */
-    var div_date_id = document.createElement("div");
-    div_date_id.setAttribute("id","date_"+n)
-    var cell_date = document.getElementById("cell_dates");
-    /* Appends All childs */
-    main_div.appendChild(input)
-    main_div.appendChild(add_button)
-    main_div.appendChild(delete_button)
-    div.appendChild(main_div)
-    add_cell.appendChild(div);
+    var n =add_cell.children.length;
+    ////Creates unique ID and runs div creation////
+    $.ajax({
+      url : "../PHP/create_id.php",
+      type : 'POST',
+      data:{id: 0, project_id: window.project_id, action:'mainid'},
+      success:function(data){
+        n = JSON.parse(data)
+        var main_div = document.createElement('div')
+        main_div.setAttribute('class','main_activity_title')
+        var input = document.createElement('input');
+        input.setAttribute('class','title clickable');
+        input.setAttribute('id','title_'+n);
+        input.setAttribute('placeholder','Add Main Activity Title');
+        var delete_button= document.createElement("i");
+        delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
+        delete_button.setAttribute("id","delete_"+n);
+        delete_button.setAttribute("onclick","cancel_main_activity(this)")
+        var add_button= document.createElement("i");
+        add_button.setAttribute("class","far fa-plus-square main_add title clickable");
+        add_button.setAttribute("id","add_"+n);
+        add_button.setAttribute("onclick","change_input_to_title(this)")
+        var div = document.createElement('div');
+        div.setAttribute("id",n);
+        div.setAttribute("class","main_activity");
+        /*  Adds Div for Dates for Main Activity */
+        var div_date_id = document.createElement("div");
+        div_date_id.setAttribute("id","date_"+n)
+        var cell_date = document.getElementById("cell_dates");
+        /* Appends All childs */
+        main_div.appendChild(input)
+        main_div.appendChild(add_button)
+        main_div.appendChild(delete_button)
+        div.appendChild(main_div)
+        add_cell.appendChild(div)
+      }
+    })
   };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1354,39 +1541,42 @@ function cancel_main_activity(cancel_tag){
 //////////////////////////////////////////////////////////////////////////////
 /* Creates the main activity title from an input format to a title*/
   function change_input_to_title(add_tag){
+    let index = document.getElementsByClassName('main_activity').length
     var main_parent_element = add_tag.parentElement.parentElement;
     var input_parent= add_tag.parentElement;
     var input_value= input_parent.children[0].value;
     var id=main_parent_element.id;
     var action = 'add_main_activity'
-    var main_div=input_parent.parentElement;
+    // var main_div=input_parent.parentElement;
+    let main_div = create_main_activity(id,index,input_value)
+    // main_div.setAttribute('draggable','true')
+    // main_div.setAttribute('ondrag','main_draggables(this)')
+    // main_div.setAttribute('data-index',index)
     let sub_activity = create_title_sub_activity(id)
-    // var subadd=document.createElement('div');
-    // subadd.setAttribute("class","sub_activity_add clickable");
-    // subadd.setAttribute("onclick","add_sub_activity(this)");
-    // var subaddtwo=document.createElement("i");
-    // subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button clickable");
-    // subaddtwo.innerHTML="   Add Sub Activity";
-    // subadd.appendChild(subaddtwo);
-    var divtitle = document.createElement('div')
-    divtitle.setAttribute('class','main_activity_title')
-    var input = document.createElement('h2');
-    input.setAttribute('class','title clickable');
-    input.setAttribute('id','title_'+id);
-    input.setAttribute('onClick','input_edit(this)')
-    input.setAttribute('name',input_value)
-    input.innerHTML = input_value;
-    var delete_button= document.createElement("i");
-    delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
-    delete_button.setAttribute("id","delete_"+id);
-    delete_button.setAttribute("onclick","delete_main_activity_box(this)")
-    divtitle.appendChild(input)
-    divtitle.appendChild(delete_button)
-    removeAllChildNodes(main_parent_element)
-    main_parent_element.appendChild(divtitle);
-    main_parent_element.appendChild(sub_activity);
-    $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value, action:action, project_id:window.project_id} );
-
+    let subadd = sub_activity.getElementsByClassName('activity_left')[0]
+    subadd = create_sub_action(subadd,id)
+    
+    // var divtitle = document.createElement('div')
+    // divtitle.setAttribute('class','main_activity_title')
+    // var input = document.createElement('h2');
+    // input.setAttribute('class','title clickable');
+    // input.setAttribute('id','title_'+id);
+    // input.setAttribute('onClick','input_edit(this)')
+    // input.setAttribute('name',input_value)
+    // input.innerHTML = input_value;
+    // var delete_button= document.createElement("i");
+    // delete_button.setAttribute("class","far fa-minus-square main_delete title clickable");
+    // delete_button.setAttribute("id","delete_"+id);
+    // delete_button.setAttribute("onclick","delete_main_activity_box(this)")
+    // divtitle.appendChild(input)
+    // divtitle.appendChild(delete_button)
+    // removeAllChildNodes(main_parent_element)
+    // main_parent_element.appendChild(divtitle);
+    // main_parent_element.appendChild(sub_activity);
+    main_div.appendChild(sub_activity)
+    main_parent_element.replaceWith(main_div)
+    console.log(id,input_value)
+    $.post( "../PHP/main_activity_add.php", { main_id: id, main_activity: input_value, action:action, project_id:window.project_id,index:index} );
   };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1413,7 +1603,7 @@ function cancel_main_activity(cancel_tag){
     var collapsable_button = document.createElement('div')
     collapsable_button.setAttribute('class','collapsable_button')
     var c_button = document.createElement('i')
-    c_button.setAttribute('class','fas fa-ellipsis-v clickable')
+    c_button.setAttribute('class','fa fa-angle-left clickable')
     c_button.setAttribute('onclick','collapse_activities(this)')
     c_button.setAttribute('type','active')
     c_button.setAttribute('id','collapse_'+main_id)
@@ -1421,6 +1611,8 @@ function cancel_main_activity(cancel_tag){
     /* Sub Activity Title */
     var s_activity_div=document.createElement('div');
     s_activity_div.setAttribute("class","sub_activity sub_title");
+    s_activity_div.setAttribute("style","display:none");
+    s_activity_div.setAttribute('data-index',0)
     /* Add Title for ID */
     var id_title = document.createElement("h3");
     id_title.setAttribute("class","sub_id_title sub id_title");
@@ -1454,6 +1646,7 @@ function cancel_main_activity(cancel_tag){
     bdate.setAttribute("class","sub_activity_bdate sub")
     var bdate_div= document.createElement('div')
     bdate_div.setAttribute('class','sub_titles')
+    bdate_div.setAttribute("style","display:none");
     var bdate_days = document.createElement("div");
     bdate_days.setAttribute("class","cell_days");
     var bdate_dates = document.createElement("div");
@@ -1486,6 +1679,7 @@ function cancel_main_activity(cancel_tag){
   function create_all_sub_activity_divs(){
     var activity_div=document.createElement('div');
     activity_div.setAttribute("class","sub_activity");
+  
     /* Add Title for ID */
     var id_div = document.createElement('div');
     id_div.setAttribute("class","sub_activity_id sub")
@@ -1558,7 +1752,6 @@ function cancel_main_activity(cancel_tag){
   }
 ////////////////////////////////////////////////////////////////////
 function download_sub_activity2(main_id,sub_id,activity_title,date,duration,party_involved, dates,actualized){
-
   var parent_id = main_id;
   var id = sub_id;
   var p_id = document.createElement("h5");
@@ -1574,6 +1767,9 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
     var attribute_id=(id-Number(parent_id)*1000).toString();
   }
   p_id.innerHTML=attribute_id;
+  
+
+
 
   /* Create Activity */
   var input_activity = document.createElement("h5");
@@ -1606,6 +1802,8 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
   //Sub_Activity Div
   let sub_activity = document.createElement('div')
   sub_activity.setAttribute('id','sub_'+id)
+  sub_activity.setAttribute('draggable','true')
+  sub_activity.setAttribute('ondrag','sub_draggables(this)')
 
     /* Create Date Box */
    var bdate_box = document.createElement("div");
@@ -1643,6 +1841,27 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
   sub_activity.appendChild(input_actualized)
   sub_activity.appendChild(delete_button)
   return [sub_activity,bdate_box];
+}
+
+
+function create_sub_action(activity_left,id){
+  ////Creates the add sub_activity box, error box, and any miscellaneous boxes needed///
+  var error_div = document.createElement('div')
+  error_div.setAttribute('class','error_div')
+  var error_message = document.createElement('h6')
+  error_message.setAttribute('id','error_'+id)
+  error_message.setAttribute('class','error_message')
+  error_div.appendChild(error_message)
+  var subadd=document.createElement('div');
+  subadd.setAttribute("class","sub_activity_add clickable");
+  subadd.setAttribute("onclick","add_sub_activity(this)");
+  var subaddtwo=document.createElement("i");
+  subaddtwo.setAttribute("class","far fa-plus-square add_sub_activity_button");
+  subaddtwo.innerHTML="   Add Sub Activity";
+  subadd.appendChild(subaddtwo);
+  activity_left.appendChild(error_div)
+  activity_left.appendChild(subadd)
+  return activity_left
 }
 
 function download_sub_activity(main_id,sub_id,activity_title,date,duration,party_involved, dates,actualized){
@@ -1734,7 +1953,9 @@ return true
 
   //////////////////////////////////////////////////////////////////////////////
 /* Adds a sub Activity to the corresponding main activty*/
+
 function add_sub_activity(this_tag){
+
   var parent_div=this_tag.parentElement.parentElement.parentElement;
   let add_clone = this_tag.cloneNode(true)
   if (check_for_active_inputs(parent_div)==false){
@@ -1744,150 +1965,114 @@ function add_sub_activity(this_tag){
     var parent_div=this_tag.parentElement.parentElement.parentElement;
     let parent = this_tag.parentElement
     var parent_id=parent_div.id;
-    console.log(parent_id)
+    parent_div.setAttribute('draggable','false')
+    let subbox = did("subbox_"+parent_id)
+    subbox.getElementsByClassName('sub_title')[0].removeAttribute('style')
+    subbox.getElementsByClassName('sub_titles')[0].removeAttribute('style')
+
     remove_error('error_'+parent_id)
     if (parent.children.length < 3){
       var activity_div = create_title_sub_activity(parent_id) 
       this_tag.replaceWith(activity_div)
-
-      // empty_divs = create_all_sub_activity_divs();
-      // var id_div = empty_divs[0];
-      // var name_div = empty_divs[1];
-      // var dateval_div = empty_divs[2];
-      // // var edate_div = empty_divs[3];
-      // var duration_div = empty_divs[3];
-      // var contractor_div = empty_divs[4];
-      // var bdate = empty_divs[5];
-      // var actualized_div = empty_divs[6];
-      // var activity_div = empty_divs[7];
-      // var delete_div = empty_divs[8];
-      // var date_div = document.createElement('div');
-      // date_div.setAttribute('class','activity_right');
-      // var action_div = document.createElement('div');
-      // action_div.setAttribute('class','activity_left')
-      // var collapsable_button = document.createElement('div')
-      // collapsable_button.setAttribute('class','collapsable_button')
-      // var c_button = document.createElement('i')
-      // c_button.setAttribute('class','fas fa-ellipsis-v clickable')
-      // c_button.setAttribute('onclick','collapse_activities(this)')
-      // c_button.setAttribute('type','active')
-      // c_button.setAttribute('id','collapse_'+parent_id)
-      //     /// Create Error Div////
-      // var error_div = document.getElementById('error_'+parent_id)
-    //////////////////////////////////////
-      // collapsable_button.appendChild(c_button)
-      //   action_div.appendChild(id_div);
-      //   action_div.appendChild(name_div);
-      //   action_div.appendChild(dateval_div);
-      //   // activity_div.appendChild(edate_div);
-      //   action_div.appendChild(duration_div);
-      //   action_div.appendChild(contractor_div);
-      //   action_div.appendChild(actualized_div);
-      //   action_div.appendChild(delete_div);
-      //   date_div.appendChild(bdate);
-      //   activity_div.appendChild(action_div)
-      //   activity_div.appendChild(collapsable_button)
-      //   activity_div.appendChild(date_div)
-      //   parent_div.appendChild(activity_div);
-      //   parent_div.appendChild(error_div)
-        // parent_div.appendChild(this_tag);
     }
+
+
+
 
     /* Add Id to sub activity number */
-    var current_id=parent_div.getElementsByClassName("sub_id");
-    if( current_id.length>0){
-    var id=Number(current_id[current_id.length-1].id) +1;
-    }
-    else{
-      var id = parseInt(parent_id)*1000+1;
-    }
 
-    //Create Sub Activity Div//
-    let activity_left = document.getElementById('subbox_'+parent_id).children[0]
+    $.ajax({
+      url : "../PHP/create_id.php",
+      type : 'POST',
+      data:{id: parent_id, project_id: window.project_id, action:'subid'},
+      success:function(data){
+        id = JSON.parse(data)
+        let activity_left = document.getElementById('subbox_'+parent_id).children[0]
 
-    let sub_activity = document.createElement('div')
-    sub_activity.setAttribute('class','sub_activity')
-    sub_activity.setAttribute('id','sub_'+id)
-    /*  Create ID */
-    var p_id = document.createElement('h5');
-    p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
-    p_id.setAttribute("id",id)
-    if(parseInt(id)-Number(parent_id)*1000 < 10){
-      var attribute_id="00"+(id-Number(parent_id)*1000).toString();
-    }
-    else if (parseInt(id)-Number(parent_id)*1000 < 100){
-      var attribute_id="0"+(id-Number(parent_id)*1000).toString();
-    }
-    else{
-      var attribute_id=(parseInt(id)-Number(parent_id)*1000).toString();
-    }
-    p_id.innerHTML=attribute_id;
-    sub_activity.appendChild(p_id);
-
+        let sub_activity = document.createElement('div')
+        sub_activity.setAttribute('class','sub_activity filter-in')
+        sub_activity.setAttribute('id','sub_'+id)
+        sub_activity.setAttribute('ondrag','sub_draggables(this)');
+        sub_activity.setAttribute('draggable','true');
+        let index = this_tag.parentElement.querySelectorAll('.sub_activity').length;
+        sub_activity.setAttribute('data-index',index)
+        /*  Create ID */
+        var p_id = document.createElement('h5');
+        p_id.setAttribute("class","sub_id sub_activity_"+id.toString());
+        p_id.setAttribute("id",id)
+        if(parseInt(id)-Number(parent_id)*1000 < 10){
+          var attribute_id="00"+(id-Number(parent_id)*1000).toString();
+        }
+        else if (parseInt(id)-Number(parent_id)*1000 < 100){
+          var attribute_id="0"+(id-Number(parent_id)*1000).toString();
+        }
+        else{
+          var attribute_id=(parseInt(id)-Number(parent_id)*1000).toString();
+        }
+        p_id.innerHTML=attribute_id;
+        sub_activity.appendChild(p_id);
     
-    /* Create Activity */
-    var input_activity = document.createElement("input");
-    input_activity.setAttribute('type','text')
-    input_activity.setAttribute("class","sub_name");
-    input_activity.setAttribute("id","name_"+id.toString());
-    sub_activity.appendChild(input_activity);
-
-    /* Create Start Date */
-    var input_date = document.createElement("input");
-    input_date.setAttribute('type','text')
-    input_date.setAttribute("class","sub_date");
-    input_date.setAttribute("id","date_"+id.toString());
-    input_date.setAttribute("onfocus","date_range_picker(this.id,'new',this.value)");
-    var today_ = date_format_changer2(date_standard_to_yyyy_mm_dd_format(new Date()))
-    input_date.setAttribute('value',today_+" - "+today_)
-    sub_activity.appendChild(input_date);
-
-    //Create Duration//
-    var input_duration = document.createElement("input");
-    input_duration.setAttribute('type','number')
-    input_duration.setAttribute("class","sub_duration collapsable");
-    input_duration.setAttribute("id","duration_"+id.toString());
-    input_duration.value=1
-    sub_activity.appendChild(input_duration);
-
-      /* Create Contartcor Option */
-    var input_contractor = window.party_list.cloneNode(true)
-    input_contractor.setAttribute("class","sub_contractor collapsable");
-    input_contractor.setAttribute("id","contractor_"+id.toString());
-    sub_activity.appendChild(input_contractor);
-
-    //// Create Add Button////
-    var add = document.createElement("i");
-    add.setAttribute("class","far fa-plus-square add_sub_icon sub_actualized clickable collapsable");
-    add.setAttribute("id","add_"+id);
-    add.setAttribute("onclick","upload_sub_activity(this,'add')")
-    sub_activity.appendChild(add);
-
-    ////Create Delete Button/////
-    var delete_button= document.createElement("i");
-    delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable collapsable");
-    delete_button.setAttribute("id","delete_"+id);
-    delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
-    sub_activity.appendChild(delete_button);
-
-    /* Create Date Box */
-    var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
-    var bdate_box = document.createElement("div");
-    bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
-    bdate_box.setAttribute("id","bdate_"+id);
-    dates=bdate_parent.getElementsByClassName("cell_dates")[0];
-    date_box(bdate_box,id,dates);
-    bdate_parent.appendChild(bdate_box);
-    var action = "new";
-    var id_array = [id,parent_id, action]
-    let error_div = activity_left.getElementsByClassName('error_div')[0].cloneNode(true)
-    activity_left.getElementsByClassName('error_div')[0].replaceWith(sub_activity)
-    activity_left.getElementsByClassName('sub_activity_add')[0].replaceWith(error_div)
-    activity_left.appendChild(add_clone)
-
-    ///
-
-
+        /* Create Activity */
+        var input_activity = document.createElement("input");
+        input_activity.setAttribute('type','text')
+        input_activity.setAttribute("class","sub_name");
+        input_activity.setAttribute("id","name_"+id.toString());
+        sub_activity.appendChild(input_activity);
+    
+        /* Create Start Date */
+        var input_date = document.createElement("input");
+        input_date.setAttribute('type','text')
+        input_date.setAttribute("class","sub_date");
+        input_date.setAttribute("id","date_"+id.toString());
+        input_date.setAttribute("onfocus","date_range_picker(this.id,'new',this.value)");
+        var today_ = date_format_changer2(date_standard_to_yyyy_mm_dd_format(new Date()))
+        input_date.setAttribute('value',today_+" - "+today_)
+        sub_activity.appendChild(input_date);
+    
+        //Create Duration//
+        var input_duration = document.createElement("input");
+        input_duration.setAttribute('type','number')
+        input_duration.setAttribute("class","sub_duration collapsable");
+        input_duration.setAttribute("id","duration_"+id.toString());
+        input_duration.value=1
+        sub_activity.appendChild(input_duration);
+    
+          /* Create Contartcor Option */
+        var input_contractor = window.party_list.cloneNode(true)
+        input_contractor.setAttribute("class","sub_contractor collapsable");
+        input_contractor.setAttribute("id","contractor_"+id.toString());
+        sub_activity.appendChild(input_contractor);
+    
+        //// Create Add Button////
+        var add = document.createElement("i");
+        add.setAttribute("class","far fa-plus-square add_sub_icon sub_actualized clickable collapsable");
+        add.setAttribute("id","add_"+id);
+        add.setAttribute("onclick","upload_sub_activity(this,'add')")
+        sub_activity.appendChild(add);
+    
+        ////Create Delete Button/////
+        var delete_button= document.createElement("i");
+        delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable collapsable");
+        delete_button.setAttribute("id","delete_"+id);
+        delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
+        sub_activity.appendChild(delete_button);
+    
+        /* Create Date Box */
+        var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
+        var bdate_box = document.createElement("div");
+        bdate_box.setAttribute("class","sub_bdate sub_activity_"+id.toString());
+        bdate_box.setAttribute("id","bdate_"+id);
+        dates=bdate_parent.getElementsByClassName("cell_dates")[0];
+        date_box(bdate_box,id,dates);
+        bdate_parent.appendChild(bdate_box);
+        var action = "new";
+        var id_array = [id,parent_id, action]
+        let error_div = activity_left.getElementsByClassName('error_div')[0].cloneNode(true)
+        activity_left.getElementsByClassName('error_div')[0].replaceWith(sub_activity)
+        activity_left.getElementsByClassName('sub_activity_add')[0].replaceWith(error_div)
+        activity_left.appendChild(add_clone)
+      }
+    })
   }
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -2009,7 +2194,6 @@ $(document).on('change','.sub_duration', function(){
   var date_tag = document.getElementById("date_"+id)
   var dates = date_tag.getAttribute('value')
   var start_date = dates.split(" ")[0]
-  var holidays_date_array = []
   var end_date = return_end_date(start_date,duration,window.holidays,weekend_value);
   dates = start_date+" - "+end_date  
   window.date_log[id]=dates
@@ -2019,8 +2203,8 @@ $(document).on('change','.sub_duration', function(){
   var array_answer = relationship_date(window.relationship_log,id,1,[id],datelog)
   update_dates_rel(array_answer[1])
 
-  // var date_array = date_filler(date_format_changer3(start_date),date_format_changer3(end_date));
-  // log_dates_to_schedule(date_array,id,'update')
+  var date_array = date_filler(date_format_changer3(start_date),date_format_changer3(end_date));
+  log_dates_to_schedule(date_array,id,'update')
 
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2110,9 +2294,9 @@ function delete_sub_activity_box(delete_icon_tag){
 
   var sub_id= delete_icon_tag.id.split("_")[1];
   // var sub_tags_array = get_all_sub_tags_with_id(sub_id);
-  var sub_activity_title = document.getElementById('name_'+sub_id).inne;
+  var sub_activity_title = document.getElementById('name_'+sub_id).innerHTML;
   var url = "../HTML/delete_confirm.html";
-  add_box_blur_background(url);
+  let content_box = add_box_blur_background(url);
   var parent_id = delete_icon_tag.parentElement.parentElement.parentElement.id;
   var action = "delete_sub_activity";
   var id_array = [sub_id,parent_id,action];
@@ -2154,80 +2338,56 @@ return false;
 
 }
 
-// function add_title(){
-//   document.getElementById("search_bar_title").innerHTML += " Schedule";
-// }
+function kmp_pre_proccess(string){
+  let lps = [0]
+  let pos = 0;
+  for(let i =1;i<string.length;i++){
+    if(string[i]==string[pos]){
+      pos = 1+pos;
+      lps.push(pos)
+    }
+    else{
+      pos = 0;
+      lps.push(pos)
+    }
+  }
+  return lps
+}
 
-// function search_activity() { 
-//   let input = document.getElementById('searchbar').value;
-//   input=input.toLowerCase(); 
-//   let x = document.getElementsByClassName('main_activity_title'); 
-//   let y = document.getElementsByClassName('sub_name'); 
-//   let contractor = document.getElementsByClassName('sub_contractor');
-//   /*for (i = 0; i < x.length; i++) {  
-//   } */
-//   if(input==""){
-//     for(var l=0;l<x.length;l++){
-//       x[l].parentElement.removeAttribute('style');
-//     }
-//     for (var m = 0; m < y.length; m++){
-//         y[m].parentElement.parentElement.parentElement.removeAttribute('style','display');
-//         var split = y[m].id.split("_")[1];
-//         var row = document.getElementsByClassName("sub_activity_"+split);
-//         for (var k3=0;k3<row.length;k3++){
-//           row[k3].style.display = "";
-//         }
-//     }
-//   }
-//   else{
-//     for (var i = 0; i < x.length; i++) {  
-//       if (!x[i].childNodes[0].textContent.toLowerCase().includes(input)) { 
-//           x[i].parentElement.style.display="none"; 
-//           for (var j = 0; j < y.length; j++){
-//             if (y[j].textContent.toLowerCase().includes(input)||
-//                 contractor[j].textContent.toLowerCase().includes(input)){
-//               var split = y[j].id.split("_")[1];
-//               y[j].parentElement.parentElement.parentElement.removeAttribute('style','display'); 
-//               var row = document.getElementsByClassName("sub_activity_"+split);
-//               for (var p=0;p<row.length;p++){
-//                 row[p].style.removeAttribute('style');
-//               }
-//             }
-//             else{
-//               if(!y[j].parentElement.parentElement.parentElement.childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)){
-//                 var split = y[j].id.split("_")[1];
-//                 var row = document.getElementsByClassName("sub_activity_"+split);
-//                 for (var k=0;k<row.length;k++){
-//                   row[k].style.display = "none";
-//                 }
-//               }
-//               else{
-//                 var split = y[j].id.split("_")[1];
-//                 var row = document.getElementsByClassName("sub_activity_"+split);
-//                 for (var k2=0;k2<row.length;k2++){
-//                   row[k2].style.removeAttribute('style');
-//                 }
-//               }
-//             }
-//           }
-//       } 
-//       else { 
-//           x[i].parentElement.removeAttribute('style');                  
-//       } 
-//     } 
-//   }
-
-// } 
-
+function kmp(string1,string_lps,string2){
+  let len = string1.length;
+  let pos=0;
+  for (let i=0;i<string2.length;i++){
+    if(string2[i]==string1[pos]){
+      let k=i+1;
+      for(var j=pos+1;j<len;j++){
+        if(string1[j]==string2[k]){
+          k=k+1;
+        }
+        else{
+          pos=string_lps[j-1]
+          j=len+5
+        }
+      }
+      if(j==len){
+        return true
+      }
+    }
+  }
+  return false
+}
 
 function search_activity(){
   let input = document.getElementById('searchbar').value;
   if(input==''){
-    remove_filters(input)
-    toggle_filters()
+    let search_out = document.querySelectorAll('.search-out')
+    search_out.forEach(s => {
+      s.classList.remove('search-out')
+    })
     return
   }
   input = input.toLowerCase()
+  let pre =kmp_pre_proccess(input)
   let main_title = document.getElementsByClassName('title')
   for(var i=0;i<main_title.length;i++){
     if(main_title[i].tagName=='I'){
@@ -2235,35 +2395,34 @@ function search_activity(){
     }
     var main_id = main_title[i].id.split("_")[1]
     let title = main_title[i].textContent.toLowerCase()
-    if(title.includes(input)){
+    if(kmp(input,pre,title)){
       var main_div = document.getElementById(main_id)
-      main_div.removeAttribute('style')
+      main_div.classList.remove('search-out')
       continue
     }
     else{
       count = 0
-      let sub_name = document.getElementById(main_id).getElementsByClassName('sub_name')
-      for(var k=0;k<sub_name.length;k++){
-        let activity = sub_name[k].textContent.toLowerCase()
-        let id_ = sub_name[k].id.split("_")[1]
-        let activity_array = document.getElementsByClassName('sub_activity_'+id_)
-        if(activity.includes(input)){
-          for(let z=0;z<activity_array.length;z++){
-            activity_array[z].removeAttribute('style')
-          }
+      let p_sub = document.getElementById(main_id).querySelectorAll('.sub_activity.filter-in')
+      for(var k=0;k<p_sub.length;k++){
+        let activity = p_sub[k].getElementsByClassName('sub_name')[0].textContent.toLowerCase()
+        let party =p_sub[k].getElementsByClassName('sub_contractor')[0].textContent.toLowerCase()
+
+        let id_ = p_sub[k].id.split("_")[1]
+        if(kmp(input,pre,activity)||kmp(input,pre,party)){
+          p_sub[k].classList.remove('search-out')
+          did('bdate_'+id_).classList.remove('search-out')
         }
         else{
-          for(let z=0;z<activity_array.length;z++){
-            activity_array[z].setAttribute('style','display:none')
-          }
+          p_sub[k].classList.add('search-out')
+          did('bdate_'+id_).classList.add('search-out')
           count++
         }
       }
-      if(count==sub_name.length){
-        document.getElementById(main_id).setAttribute('style','display:none')
+      if(count==p_sub.length){
+        did(main_id).classList.add('search-out')
       }
       else{
-        document.getElementById(main_id).removeAttribute('style')
+        did(main_id).classList.remove('search-out')
       }
     }
   }
@@ -2276,6 +2435,21 @@ function add_function_to_search(function_call){
   search_tag.setAttribute('onkeyup',function_call);
   var search_title = document.getElementById("search_bar_title");
   search_title.innerHTML += " title";
+}
+
+function hide_searchbar(body){
+  if(document.documentElement.scrollTop>300 || document.body.scrollTop>300){
+    did('search_navbar').className = "hide_nav"
+    did('sidebar').setAttribute('style','display:none')
+    did('filter_div').classList.remove('filter_active')
+    did('topbar').classList.remove('navbar_active')
+
+  }
+  else{
+    did('search_navbar').removeAttribute('class')
+    did('sidebar').removeAttribute('style')
+  }
+
 }
 
 function push_to_all(){
@@ -2310,6 +2484,7 @@ function collapse_activities(collapse_button){
   // var date_div = parent_div.getElementsByClassName('sub_date')
   // var edate_div = parent_div.getElementsByClassName('sub_activity_edate')[0]
   let activities_div = document.getElementsByClassName('activity_left')
+  let collapsed_buttons = document.getElementsByClassName('collapsable_button')
   if (activities_div[0].className.split(' ').length>1){
     var action = 'not_active'
   }
@@ -2324,6 +2499,7 @@ function collapse_activities(collapse_button){
     // collapse_button.setAttribute('type','hidden');
     for(var i =0; i<activities_div.length;i++){
       activities_div[i].setAttribute('class','activity_left collapsed')
+      collapsed_buttons[i].children[0].className = "fa-solid fa-angle-left clickable rotate180"
   }
   for(var i =0; i<name_title.length;i++){
     name_title[i].setAttribute('class','sub_name_title sub activity_title collapsed')
@@ -2341,6 +2517,8 @@ function collapse_activities(collapse_button){
     // collapse_button.setAttribute('type','active');
     for(var i =0; i<activities_div.length;i++){
       activities_div[i].setAttribute('class','activity_left')
+      collapsed_buttons[i].children[0].className = "fa-solid fa-angle-left clickable rotate0"
+
   }
   for(var i =0; i<name_title.length;i++){
     name_title[i].setAttribute('class','sub_name_title sub activity_title')
@@ -2384,6 +2562,35 @@ function update_rel_height(){
   relationship_tag.setAttribute('style','top:calc(100% - '+height_button+'px)')
 }
 
+function change_rel(new_rel){
+  let sub_id = new_rel.split('-')[0];
+  let title = new_rel.split('-')[1];
+  let rel_title = did('relationship_top')
+  removeAllChildNodes(rel_title);
+  let h3 = document.createElement('h3');
+  h3.id='rel_'+sub_id;
+  h3.innerHTML = title;
+  rel_title.appendChild(h3)
+  let rel_area = document.querySelectorAll('.rel_area');
+  let rel_sub_titles = rel_area[0].children[0].cloneNode(true)
+  let rel_t2 = rel_sub_titles.cloneNode(true)
+  console.log(rel_sub_titles)
+  rel_area.forEach(rel=>{
+    removeAllChildNodes(rel)
+  });
+  rel_area[0].appendChild(rel_sub_titles)
+  rel_area[1].appendChild(rel_t2)
+
+  if(window.relationship_log[parseInt(sub_id)]!=null){
+    for(let i in window.relationship_log[parseInt(sub_id)]){
+      for(let k in window.relationship_log[parseInt(sub_id)][i]){
+        add_predecessor_successor(i,k,sub_id)
+      }
+
+    }
+  }
+
+}
 
 function relationship_continue(continue_tag){
   var input = document.getElementById('relationship_input')
@@ -2698,65 +2905,7 @@ function update_relationship_log(id){
       }
     }
   }
-    // }
-    // var pre_id = pre_array[i].children[0].value.split('-')[0]
-    // if(pre_id==''){
-    //   let message = 'All Input Fields must be Filled Prior to Submitting'
-    //   error_message(message,'rel_errormsg')
-    //   update_rel_height()
-    //   return
-    // }
-    // else if(pre_id_log.includes(pre_id)){
-    //   let message = "Input '"+pre_id+"' has been inputted twice"
-    //   error_message(message,'rel_errormsg')
-    //   update_rel_height()
-    //   return
-    // }
-    // else{
-    //   pre_id_log.push(pre_id)
-    //   if(pre_array[i].id!=''){
-    //     var rel_id = pre_array[i].id.split('_')[1]
-    //     ////Delete Relationship///
-    //     if(pre_array[i].children[0].className.split(' ')[1]=='rel_delete'){
-    //       delete_rel=delete_rel+rel_id+';'
-    //       continue
-    //   }
-    // }
-    //   else{
-    //     var rel_id = 0
-    //   }
-    //   var relationship = pre_array[i].children[1].value
-    //   var lag = pre_array[i].children[2].value
-    //   if (rel_id==0 & new_==0){
-    //     n_pre_id.push(pre_id)
-    //     dict[id][0][0]=[{'sub_id':pre_id,'Rel':relationship,'Lag':lag}]
-    //     new_=new_+1
-    //     if (window.relationship_log[pre_id][1]==undefined){
-    //       window.relationship_log[pre_id][1] = {}
-    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-    //     }
-    //     else{
-    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-    //     }
-    //   }
-    //   else if(rel_id==0 & new_!=0){
-    //     dict[id][0][0].push({'sub_id':pre_id,'Rel':relationship,'Lag':lag})
-    //     n_pre_id.push(pre_id)
-    //     if (window.relationship_log[pre_id][1]==undefined){
-    //       window.relationship_log[pre_id][1] = {}
-    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-    //     }
-    //     else{
-    //       window.relationship_log[pre_id][1][-2] = {'sub_id':id,'Rel':relationship,'Lag':lag}
-    //     }
 
-    //   }
-    //   else{
-    //     dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
-    //   }
-      
-
-    // }
   /////Post Array///////
   var new_=0
   var new_d =0
@@ -2819,48 +2968,21 @@ function update_relationship_log(id){
         dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
         dict[[post_id]][0][rel_id]={'sub_id':id,'Rel':relationship,'Lag':lag}
       }
-      // var relationship = post_array[i].children[1].value
-      // var lag = post_array[i].children[2].value
-      // if (rel_id==0 & new_==0){
-      //   dict[id][1][0]=[{'sub_id':post_id,'Rel':relationship,'Lag':lag}]
-      //   new_=new_+1
-      // }
-      // else if(rel_id==0 & new_!=0){
-      //   dict[id][1][0].push({'sub_id':post_id,'Rel':relationship,'Lag':lag})
-
-      // }
-      // else if(post_array[i].children[0].className.split(' ')[1]=='rel_delete'){
-      //   if(new_d == 0){
-      //     delete_rel=delete_rel+rel_id+';'
-      //     dict[id][1][-1] = {}
-      //     dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag} 
-      //     new_d = 1
-      //   }
-      //   else{
-      //     delete_rel=delete_rel+rel_id+';'
-      //     dict[id][1][-1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
-      //   }
-      // }
-      // else{
-      //   dict[id][1][rel_id]={'sub_id':post_id,'Rel':relationship,'Lag':lag}
-      // }
-
     }
 
   }
   var datelog = {}
   var array_answer = relationship_date(dict,id,1,[id],datelog)
-  console.log(array_answer[1])
-  for(let i =0;i<n_pre_id.length;i++){
-    
-    if (Object.keys(window.relationship_log[n_pre_id[i]][1]).length==1){
-      delete window.relationship_log[n_pre_id[i]][1]
-    }
-    else{
-      delete window.relationship_log[n_pre_id[i]][1][-2]
-    }
+  // for(let i =0;i<n_pre_id.length;i++){
+  //   console.log(n_pre_id[i])
+  //   if (Object.keys(window.relationship_log[n_pre_id[i]][1]).length==1){
+  //     delete window.relationship_log[n_pre_id[i]][1]
+  //   }
+  //   else{
+  //     delete window.relationship_log[n_pre_id[i]][1][-2]
+  //   }
 
-  }
+  // }
   if (array_answer[0]=="Error"||array_answer[0]=="Erro"){
     error_message(array_answer[1],'rel_errormsg')
     return
@@ -2954,7 +3076,6 @@ function update_relationship_log(id){
 
 function update_dates_rel(date_changes){
   let doc = []
-  console.log(date_changes)
   for(var z in Object.keys(date_changes)){
     var sub_id = Object.keys(date_changes)[z]
     if(document.getElementById('actualized_'+sub_id).checked == false){
@@ -2973,7 +3094,6 @@ function update_dates_rel(date_changes){
       // doc_date.setAttribute('class','sub_date')
     }
   }
-  console.log(doc)
   setTimeout(() => {
     for (let k=0;k<doc.length;k++){
       doc[k].setAttribute('class','sub_date')
@@ -2995,9 +3115,7 @@ function calculate_max_sdate(pre_id,post_id,rel_dict,datelog){
   var edate = dates.split(' ')[2]
   var duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
   var new_sdate = relationship_sdate(sdate,edate,relationship,lag,duration)
-  console.log(pre_id)
-  console.log(post_id)
-  console.log(new_sdate)
+
   return new Date(new_sdate).getTime()
 
 }
@@ -3047,8 +3165,6 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
       var new_sdate = 0
     }
     else{
-      // var new_sdate = new Date(datelog[sub_id].split(' ')[0]).getTime()
-      // var og_sdate = new_sdate
       datelog[sub_id]=0
       var og_sdate = 0
       var new_sdate = 0
@@ -3073,22 +3189,10 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
         
         let loc = id_rel_dict[sub_id][0][i]
         var pre_id = loc['sub_id']
-        console.log(id_rel_dict)
-        console.log(loc)
+
         new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc,datelog),new_sdate)
 
       }
-      // original_id.push(pre_id)
-      // if (original_id.indexOf(pre_id)>-1 ){
-      //   let message = "Relationship Loop Created: "
-      //   for(let z=0;z<original_id.length-1;z++){
-      //     var name = document.getElementById('name_'+original_id[z]).innerHTML
-      //     message = message+name+" => "
-      //   }
-      //   var name = document.getElementById('name_'+original_id[z]).innerHTML
-      //   message = message+name
-      //   return ["Error",message]
-      // }
     }
     if (og_sdate<new_sdate){
       new_sdate = date_format_changer4(new_sdate)
@@ -3187,24 +3291,6 @@ return [original_id,datelog]
 }
 
 function successor_relationship(sub_id,post_id,loc,datelog,original_id,dict){
-  // let npost_sdate = calculate_max_sdate(sub_id,post_id,loc,datelog)
-  // // if(new Date(date_log[post_id].split(' ')[0]).getTime()<npost_sdate){
-  // //   original_id=original_id.slice(0,-1)
-  // //   return [original_id,datelog]
-  // // }
-  // if (datelog[post_id]==null  & window.rel_settings==1){
-  //   datelog[post_id]=window.date_log[post_id]
-  //   var post_sdate = (new Date(datelog[post_id].split(' ')[0])).getTime()
-  // }
-  // else if(datelog[post_id]==null  & window.rel_settings==0){
-  //   var post_sdate = 0
-  // }
-  // if (post_sdate<npost_sdate){
-  //   post_sdate=npost_sdate
-  //   duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
-  //   post_edate = return_end_date(npost_sdate,duration,[],weekend_value)
-  //   datelog[post_id] = date_format_changer4(post_sdate)+" - "+post_edate
-  //   original_id.push(post_id)
     array_answer = relationship_date(dict,post_id,1,original_id,datelog)
     if (array_answer[0]=="Error"){
       return array_answer
@@ -3258,17 +3344,424 @@ function convert_to_FS(relationship,lag,parent_sdate, parent_edate,child_duratio
   }
 }
 
+function change_dates_title(date,day){
+  ////   date ////
+  date = date.split('/')
+  date = date[0]+"/"+date[1]
+  /// Day ///
+  if(day=="Monday"){
+    day="Mon"
+  }
+  else if(day=="Tuesday"){
+    day="Tues"
+  }
+  else if(day=="Wednesday"){
+    day="Wed"
+  }
+  else if(day=="Thursday"){
+    day="Thur"
+  }
+  else if(day=="Firday"){
+    day="Fri"
+  }
+  else if(day=="Saturday"){
+    day="Sat"
+  }
+  else if(day=="Sunday"){
+    day="Sun"
+  }
+  return [date,day]
+}
 function print_PDF(){
+  let timestamp = document.createElement('h5')
+  timestamp.setAttribute('id','time_stamp')
+  timestamp.innerHTML=new Date()
   let p_body = document.getElementById('added_cell').cloneNode(true)
   p_body.className="PDF"
+  let title = did('main_title').cloneNode(true)
+  let date_array = p_body.getElementsByClassName('date')
+  let day_array = p_body.getElementsByClassName('day')
+  for (let i=0; i<date_array.length;i++){
+    let odate = date_array[i].innerHTML
+    let oday = day_array[i].innerHTML
+    let ndate_day =  change_dates_title(odate,oday)
+    date_array[i].innerHTML = ndate_day[0]
+    day_array[i].innerHTML = ndate_day[1]
+  }
+  let schedule = document.createElement('div');
+  schedule.append(title)
+  schedule.append(timestamp)
+  schedule.append(p_body)
   var opt = {
     margin: 0.5,
     filename: 'schedule.pdf',
-    image: {type:'jpeg',quality:0.2},
-    html2canvas: {scale:10},
-    jsPDF: {unit:"in", format:"letter",orientation:"landscape",precision:"12"}
+    image: {type:'jpeg',quality:1},
+    pagebreak:{avoid:'.main_activity'},
+    html2canvas: {scale:2},
+    jsPDF: {unit:"in", format:"ledger",orientation:"landscape",precision:"12"}
   }
 
 
-  html2pdf().set(opt).from(p_body).toPdf().save();
+  html2pdf().set(opt).from(schedule).toPdf().save();
 }
+
+function swap_sub_activities(start,end,sid,eid){
+  if (sdragstartIndex==-1){
+    return
+  }
+  let id_e = eid.split('_')[1]
+  let id_s = sid.split('_')[1]
+  start = parseInt(start)
+  end = parseInt(end)
+  let parent_clone = did(sid).parentElement.cloneNode(true)
+  let children_ = parent_clone.children
+  let bdate = did('bdate_'+id_e).parentElement.children
+  let indexes = []
+  let ordered_list_c =[]
+  let ordered_list_d = []
+  // linked_list_c[0] = chilren_[0]
+  // linked_list_d[0]=bdate[0]
+  let error = children_[children_.length-2];
+  let add_sub_activity = children_[children_.length-1]
+  ///Place values in an onordered list////
+  for(let i =0;i<children_.length-2;i++){
+    console.log("HERE")
+
+    let c_index = parseInt(children_[i].getAttribute('data-index'));
+    if (c_index!=start){
+      if (start<end){
+          if(end==c_index){
+            console.log("HERE")
+            indexes.push(c_index)
+            ordered_list_c.push(did(sid).cloneNode(true))
+            ordered_list_d.push(did('bdate_'+id_s).cloneNode(true))
+            indexes.push(c_index-1)
+            ordered_list_c.push(children_[i].cloneNode(true))
+            ordered_list_d.push(bdate[i].cloneNode(true))
+          }
+          else if(c_index<start||c_index>end){
+            indexes.push(c_index)
+            ordered_list_c.push(children_[i].cloneNode(true))
+            ordered_list_d.push(bdate[i].cloneNode(true))
+        }
+        else if(c_index>start&&c_index<end){
+          indexes.push(c_index-1)
+          ordered_list_c.push(children_[i].cloneNode(true))
+          ordered_list_d.push(bdate[i].cloneNode(true))
+        }
+      }
+      else{
+        if(end==c_index){
+          indexes.push(c_index+1)
+          ordered_list_c.push(did(sid).cloneNode(true))
+          ordered_list_d.push(did('bdate_'+id_s).cloneNode(true))
+          indexes.push(c_index)
+          ordered_list_c.push(children_[i].cloneNode(true))
+          ordered_list_d.push(bdate[i].cloneNode(true))
+        }
+        else if(c_index<end||c_index>start){
+          indexes.push(c_index)
+          ordered_list_c.push(children_[i].cloneNode(true))
+          ordered_list_d.push(bdate[i].cloneNode(true))
+      }
+        else if(c_index>end){
+          indexes.push(c_index+1)
+          ordered_list_c.push(children_[i].cloneNode(true))
+          ordered_list_d.push(bdate[i].cloneNode(true))
+        }
+      }
+    }
+  }
+
+  let datep= did('bdate_'+id_s).parentElement
+  let parent = did(sid).parentElement
+  removeAllChildNodes(parent)
+  removeAllChildNodes(datep)
+  let id_array = []
+  let pos_array = []
+  let sort_array = [indexes,ordered_list_c,ordered_list_d];
+  console.log(sort_array)
+  sort_array = quicksort_jointlists(sort_array,0,sort_array[0].length)
+  ordered_list_c = sort_array[1]
+  ordered_list_d = sort_array[2]
+  for(let i=0;i<ordered_list_c.length;i++){
+    ordered_list_c[i].setAttribute('data-index',i)
+    parent.appendChild(ordered_list_c[i])
+    datep.appendChild(ordered_list_d[i])
+    if(i!=0){
+      id_array.push(ordered_list_c[i].id.split('_')[1])
+      pos_array.push(i)
+    }
+  }
+  parent.appendChild(error)
+  parent.appendChild(add_sub_activity)
+  id_array = id_array.join()
+  pos_array = pos_array.join()
+
+  $.post( "../PHP/update_single_subitem.php",{ project_id:window.project_id, action:"position", sub_item:pos_array, sub_id:id_array} );
+
+  
+}
+
+
+var sdragstartIndex = -1;
+var sdragstartid = -1;
+var dragging = 0;
+
+
+////// Sub Activities //////
+function dragStart_sub(){
+  sdragstartIndex = this.getAttribute('data-index')
+  // this.classList.add('sub_drag_over')
+  // let childs = this.querySelectorAll('.sub');
+  // childs.forEach(child_ =>{
+  //   child_.setAttribute('style','pointer-events:none')})
+}
+
+function dragDrop_sub(){
+  this.classList.remove('sub_drag_over')
+  mdragstartIndex = -1
+  let childs = this.querySelectorAll('.sub');
+  let main_div = this.parentElement
+  let draggables = main_div.querySelectorAll('.sub_activity');
+  draggables.forEach(draggable => {
+      draggable.removeEventListener('drop',dragDrop_sub);
+      draggable.removeEventListener('dragover',dragOver_sub);
+      draggable.removeEventListener('dragenter',dragEnter_sub);
+      draggable.removeEventListener('dragleave',dragLeave_sub);
+
+  })
+  childs.forEach(child_ =>{
+    child_.removeAttribute('style')})
+
+  let sdragendindex = this.getAttribute('data-index')
+  let sdragendid = this.id
+  swap_sub_activities(sdragstartIndex,sdragendindex,sdragstartid,sdragendid)
+  dragging = 0
+  }
+
+function dragEnter_sub(){
+  this.classList.add('sub_drag_over')
+  let childs = this.querySelectorAll('.sub');
+  childs.forEach(child_ =>{
+    child_.setAttribute('style','pointer-events:none')})
+ }
+
+function dragLeave_sub(){
+  this.classList.remove('sub_drag_over')
+  let childs = this.querySelectorAll('.sub');
+  childs.forEach(child_ =>{
+    child_.removeAttribute('style')})
+}
+
+function dragOver_sub(e){
+  e.preventDefault()
+
+}
+
+
+function sub_draggables(drag){
+  dragging = 'sub'
+  sdragstartIndex = drag.getAttribute('data-index')
+  sdragstartid = drag.id
+  let main_div = drag.parentElement
+  let draggables = main_div.querySelectorAll('.sub_activity');
+  drag.addEventListener('dragstart',dragStart_sub)
+  draggables.forEach(draggable => {
+    if(draggable!=drag){
+      draggable.addEventListener('drop',dragDrop_sub);
+      draggable.addEventListener('dragover',dragOver_sub);
+      draggable.addEventListener('dragenter',dragEnter_sub);
+      draggable.addEventListener('dragleave',dragLeave_sub);
+    }
+
+  })
+}
+
+////// Main Activities Drag //////
+
+var mdragstartIndex = -1;
+var mdragstartid = -1;
+var mheight = 0;
+
+function swap_main_activities(start,end,sid,eid){
+  if (start==-1){
+    return 
+  }
+  start = parseInt(start)
+  end = parseInt(end)
+  let index_array = []
+  let parent_clone = did(sid).cloneNode(true)
+  let all_main_activities = document.getElementsByClassName('main_activity')
+  // let ordered_list_m =[Array(all_main_activities.length).fill(-1)]
+  let ordered_list_m = []
+  for(let i =0;i<all_main_activities.length;i++){
+    let m_index = parseInt(all_main_activities[i].getAttribute('data-index'));
+    if (m_index!=start){
+      if (start<end){
+          if(end==m_index){
+            index_array.push(m_index)
+            ordered_list_m.push(did(sid).cloneNode(true))
+            index_array.push(m_index-1)
+            ordered_list_m.push(all_main_activities[i].cloneNode(true))
+          }
+          else if(m_index<start||m_index>end){
+            ordered_list_m.push(all_main_activities[i].cloneNode(true))
+            index_array.push(m_index)
+        }
+        else if(m_index>start&&m_index<end){
+          ordered_list_m.push(all_main_activities[i].cloneNode(true))
+          index_array.push(m_index-1)
+        }
+      }
+      else{
+        if(end==m_index){
+          ordered_list_m.push(did(sid).cloneNode(true))
+          index_array.push(m_index+1)
+          ordered_list_m.push(all_main_activities[i].cloneNode(true))
+          index_array.push(m_index)
+          // ordered_list_m[m_index+1]=did(sid).cloneNode(true)
+          // ordered_list_m[m_index]=all_main_activities[i].cloneNode(true)
+        }
+        else if(m_index<end||m_index>start){
+          ordered_list_m.push(all_main_activities[i].cloneNode(true))
+          index_array.push(m_index)
+          // ordered_list_m[m_index]=all_main_activities[i].cloneNode(true)
+      }
+        else if(m_index>end){
+          ordered_list_m.push(all_main_activities[i].cloneNode(true))
+          index_array.push(m_index+1)
+          // ordered_list_m[m_index+1]=all_main_activities[i].cloneNode(true)
+        }
+      }
+    }
+  }
+  let list = [index_array,ordered_list_m]
+  list = quicksort_jointlists(list,0,list[0].length)
+  index_array = list[0]; ordered_list_m = list[1]
+  let parent = did(sid).parentElement
+  removeAllChildNodes(parent)
+  let id_array = []
+  let pos_array = []
+  console.log(ordered_list_m)
+  for(let i=0;i<ordered_list_m.length;i++){
+    ordered_list_m[i].setAttribute('data-index',i)
+    parent.appendChild(ordered_list_m[i])
+    id_array.push(ordered_list_m[i].id)
+    pos_array.push(i)
+  }
+  id_array = id_array.join()
+  pos_array = pos_array.join()
+
+  $.post( "../PHP/update_single_mainitem.php",{ project_id:window.project_id, action:"position", main_item:pos_array, main_id:id_array} );
+
+  
+}
+
+function dragStart_m(){
+  mdragstartIndex = this.getAttribute('data-index')
+  sdragstartIndex = -1
+  // this.classList.add('sub_drag_over')
+  // let childs = this.querySelectorAll('.sub');
+  // childs.forEach(child_ =>{
+  //   child_.setAttribute('style','pointer-events:none')})
+}
+function dragDrop_m(){
+  this.classList.remove('m_drag_over')
+  this.removeAttribute('style')
+  let childs = this.querySelectorAll('.sub');
+  let draggables = document.querySelectorAll('.main_activity');
+  let main_title = document.querySelectorAll('.main_activity_title')
+  let sub_box = document.querySelectorAll('.sub_activity_box')
+  main_title.forEach(title=>{
+    title.removeAttribute('style')
+  })
+  sub_box.forEach(box=>{
+    box.removeAttribute('style')
+  })
+  draggables.forEach(draggable => {
+      draggable.removeEventListener('drop',dragDrop_m);
+      draggable.removeEventListener('dragover',dragOver_m);
+      draggable.removeEventListener('dragenter',dragEnter_m);
+      draggable.removeEventListener('dragleave',dragLeave_m);
+
+  })
+  childs.forEach(child_ =>{
+    child_.removeAttribute('style')})
+
+  let dragendindex = this.getAttribute('data-index')
+  let dragendid = this.id
+  if (dragendid==mdragstartid){
+    return
+  }
+  swap_main_activities(mdragstartIndex,dragendindex,mdragstartid,dragendid)
+  }
+
+function dragEnter_m(){
+  console.log((this.offsetHeight+mheight)+"px")
+  this.classList.add('m_drag_over')
+  this.setAttribute('style','padding-bottom:'+(mheight)+"px!important")
+  // let main_title = document.querySelectorAll('.main_activity_title')
+  // let sub_box = document.querySelectorAll('.sub_activity_box')
+  // main_title.forEach(title=>{
+  //   title.setAttribute('style','pointer-events:none')
+  // })
+  sub_box.forEach(box=>{
+    box.setAttribute('style','pointer-events:none')
+  })
+
+  // childs.forEach(child_ =>{
+  //   child_.setAttribute('style','pointer-events:none')})
+ }
+
+function dragLeave_m(){
+  this.classList.remove('m_drag_over')
+  this.removeAttribute('style')
+  let childs = this.children
+  // let main_title = document.querySelectorAll('.main_activity_title')
+  // let sub_box = document.querySelectorAll('.sub_activity_box')
+  // main_title.forEach(title=>{
+  //   title.removeAttribute('style')
+  // })
+  // sub_box.forEach(box=>{
+  //   box.removeAttribute('style')
+  // })
+  // childs.forEach(child_ =>{
+  //   child_.setAttribute('style','pointer-events:none')})
+}
+
+function dragOver_m(e){
+  e.preventDefault()
+
+}
+
+
+function main_draggables(drag){
+  console.log('main_drag')
+  if (dragging=='sub'){
+    return
+  }
+  let main_title = document.querySelectorAll('.main_activity_title')
+  let sub_box = document.querySelectorAll('.sub_activity_box')
+  main_title.forEach(title=>{
+    title.setAttribute('style','pointer-events:none')
+  })
+  sub_box.forEach(box=>{
+    box.setAttribute('style','pointer-events:none')
+  })
+  mheight = drag.offsetHeight
+  mdragstartIndex = drag.getAttribute('data-index')
+  mdragstartid = drag.id
+  let draggables = document.querySelectorAll('.main_activity');
+  drag.addEventListener('dragstart',dragStart_m)
+  draggables.forEach(draggable => {
+
+      draggable.addEventListener('drop',dragDrop_m);
+      draggable.addEventListener('dragover',dragOver_m);
+      draggable.addEventListener('dragenter',dragEnter_m);
+      draggable.addEventListener('dragleave',dragLeave_m);
+
+
+  })
+}
+

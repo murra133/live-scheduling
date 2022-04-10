@@ -50,6 +50,8 @@ function pull_all_schedules(){
                 var project_name = js_data[project_id][1];
                 var schedule_line = document.getElementById('sample_line');
                 var cloned_schedule_line = schedule_line.cloneNode(true);
+                cloned_schedule_line.getElementsByTagName('i')[0].setAttribute('onclick','delete_schedule('+project_id+')')
+                cloned_schedule_line.getElementsByTagName('i')[0].classList.add('clickable')
                 cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
                 cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
                 cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= user_name;
@@ -57,6 +59,7 @@ function pull_all_schedules(){
                 cloned_schedule_line.getElementsByTagName('span')[0].id= project_id;
                 cloned_schedule_line.removeAttribute('style');
                 cloned_schedule_line.removeAttribute('id');
+                
                 var add_project_button = document.getElementById("add_project");
                 add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
 
@@ -74,7 +77,12 @@ function WriteCookie(Cookie_Value_Str) {
 
     }
  }
+//////////////////////////////////////////////////////////////////
 
+function delete_schedule(id){
+    $.post( "../PHP/delete_schedule.php",{project_id:id} );
+
+}
 
 //////////////////////////////////////////////////////////////////
 function ValidateEmail(mail) 

@@ -35,6 +35,10 @@ h1{
 .filter h2,.filter input{
     display: inline-block
 }
+.filter .website_button{
+    display: inline-block;
+    height: 100%;
+}
 
 #filter_div{
     height: 65px;
@@ -49,8 +53,10 @@ h1{
     top:0px
 }
 
-#main_page{
+.filter-out{
+    display: None!important;
 }
+
 
 /* -----Styles for Activity Headers----  */
 #cell{
@@ -61,6 +67,8 @@ h1{
 #header{
     top: 100px;
     position: relative;
+    padding-bottom: 30px;
+    display: block;
 }
 
 #cell_header{
@@ -104,7 +112,26 @@ h1{
 .main_activity{
     display:grid;
     padding-bottom: 5px;
+    transition: all .5s ease;
 }
+
+.m_drag_over{
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: baseline;
+    cursor:grabbing;
+}
+/* .m_drag_over::after{
+    content:"";
+    height: 32px;
+    opacity: 1;
+    border: grey 1px solid;
+    box-shadow: 0px 0px 4px 0px  gray;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+} */
+
 .main_activity_input{
     text-align: left;
     display: block;
@@ -177,7 +204,8 @@ input.title{
     position: relative;
     font-size: 23px;
     top: 4px;
-    left:10px
+    left:10px;
+    z-index:100
 }
 
 
@@ -310,7 +338,25 @@ transition:width .5s;
     align-items: center;
     height: 32px;
     box-shadow: 0px 1px 0px 0px grey;
+    transition: all .5s ease;
 
+}
+.sub_drag_over{
+    flex-wrap: wrap;
+    width: 100%;
+    height: 64px;
+    align-items: baseline;
+    cursor:grabbing;
+}
+.sub_drag_over::after{
+    content:"";
+    height: 32px;
+    opacity: 1;
+    border: grey 1px solid;
+    box-shadow: 0px 0px 4px 0px  gray;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
 }
 
 .sub_activity_actualized h5, .sub_activity_actualized i{
@@ -342,9 +388,21 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
-
+.sub_draggable{
+    position: relative;
+    left: -10px;
+    transition: all .5s;
+}
+.sub_draggable:hover{
+    background-color: lightgray;
+    cursor:grab
+}
+.sub_draggable:focus{
+    cursor: grabbing;
+}
 .sub_name,.sub_date,.sub_duration,.sub_contractor{
-    height:20px
+    height:20px;
+    overflow:hidden;
 }
 .sub_date,.sub_duration,.sub_contractor{
     text-align: center;
@@ -381,7 +439,7 @@ width:15%;
     width:1.5%;
 }
 
-.sub_actualized,.sub_actualized_title{
+.sub_actualized,.sub_actualized_title,.sub_undo{
     width: 3%;
 }
 
@@ -421,6 +479,15 @@ h5.sub_name:hover,h5.sub_date:hover,h5.sub_duration:hover,h5.sub_contractor:hove
     justify-content: center;
     align-items: center;
 }
+.rotate0{
+    transform: rotateZ(0deg);
+    transition: all .5s;
+}
+.rotate180{
+    transform: rotateZ(180deg);
+    transition: all .5s;
+}
+
 .date, .day{
     /* border-style: solid;
     border-width: 0px 1px 0px 1px; */
@@ -525,9 +592,9 @@ box-shadow: 0px 1px 0px 0px gray;
 .box{
     width:max-content;
     border: black 1px solid;
-    border-radius: 5px;
+    border-radius: 25px;
     padding:2%;
-    background-color:#7285C9;
+    background-color:lightgray;
 
 }
 .box_title{
@@ -694,6 +761,7 @@ box-shadow: 0px 1px 0px 0px gray;
     flex-direction:column;
     row-gap: 20px;
     opacity: 1;
+    z-index: 1000;
 
 }
 .relationship:hover{
@@ -811,44 +879,67 @@ input.rel_right{
     padding-left: 3%
 }
 
+.search-out{
+    display: none!important;
+}
+
+
+
 
 /*--------Print----------*/
 
-.PDF .colapsable_button,.PDF .clickable, .PDF input,.PDF  button,.PDF  .website_button,.PDF #main_relationship{
+.PDF .colapsable_button,.PDF .clickable, .PDF input,.PDF  button,.PDF  .website_button,.PDF #main_relationship,.PDF .sub_actualized_title, .PDF .sub_draggable{
     display: none !important;
 }
 
 .PDF{
-    width: 11in!important;
-    height: 8.5in!important;
-    border: 1px solid black
+    width: 16in!important;
+    height: 100%!important;
 }
 
-
+.PDF #main_title{
+    display: block;
+    width: 100%;
+    font-size: 30px;
+    height: 40px;
+}
+.PDF #time_stamp{
+    display: block;
+    width: 100%;
+    font-size: 4px!important;
+    float: left;
+    left:20px
+}
 .PDF .main_activity_title{
-    width: 11in!important;
+    width: 16in!important;
     left: 0px!important;;
     position:relative;
     left: 38px;;
  
 
 }
+.PDF .main_activity{
+    break-before: always;
+}
 .PDF .main_activity_title > h2{
 text-align: left;
-font-size: 6px;
+font-size: 15px;
 padding: 2px!important;
 color:white!important;
 background-color: gray!important;
-width:30%!important;
+width: 100%!important;
 border-style: solid;
 border:black!important;
-border-radius: 5px;
+border-radius: 1px;
 }
 .PDF h2.title{
     display: inline-block!important;
     float: left;
 }
 
+.PDF .filter-out{
+    display: none!important;
+}
     
 /*-----Sub Activity-----*/
 
@@ -862,7 +953,7 @@ border-radius: 5px;
     text-align: center;
     display: block!important;
     position: relative;
-    width: 30%!important;
+    width: 43%!important;
     float:left;
     
     }
@@ -870,25 +961,26 @@ border-radius: 5px;
     text-align: center;
     display: block!important;
     position: relative;
-    width: 65%!important;
+    width: 57%!important;
     float:left;
     }
 .PDF .sub_activity{
-    display: flex!important;
+    display: flex;
     flex-direction: row;
     align-items: center;
-    height: 10px;
-    box-shadow: 0px 1px 0px 0px grey!important;
+    height: 16px;
+    /* border: 1px 0px solid gray!important; */
+    border-bottom: 1px solid gray!important;
 
 }
 .PDF .sub_activity>h5{
-    font-size: 5px;
+    font-size: 8px;
     margin-bottom: 0px;
 }
 
 .PDF .sub_activity>h3{
-    font-size: 5px;
-    font-weight:500;
+    font-size: 8px;
+    font-weight:700;
 }
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
@@ -897,7 +989,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .PDF .sub_name,.PDF .sub_date,.PDF .sub_duration,.PDF .sub_contractor{
-    height:1vw!important
+    height: 12px!important;
+    padding-bottom:1px
 }
 .PDF .sub_date,.PDF .sub_duration,.PDF .sub_contractor{
     text-align: center;
@@ -912,20 +1005,18 @@ input[type=number]::-webkit-outer-spin-button {
 
 }
 .PDF .sub_date,.PDF .sub_date_title{
-    width: 20%;
+    width: 22%;
     margin:0px 0px;
-    transition: .5s width;
-    transition: 2s background-color;
 
 }
 
 .PDF .sub_duration,.PDF .sub_duration_title{
-    width: 10%;
+    width: 8%;
     margin:0px 0px
 }
 
 .PDF .sub_contractor,.PDF .sub_contractor_title{
-width:10%;
+width:18%;
 
 }
 
@@ -938,75 +1029,77 @@ width:10%;
 .PDF .cell_days{
     position: relative;
     display: flex;
+    border-right: 1px solid gray!important;
 }
-.PDF.date,.PDF>.day{
+.PDF .date,.PDF .day{
+
     /* border-style: solid;
     border-width: 0px 1px 0px 1px; */
-    box-shadow: 1px 0px 0px 0px gray!important;
-    font-size:12px!important;
+    border-right: 1px solid gray!important;
+    font-size:6px!important;
     margin-bottom: auto;
-    height: 16px;
-    width:75px;
+    height: 8px;
+    width: 25px;
     text-align: center;
     }
 
 
     
 
-.PDF>.date_box{
+.PDF .date_box{
     display:inline-block!important;
     /* border-style: solid;
     border-width: 1px; */
     /* padding:10px; */
-    box-shadow: 1px 0px 1px 0px gray!important;
-    margin: 11px 0px!important;
     font-size:small!important;
     position: relative!important;
-    width:75px!important;
-    height: 16px!important;
+    width:25px!important;
+    height: 8px!important;
 
 }
 
-.PDF>.schedule{
+.PDF .schedule{
     border: rgb(97, 163, 97) solid!important;
     background-color: rgb(97, 163, 97)!important;
 }
 
-.PDF>.schedule_start{
+.PDF .schedule_start{
     border-radius: 15px 0px 0px 15px!important;
 }
-.PDF>.schedule_single{
+.PDF .schedule_single{
     border-radius: 15px 15px 15px 15px!important;
 }
-.PDF>.schedule_end{
+.PDF .schedule_end{
     border-radius: 0px 15px 15px 0px!important;
 }
 
-.PDF>.weekend{
+.PDF .weekend{
     background-color: rgb(211,211,211)!important;
  
 }
 
-.PDF>.holiday{
+.PDF .holiday{
     background-color: rgb(170, 170, 170)!important;
 }
-.PDF>.sub_bdate{
-height: 32px!important;
+.PDF .sub_bdate{
+height: 16px!important;
 display: flex!important;
 align-items: center!important;
-box-shadow: 0px 1px 0px 0px gray!important;
+border-bottom: 1px solid gray!important;
 
 }
 
-.PDF>.sub_activity_bdate{
+.PDF .sub_activity_bdate{
     white-space: nowrap!important;
     position: relative!important;
-    bottom: 29px!important;
+    bottom: 0px!important;
 }
-
-.PDF>.sub_titles{
+.PDF .sub_title{
+    height: 16px!important;   
+}
+.PDF .sub_titles{
     display: flex!important;
-    height: 60px!important;
+    height: 16px!important;
     flex-flow: column!important;
     justify-content: end!important;
     box-shadow: 0px 1px 0px 0px gray!important;

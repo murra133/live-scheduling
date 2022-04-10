@@ -457,6 +457,13 @@ $( document ).ready(function() {
     }
   });  
 
+  /*
+
+  buggggggggggggggggggggg php not making holidat table
+
+  */
+ 
+  window.holidays={}
   $.ajax({
     url : '../PHP/pull_holidays.php',
     type : 'POST',

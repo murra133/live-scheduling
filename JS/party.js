@@ -48,9 +48,13 @@ function add_id_Party_Update(id){
 
 
 //for deleting party
-function delete_project(e){
+function delete_party(e){
+  var comfirm = confirm("Are you sure you want to delete this party?");
+  if(comfirm == false){
+    return;
+  }
   GLOBAL_COUNTER = GLOBAL_COUNTER-1;
-  var id = e.parentNode.id;
+  var id = e.parentNode.parentNode.parentNode.parentNode.id;
   console.log(id);
   e.parentNode.parentNode.parentNode.parentNode.remove();
   $.post( "../PHP/delete_party.php",{ id: parseInt(id), project_id:window.project_id} );
@@ -61,13 +65,16 @@ function delete_project(e){
 //adds the new party id to the edit page
 function add_id_Party_Input(){
   GLOBAL_COUNTER = GLOBAL_COUNTER+1;
-  document.getElementsByClassName('new_party_form')[0].id = GLOBAL_COUNTER;
+  MAX_PARTY_ID = MAX_PARTY_ID + 1;
+  document.getElementsByClassName('new_party_form')[0].id = MAX_PARTY_ID;
   return;
 }
+
 
 //for adding party: calls an empty edit page
 function add_party(){
 	//document.getElementById("main_page").style.blur = "10px";
+  console.log("add parties!!!!!");
     $('#content_box').load("../HTML/testParty.html");
     setTimeout(add_id_Party_Input,500);
 }
@@ -79,8 +86,9 @@ function submit_form(newFields){
 }
 
 
+
 function moreFields() {
-  var party_counter = GLOBAL_COUNTER+1;
+  var party_counter = MAX_PARTY_ID+1;
   var newFields = document.getElementById('readroot').cloneNode(true);
   newFields.id = party_counter;
   newFields.style.display = 'block';
@@ -142,16 +150,15 @@ function containsKey(object, key) {
   return !!Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase());
 }
 
-function 
-_person(this_id){
+function submit_person(this_id){
   var name = document.getElementById('partyname').value;
-  console.log(this_id);
+  console.log(name);
   var div_grid = document.createElement('div');
   div_grid.className = "party_card_div";
   var div_project = create_card_title(this_id, name);
   console.log("This is a test for posting id: ", this_id);
 
-  $.post( "../PHP/add_parties.php", { party_id: this_id, party_name: name, project_id:window.project_id});
+  //$.post( "../PHP/add_parties.php", { party_id: this_id, party_name: name, project_id:window.project_id});
 
   $.ajax({
     url : '../PHP/pull_all_registered_users.php',
@@ -168,7 +175,7 @@ _person(this_id){
         if(user_exist){
 
         }*/
-        var party_counter = GLOBAL_COUNTER;
+        var party_counter = MAX_PARTY_ID;
         var n = count_person(party_counter);
         var parent_element = document.getElementById(this_id).parentElement.parent_element;
         var newFields2 = document.createElement("ul");
@@ -179,17 +186,23 @@ _person(this_id){
           var lname = insertHere.getElementsByTagName("input")[1].value;
           var title = insertHere.getElementsByTagName("input")[2].value;
           var email = insertHere.getElementsByTagName("input")[3].value;
+          if(fname == "" ||lname == "" ||title == "" ||email == "" ){
+            alert("Input cannot be empty");
+            return;
+          }
+          else if(email!=""){
+            const email_format = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+            const valid = email_format.test(email);
+            if(valid == false){
+              alert("Input must be of email format");
+              return;
+            }
+          }
+          $.post( "../PHP/add_parties.php", { party_id: this_id, party_name: name, project_id:window.project_id});
           console.log(fname);
-          newFields2.id = id;
-          newFields2.className = 'personel_box list-group list-group-flush';
-          newFields2.style.display = 'block';
-          var item = document.createElement('li');
-          item.className = "list-group-item";
-          item.innerHTML = fname + " " + lname;
-          newFields2.appendChild(item);
-          //console.log(newFields2);
-          div_project.appendChild(newFields2);
-          $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, project_id:window.project_id} );
+          var personel_field = create_card_personel(party_counter, id, fname, lname, title, email)
+          div_project.children[0].children[0].children[1].children[0].children[1].appendChild(personel_field);
+          $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, project_id:window.project_id, action:"Add"} );
           console.log(email);
           //checking existing users and adding administry level if not assigned
           //TODO: auto email for personels noy yet registered

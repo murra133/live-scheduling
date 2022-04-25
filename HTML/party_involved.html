@@ -26,52 +26,67 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
+    
+
     <body>
     <div>
     <div class="wrapper d-flex align-items-stretch">
         <nav id="sidebar" class = "active" onclick="toggle_side_bar()" >
-            
-    </nav>
-    <div id = "content">
-    <div id="main_page">
-        <div id = "search_navbar"></div>
-            <!--nav class="navbar navbar-light bg-light justify-content-between" >
-                    <h5 class="navbar-brand">Party Involved</h5>
-                    <form class="form-inline">
-                      <input id="searchbar" class="" type="search" placeholder="Search for keywords" aria-label="Search">
-                    </form>
-                  </nav-->
-    <!-- Scedule Headers-->
-    <div id="cell">
-        <div id="cell_header">
-            <br>
-        </div>
-            <div id="added_party_cell">
-
-                <span id="party_bottom"></span>
-
+        </nav>
+        <div id = "filter_button_div"><i id = "sort_button" class="fa-solid fa-sort fa-xl"></i></div>
+        <div id = "filter_bar" class = "card">
+            <div class="filter-check">
+                <input class="filter-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked onclick="sort_least_recent()">
+                <label class="filter-check-label" for="exampleRadios1">
+                    Filter by least recent
+                </label>
             </div>
-
-            <div id="party_add">
-                <div id="main_party_added" onclick="add_party()">
-                    <i class="far fa-plus-square">  Add Party</i>
-                </div>
-                </div>
-
+            <div class="filter-check">
+                <input class="filter-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" onclick="sort_most_recent()">
+                <label class="filter-check-label" for="exampleRadios2">
+                    Filter by most recent
+                </label>
+            </div>
+            <div class="filter-check">
+                <input class="filter-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" onclick="sortA_Z()">
+                <label class="filter-check-label" for="exampleRadios3">
+                    Filter by A-Z
+                </label>
+            </div>
+            <div class="filter-check">
+                <input class="filter-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="option4" onclick="sortZ_A()">
+                <label class="filter-check-label" for="exampleRadios4">
+                    Filter by Z-A
+                </label>
+            </div>
         </div>
+        <div id = "content">
+            <div id="main_page">
+                <div id = "search_navbar"></div>
+                <div id="cell">
+                    <div id="cell_header">
+                        <br>
+                    </div>
 
+                    <div id="added_party_cell">
+                        <span id="party_bottom"></span>
+                    </div>
 
-        </div> 
+                    <div id="party_add">
+                        <div id="main_party_added" onclick="add_party()">
+                            <i class="far fa-plus-square">  Add Party</i>
+                        </div>
+                    </div>
 
-    </div> 
-</div>
+                </div>
+            </div> 
+        </div>
 </div>
 <!--/div>-->
 
 <div id ="content_box">
 
 </div>
-
 
 
 <div id="person_submitted" style="display: none">

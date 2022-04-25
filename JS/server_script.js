@@ -31,6 +31,9 @@ function close_button(){
 
 }
 
+function did(id){
+    return document.getElementById(id);
+}
 function pull_all_schedules(){
     var all_cookies = ReadCookie();
     for(var n=0; n<all_cookies.length;n++){
@@ -58,7 +61,7 @@ function pull_all_schedules(){
                 cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
                 cloned_schedule_line.getElementsByTagName('span')[0].id= project_id;
                 cloned_schedule_line.removeAttribute('style');
-                cloned_schedule_line.removeAttribute('id');
+                cloned_schedule_line.id = project_id;
                 
                 var add_project_button = document.getElementById("add_project");
                 add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
@@ -81,7 +84,7 @@ function WriteCookie(Cookie_Value_Str) {
 
 function delete_schedule(id){
     $.post( "../PHP/delete_schedule.php",{project_id:id} );
-
+    did(id).remove;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -188,24 +191,39 @@ function removeAllChildNodes(parent) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function delete_user_admin_input(delete_tag){
     var parent_node = delete_tag.parentNode;
-    removeAllChildNodes(parent_node);
+        parent_node.remove()
 
 }
 
 //////////////////////////////////////////////////////////////////////////////
 function add_user_to_project_box(user_array){
     ///// var user_array = [first_name, last_name, email];
-    document.getElementsByClassName('firstname')[1].innerHTML = user_array[0];
-    document.getElementsByClassName('firstname')[1].setAttribute('value',user_array[0]);
-    document.getElementsByClassName('lastname')[1].setAttribute('value',user_array[1]);
-    document.getElementsByClassName('lastname')[1].innerHTML = user_array[1];
-    document.getElementsByClassName('email')[1].setAttribute('value',user_array[2]);
-    document.getElementsByClassName('email')[1].innerHTML = user_array[2];
+    let admin = did("user_admin")
+    admin.getElementsByClassName('firstname')[0].innerHTML = user_array[0];
+    admin.getElementsByClassName('firstname')[0].setAttribute('value',user_array[0]);
+    admin.getElementsByClassName('lastname')[0].setAttribute('value',user_array[1]);
+    admin.getElementsByClassName('lastname')[0].innerHTML = user_array[1];
+    admin.getElementsByClassName('email')[0].setAttribute('value',user_array[2]);
+    admin.getElementsByClassName('email')[0].innerHTML = user_array[2];
 
 
 }
 
 ///////////////////////////////////////////////////////////
+function add_project_next(){
+    let admin = did('administrator_info');
+    let info = did("project_info");
+    console.log(admin.getAttribute('style'))
+    if(admin.getAttribute('style')=="display:none;"){
+        admin.removeAttribute('style');
+        info.setAttribute('style','display:none;');
+    }
+    else{
+        info.removeAttribute('style');
+        admin.setAttribute('style','display:none;');
+    }
+}
+//////////////////////////////////////////////////////////
 function open_add_project_box(){
     document.getElementById("main_page").style.blur = "10px";
     $('#content_box').load("../HTML/add_new_project.html");
@@ -215,6 +233,8 @@ function open_add_project_box(){
       "-o-filter": "blur(3px)", 
       "-ms-filter": "blur(3px)", 
       "filter": "blur(3px)", 
+      "overflow": "hidden",
+      "scroll":"none"
     }
   );
   var cookiearray = ReadCookie();
@@ -230,13 +250,15 @@ setTimeout(add_user_to_project_box,150,user_array);
 }
 
 function create_project(submit_button_tag){
-    document.getElementById("message").innerHTML = "";
-    var project_name = document.getElementById("add_project_input").value;
+    var project_name = document.getElementById("projectname").value;
     if (project_name==""){
-        document.getElementById("message").innerHTML = "Please Input a Title for the Project";
+        alert("Please Input a Title for the Project");
         return false;
     }
-    console.log(project_name);
+    let description = did('projectdesc').value;
+    let sdate = did('projectsdate').value;
+    let edate = did('projectedate').value;
+    let address = did('address').value;
     ///Input arrays////
     var tag_fname_array = document.getElementsByClassName('firstname');
     //fname_array.splice(0,1);
@@ -249,14 +271,14 @@ function create_project(submit_button_tag){
     var lname_array = Array();
     var email_array = Array();
     var admin_level_array = Array();
-    fname_array[0] = tag_fname_array[1].getAttribute('value')
-    lname_array[0] = tag_lname_array[1].getAttribute('value');
-    email_array[0] = tag_email_array[1].getAttribute('value');
-    admin_level_array[0] = tag_admin_level_array[1].getAttribute('value');
+    console.log(tag_fname_array)
+    fname_array[0] = tag_fname_array[0].innerHTML
+    lname_array[0] = tag_lname_array[0].innerHTML
+    email_array[0] = tag_email_array[0].innerHTML
+    admin_level_array[0] = tag_admin_level_array[0].getAttribute('value');
     var n=1;
     //admin_level.splice(0,1);
     for(var i = 2; i<tag_email_array.length;i++){
-
         fname_array[n] = tag_fname_array[i].value;
         lname_array[n] = tag_lname_array[i].value;
         email_array[n] = tag_email_array[i].value;
@@ -271,12 +293,11 @@ function create_project(submit_button_tag){
         console.log(line);
         console.log(fname_array);
         if (fname_array[k]==""||lname_array[k]==""||email_array[k]==""){
-            document.getElementById("message").innerHTML = "Parameters on Administrator Line "+line+" are missing";
+            alert("Parameters on Administrator Line "+line+" are missing");
             return false;
         }
         else if(ValidateEmail(email_array[k])==false){
-            console.log('running');
-            document.getElementById("message").innerHTML = "Email on Administrator Line "+line+" is not in Email format";
+            alert("Email on Administrator Line "+line+" is not in Email format");
             return false;
         };
     }
@@ -285,11 +306,13 @@ function create_project(submit_button_tag){
     var post_lname = lname_array.join();
     var post_email = email_array.join();
     var post_admin_level = admin_level_array.join();
-
+    console.log('project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level+
+    "&project_description="+description+"&start_date="+sdate+"&end_date="+edate+"&address="+address)
     $.ajax({
         type: "POST",
         url: "../PHP/create_project.php",
-        data: 'project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level,
+        data: 'project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level+
+        "&project_description="+description+"&start_date="+sdate+"&end_date="+edate+"&address="+address,
         success: function(data){
             var js_data = JSON.parse(data);
             console.log(js_data);

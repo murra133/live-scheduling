@@ -64,7 +64,8 @@ CREATE TABLE Project_Database (
     ADD ProjectEnd date,
     ADD ProjectAddress text,
     ADD WorkWeek int NOT NULL,
-    ADD Start_Day int NOT NULL DEFAULT 1;
+    ADD Start_Day int NOT NULL DEFAULT 1,
+    ADD LookAhead int NOT NULL DEFAULT 3;
 );
 
 Create Project Merger Database

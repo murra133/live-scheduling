@@ -3,7 +3,9 @@
 } */
 
 /* Loading */
-
+body{
+  background-color: white!important;
+}
 h5{
   font-size: 15px;
 }
@@ -30,6 +32,7 @@ h5{
     font-size: 2vw;
 
 }
+
 
 .close_button{
     float:right;
@@ -189,4 +192,21 @@ h5{
     margin: 0 auto; /* Added */
     float: none; /* Added */
     margin-bottom: 10px; /* Added */
+    width:1200px;
+    height:650px;
+}
+
+.form-group-pinfo{
+  display: flex;
+  flex-flow:column;
+}
+
+#admin_form{
+  max-height: 500px;
+  overflow-y: scroll;
+}
+#admin>*{
+  display: flex;
+  flex-direction: row;
+
 }

@@ -66,3 +66,9 @@ padding-left: 3%;
     margin-top: 2%;
     font-size: 125%;
 }
+
+.card{
+    width: auto;
+    height:auto;
+    padding:10px;
+}

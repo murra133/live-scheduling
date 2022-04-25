@@ -1,53 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com    @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <title>Profile settings - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="../JS/server_script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../CS/party_style.css">
+    <link rel="stylesheet" href="../CS/settings_styles.css">
+    <link rel="stylesheet" href="../CS/general_styles.css">
+</head>
+<body>
 
-    <div id="box" class = "box">
-        <i class="far fa-window-close clickable close_button" onclick="close_button()"></i>
-        <div class = "box_title">
-            <h1>Create New Project</h1>
-        </div>
-        <div id = "add_project">
-            <h3> Project Name:</h3>
-            <input id = "add_project_input" type="text">
-        </div>
-        <div id="admin">
-            <h3>Team Members</h3>
-            <div id="user_titles">
-                <h6 class = "title">First Name:</h6>
-                <h6 class = "title">Last Name:</h6>
-                <h6 class = "title">Email:</h6>
-                <h6 class = "title">Admin Level:</h6>
-            </div>
-            <div class = "user_admin_input" id="admin_sample" style="display:none;">
-                <input class = "admin_input firstname" type="text" placeholder="First Name:">
-                <input class = "admin_input lastname" type="text" placeholder="Last Name:">
-                <input class = "admin_input email" type="text" placeholder="Email:">
-                <select class = "admin_input admin_level">
-                    <option value="1">Administrator</option>
-                    <option value="2">Scheduler</option>
-                    <option value="3">Viewer</option>
-                    </select>
-                    <i class="far fa-trash-alt" onclick="delete_user_admin_input(this)"></i>
-            </div>
-            <div class = "user_admin">
-                <h7 class="firstname"></h7>
-                <h7 class="lastname"></h7>
-                <h7 class="email"></h7>
-                <h7 value ="1" class="admin_level">Administrator</h7>
-            </div>
+<div class="box-container">
+        <div class="col-8">
+          <div class="card">
+            <div class="tab_pane" id="project_info">
+                <h6 style="display:inline-block"> NEW PROJECT INFORMATION</h6>
+                <i class="far fa-window-close clickable close_button" onclick="close_button()" style="display:inline-block"></i>
+                <hr>
+                <form>
+                    <div class="form-group form-group-pinfo">
+                      <label class="label-1" for="projectName">Project Name: </label>
+                      <input type="text" class="form-control" id="projectname" aria-describedby="fullNameHelp" placeholder="Enter Project Name">
+                    </div>
+                    <div class="form-group form-group-pinfo">
+                      <label class="label-1" for="projectdesc">Project Description</label>
 
-            <div class = "user_admin_input">
-                <input class = "admin_input firstname" type="text" placeholder="First Name:">
-                <input class = "admin_input lastname" type="text" placeholder="Last Name:">
-                <input class = "admin_input email" type="text" placeholder="Email:">
-                <select class = "admin_input admin_level">
-                    <option value="2">Sub-Administrator</option>
-                    <option value="3">Scheduler</option>
-                    <option value="4">Viewer</option>
-                    </select>
-                    <i class="far fa-trash-alt" onclick="delete_user_admin_input(this)"></i>
-            </div>
-            <i class="far fa-plus-square" aria-hidden="true" onclick="add_admin_input(this)"> Add User</i>
+                      <textarea class="form-control autosize" id="projectdesc" style="height: 100px;px"placeholder="Write something about the Project" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;"></textarea>
+                    </div>
+                    <div class="form-group form-group-pinfo" style = "display: inline-block; width:49%">
+                      <label for="projectsdate">Project Start Date</label>
+                      <input type="date" class="form-control" id="projectsdate">
+                    </div>
+                    <div class="form-group form-group-pinfo" style = "display: inline-block; width:49%">
+                      <label for="projectedate">Project End Date</label>
+                      <input type="date" class="form-control" id="projectedate">
+                    </div>
+                    <div class="form-group form-group-pinfo">
+                      <label class="label-1" for="address">Address</label>
+                      <input type="text" class="form-control" id="address" placeholder="Enter the Project's Address">
+                    </div>
+                    <button type="button" style="float:right; margin-right: 10px;" class="website_button" onclick="add_project_next()">Next Section</button>
+                  </form>
+          </div>
+          <div class="tab-pane" id="administrator_info" style="display:none;">
+            <h6 style="display:inline-block">ADMINISTRATOR SETTINGS</h6>
+            <i class="far fa-window-close clickable close_button" onclick="close_button()" style="display:inline-block"></i>
+            <hr>
+            <form  id="admin_form">
+              <div id="admin_list">
+                <p class="text-muted font-size-sm">Add all administrators to have access to make changes to your schedule. To change administrative access upon project creation, please use the project settings page</p>
+                <div  class = "user_admin col-auto">
+                  <h3 class="firstname_title">First Name</h3>
+                  <h3 class="lastname_tile">Last Name</h3>
+                  <h3 class="email_title">Email</h3>
+                  <h3 value ="1" class="admin_level_title">Administrative Level</h3>
+              </div>
+                <div id ="user_admin" class = "user_admin  col-auto">
+                  <h7 class="firstname"></h7>
+                  <h7 class="lastname"></h7>
+                  <h7 class="email"></h7>
+                  <h7 value ="1" class="admin_level">Administrator</h7>
+              </div>
+                <div class = "user_admin_input  col-auto" id="admin_sample" style="display:none">
+                  <input class = "firstname" type="text" placeholder="First Name:">
+                  <input class = "lastname" type="text" placeholder="Last Name:">
+                  <input class = "email" type="text" placeholder="Email:">
+                  <select class = "admin_level">
+                      <option value="2">Sub-Administrator</option>
+                      <option value="3">Scheduler</option>
+                      <option value="4">Viewer</option>
+                      </select>
+                      <i class="far fa-trash-alt clickable" onclick="delete_user_admin_input(this)"></i>
+              </div>
+          </div>
+            <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="add_admin_input(this)"> Add User</i>
+            <button type="button" class="website_button" style="float:right; margin-right: 10px;" onclick="create_project(this)">Submit New Project</button>
+                <button type="button" class="website_button" style="float:left; margin-right: 10px;" onclick="add_project_next()">Previous</button>
+             </form>
+          </div>
         </div>
-        <div id = "message">
-        </div>
-        <button type="submit" onclick="create_project(this)">Submit Button</button>
+      </div>
+
     </div>
+            </div>
+        </div>
+
+
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>

@@ -1,9 +1,13 @@
 <?php
 // error_reporting(0);
-$user = 'root';
-$password = '';
-$db = 'test_schedule';
-$host = 'localhost';
+// $user = 'root';
+$user = 'gnatt123';
+$password = 'gnattschedule2022';
+//$password = '';
+// $db = 'test_schedule';
+$db = 'ebdb';
+// $host = 'localhost';
+$host = 'aaucggsja2cwtw.cjqmvdmnoqcw.us-west-1.rds.amazonaws.com';
 $port = 3306;
 $link = mysqli_init();
 $conn = $link -> real_connect($host, $user, $password, $db, $port);

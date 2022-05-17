@@ -31,6 +31,22 @@ function close_button(){
 
 }
 
+function add_blur(){
+    $("#main_page").css({
+        "-webkit-filter": "blur(3px)", 
+        "-moz-filter": "blur(3px)", 
+        "-o-filter": "blur(3px)", 
+        "-ms-filter": "blur(3px)", 
+        "filter": "blur(3px)", 
+        "overflow": "hidden",
+        "scroll":"none"
+      }
+    );
+}
+function remove_blur(){
+    $('#main_page').removeAttr('style');
+}
+
 function did(id){
     return document.getElementById(id);
 }
@@ -51,20 +67,8 @@ function pull_all_schedules(){
                 var project_id = Object.keys(js_data)[i];
                 var user_name = js_data[project_id][0];
                 var project_name = js_data[project_id][1];
-                var schedule_line = document.getElementById('sample_line');
-                var cloned_schedule_line = schedule_line.cloneNode(true);
-                cloned_schedule_line.getElementsByTagName('i')[0].setAttribute('onclick','delete_schedule('+project_id+')')
-                cloned_schedule_line.getElementsByTagName('i')[0].classList.add('clickable')
-                cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
-                cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
-                cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= user_name;
-                cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
-                cloned_schedule_line.getElementsByTagName('span')[0].id= project_id;
-                cloned_schedule_line.removeAttribute('style');
-                cloned_schedule_line.id = project_id;
-                
-                var add_project_button = document.getElementById("add_project");
-                add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
+                make_project_box(project_name,project_id,user_name,"")
+
 
             }
         }
@@ -81,10 +85,59 @@ function WriteCookie(Cookie_Value_Str) {
     }
  }
 //////////////////////////////////////////////////////////////////
+function create_delete_box_schedule(id){
+    ////id->id of item to be deleted, ////delete_item-> either "sub" or "main" depending of what is deleted
+    ///Main Box
+    let content_box = document.createElement('div');
+    content_box.id = "delete_box";
+    content_box.className = "box"
 
+    ///Item being deleted
+    let html = did("schedule_"+id).innerHTML
+    let delete_box = document.createElement('h3');
+    delete_box.innerHTML = "Please confirm we are to delete the following schedule: <br>"+html
+    delete_box.id = "main_delete_item";
+    ///All items affected->Only div is provided you must wirte the values
+    // let affected_area = document.createElement('div');
+    // affected_area.className = "area_affected";
+    let delete_button = document.createElement('button');
+    delete_button.className = "website_button";
+    delete_button.innerHTML="Confirm"
+    // let message = document.createElement('h6');
+    // message.id = "message_box"
+    delete_button.setAttribute("onclick","delete_schedule('"+id+"')")
+    let cancel_button = document.createElement('button');
+    cancel_button.setAttribute('onclick','cancel_box()')
+    cancel_button.innerHTML = "Cancel"
+    cancel_button.className = "website_button"
+    let button_div = document.createElement('div')
+    content_box.appendChild(delete_box);
+    // content_box.appendChild(affected_area)
+    button_div.appendChild(delete_button);
+    button_div.appendChild(cancel_button);
+    content_box.appendChild(button_div)
+    return content_box;
+  }
+///////////////////////////////////////////////////////////////////////////////////
+function confirm_delete(id){
+    add_blur();
+    let content_box = did("content_box");
+    let box = create_delete_box_schedule(id);
+    content_box.appendChild(box);
+    
+
+}
+////////////////////////////////////////////////////////////////////////
 function delete_schedule(id){
     $.post( "../PHP/delete_schedule.php",{project_id:id} );
-    did(id).remove;
+    removeAllChildNodes(did("content_box"));
+    did(id).remove();
+    remove_blur();
+}
+////////////////////////////////////////////////////////////////////
+function cancel_box(){
+    removeAllChildNodes(did("content_box"))
+    remove_blur()
 }
 
 //////////////////////////////////////////////////////////////////
@@ -259,6 +312,22 @@ function create_project(submit_button_tag){
     let sdate = did('projectsdate').value;
     let edate = did('projectedate').value;
     let address = did('address').value;
+    if(description==""){
+        alert("Project Description must be inputted")
+        return
+    };
+    if(sdate==""){
+        alert("Project Start Date must be inputted")
+        return
+    }
+    if(edate==""){
+        alert("Project End Date must be inputted")
+        return
+    }
+    if(address==""){
+        alert("Project address must be inputted")
+        return
+    }
     ///Input arrays////
     var tag_fname_array = document.getElementsByClassName('firstname');
     //fname_array.splice(0,1);
@@ -306,8 +375,6 @@ function create_project(submit_button_tag){
     var post_lname = lname_array.join();
     var post_email = email_array.join();
     var post_admin_level = admin_level_array.join();
-    console.log('project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level+
-    "&project_description="+description+"&start_date="+sdate+"&end_date="+edate+"&address="+address)
     $.ajax({
         type: "POST",
         url: "../PHP/create_project.php",
@@ -317,17 +384,7 @@ function create_project(submit_button_tag){
             var js_data = JSON.parse(data);
             console.log(js_data);
             var project_id = js_data;
-            var schedule_line = document.getElementById('sample_line');
-            var cloned_schedule_line = schedule_line.cloneNode(true);
-            cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
-            cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
-            cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= fname_array[0]+" "+lname_array[0];
-            cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
-            cloned_schedule_line.getElementsByTagName('span')[0].id= project_id;
-            cloned_schedule_line.removeAttribute('style');
-            cloned_schedule_line.removeAttribute('id');
-            var add_project_button = document.getElementById("add_project");
-            add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
+            make_project_box(project_name,project_id,fname_array[0],lname_array[0])
         }
      });
      var content = document.getElementById('content_box');
@@ -337,8 +394,27 @@ function create_project(submit_button_tag){
 
 }
 
+////////////////////////////////////////////////////////////////
+function make_project_box(project_name,project_id,fname,lname,){
+    var schedule_line = document.getElementById('sample_line');
+    var cloned_schedule_line = schedule_line.cloneNode(true);
+    cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
+    cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
+    cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= fname+" "+lname;
+    cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
+    cloned_schedule_line.getElementsByTagName("span")[0].id = "tag_"+project_id
+    cloned_schedule_line.removeAttribute('style');
+    cloned_schedule_line.id = project_id;
+    var add_project_button = document.getElementById("add_project");
+    let delete_button = cloned_schedule_line.getElementsByClassName("schedule_delete")[0];
+    delete_button.id = "delete_"+project_id;
+    delete_button.setAttribute("onclick","confirm_delete('"+project_id+"')");
+    add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
+}
+//////////////////////////////////////////////////////////////
+
 function Write_id_Cookie(tag_with_id){
-    var id = tag_with_id.id;
+    var id = tag_with_id.id.split("_")[1];
     var name = document.getElementById('schedule_'+id).innerHTML;
     var cookie = 'project_id='+id+';project_name='+name;
     WriteCookie(cookie);

@@ -1,3 +1,6 @@
+///AWS Bucket//
+AWS_bucket = ".."
+
 function ReadCookie() {
     //// Np Input, Returns Array with all Cookies
    var allcookies = document.cookie;
@@ -59,7 +62,7 @@ function pull_all_schedules(){
     
     $.ajax({
         type: "POST",
-        url: "../PHP/pull_project.php",
+        url: AWS_bucket+"/PHP/pull_project.php",
         data: 'register_id='+register_id,
         success: function(data){
             var js_data = JSON.parse(data);
@@ -129,7 +132,7 @@ function confirm_delete(id){
 }
 ////////////////////////////////////////////////////////////////////////
 function delete_schedule(id){
-    $.post( "../PHP/delete_schedule.php",{project_id:id} );
+    $.post( AWS_bucket+"/PHP/delete_schedule.php",{project_id:id} );
     removeAllChildNodes(did("content_box"));
     did(id).remove();
     remove_blur();
@@ -152,7 +155,7 @@ function ValidateEmail(mail)
 //////////////////////////////////////////////////////////////////////
 function pull_user_write_cookie(username_password){
     $.ajax({
-        url : '../PHP/pull_user.php?username='+username_password[0]+'&password='+username_password[1],
+        url : AWS_bucket+'/PHP/pull_user.php?username='+username_password[0]+'&password='+username_password[1],
         type : 'GET',     
         success:function(data){
           if (JSON.parse(data)==null){
@@ -217,7 +220,7 @@ function submit_register(action){
         }
 
         document.getElementById("message").innerHTML = "";
-        $.post( "../PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
+        $.post( AWS_bucket+"/PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
     }
     var input_array=[username,password];
     console.log(input_array);
@@ -377,7 +380,7 @@ function create_project(submit_button_tag){
     var post_admin_level = admin_level_array.join();
     $.ajax({
         type: "POST",
-        url: "../PHP/create_project.php",
+        url: AWS_bucket+"/PHP/create_project.php",
         data: 'project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level+
         "&project_description="+description+"&start_date="+sdate+"&end_date="+edate+"&address="+address,
         success: function(data){

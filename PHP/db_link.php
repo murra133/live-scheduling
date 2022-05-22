@@ -1,14 +1,16 @@
 <?php
 // error_reporting(0);
-// $user = 'root';
-$user = 'gnatt123';
-$password = 'gnattschedule2022';
-//$password = '';
-// $db = 'test_schedule';
-$db = 'ebdb';
-// $host = 'localhost';
-$host = 'aaucggsja2cwtw.cjqmvdmnoqcw.us-west-1.rds.amazonaws.com';
+// $user = 'test1';
+// $password = 'databasetest';
+// $db = 'ebdb';
+// $host = 'aa1cdwix3a6qcz2.cjqmvdmnoqcw.us-west-1.rds.amazonaws.com';
+
+$user = 'root';
+$password = '';
+$db = 'test_schedule';
+$host = 'localhost';
 $port = 3306;
+// $conn = new mysqli($host,$user,$password,$db,$port);
 $link = mysqli_init();
 $conn = $link -> real_connect($host, $user, $password, $db, $port);
 if ($conn != 1){

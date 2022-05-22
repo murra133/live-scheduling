@@ -2251,7 +2251,10 @@ $(document).on('change','.sub_duration', function(){
   date_tag.innerHTML = dates
   var datelog={}
   var array_answer = relationship_date(window.relationship_log,id,1,[id],datelog)
-  update_dates_rel(array_answer[1])
+  if(!(did("actualized_"+id)==undefined)){
+    console.log(did("actualized_"+id));
+    update_dates_rel(array_answer[1]) 
+  }
 
   var date_array = date_filler(date_format_changer3(start_date),date_format_changer3(end_date));
   log_dates_to_schedule(date_array,id,'update')

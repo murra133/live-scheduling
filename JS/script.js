@@ -41,7 +41,42 @@ function did(id_){
 }
 
 function create_delete_box(id,delete_item){
+  ////id->id of item to be deleted, ////delete_item-> either "sub" or "main" depending of what is deleted
+  ///Main Box
+  let content_box = document.createElement('div');
+  content_box.id = "delete_box";
+  content_box.className = "box"
+  ///Item being deleted
+  let delete_box = document.createElement('h3');
+  delete_box.id = "main_delete_item";
+  ///All items affected->Only div is provided you must wirte the values
+  // let affected_area = document.createElement('div');
+  // affected_area.className = "area_affected";
+  let delete_button = document.createElement('button');
+  delete_button.className = "website_button";
+  delete_button.innerHTML="Confirm"
+  // let message = document.createElement('h6');
+  // message.id = "message_box"
 
+
+  if (delete_item == 'sub'){
+    ///Removes the deleted sub Activity////
+    delete_button.setAttribute("onclick","delete_selected_items("+id+",'delete_sub_activity')")
+  }
+  else if(delete_item=='main') {
+    delete_button.setAttribute("onclick","delete_selected_items("+id+",'delete_main_activity')")
+  }
+  let cancel_button = document.createElement('button');
+  cancel_button.setAttribute('onclick','cancel_box()')
+  cancel_button.innerHTML = "Cancel"
+  cancel_button.className = "website_button"
+  let button_div = document.createElement('div')
+  content_box.appendChild(delete_box);
+  // content_box.appendChild(affected_area)
+  button_div.appendChild(delete_button);
+  button_div.appendChild(cancel_button);
+  content_box.appendChild(button_div)
+  return content_box;
 }
 
 function add_box_blur_background(box){
@@ -103,12 +138,12 @@ function upload_sub_activity(sub_id,action){
 if(action == 'add'){
   var parent_id = sub_id.parentElement.parentElement.parentElement.parentElement.id
   remove_error('error_'+parent_id)
-  var id = sub_id.id.split("_")[1]
+  var sid = sub_id.id.split("_")[1]
   var array = ['name_','date_','contractor_','duration_','add_'];
   for(var i = 0; i<array.length;i++){
-    all_sub_activities_to_h5(array[i]+id)
+    all_sub_activities_to_h5(array[i]+sid)
   }
-  var values_array = update_sub_activity(id)
+  var values_array = update_sub_activity(sid)
   var name = values_array[0]
   var date = values_array[1]
   // var edate = values_array[2]
@@ -116,7 +151,9 @@ if(action == 'add'){
   var party_involved = values_array[3]
   var sub_id = values_array[4];
   var action = values_array[5]
-  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(id), main_id: parseInt(parent_id), sub_activity:name , date:date, duration:parseInt(duration), party_involved:party_involved, project_id:window.project_id} );
+  let index = parseInt(did("sub_"+sid).getAttribute('data-index'));
+  console.log(index)
+  $.post( "../PHP/add_sub_activity.php",{ sub_id: parseInt(sid), main_id: parseInt(parent_id), sub_activity:name , date:date, duration:parseInt(duration), party_involved:party_involved, index:index, project_id:window.project_id} );
   var title = document.getElementById('title_'+parent_id);
   var r_opt = document.createElement('option')
   r_opt.setAttribute('value',sub_id+'-'+name)
@@ -497,19 +534,11 @@ window.holidays = {};
       success:function(data){
         var settings = JSON.parse(data);
         weekend_value = settings['WorkWeek'];
+        window.lookahead = settings['LookAhead'];
+        window.sday = settings['Start_Day'];
+        set_start_date()
       }})
-      $.ajax({
-        url : '../PHP/pull_relationship.php',
-        type : 'POST',
-        data: 'project_id='+window.project_id,
-        success:function(data){
-          var rel_data = JSON.parse(data);
-          for (let key in rel_data){
-            window.relationship_log[key]=rel_data[key]
-            
-          }
-        }
-      })
+      pull_relationship()
 var project_name = cookie_value('project_name');
 document.getElementById('main_title').innerHTML = project_name+" Schedule";
 
@@ -519,14 +548,9 @@ function delete_main_activity_box(delete_icon_tag){
   var main_id= delete_icon_tag.id.split("_")[1];
   var main_activity = document.getElementById('title_'+main_id)
   var main_activity_title = main_activity.getAttribute('name')
-  var url = "../HTML/delete_confirm.html";
-  add_box_blur_background(url);
-  var action = "delete_main_activity";
-  var id_array = [main_id,main_id,action];
-  var message = "You sure you want to delete: <br>"+main_activity_title;
-  setTimeout(add_id_to_box,150,id_array);
-  setTimeout(add_value_to_message_box,150,message)
-
+  let content_box = create_delete_box(main_id,'main');
+  content_box.children[0].innerHTML = "Please confirm we are to delete the following main activity: <br>"+main_activity_title;
+  add_box_blur_background(content_box);
 }
 //////////////////////////////////////////////////////////////////
   function removeAllChildNodes(parent) {
@@ -790,8 +814,8 @@ function all_sub_activities_to_h5(id_){
     else if(class_type == "far"){
       var input = document.createElement('input');
       input.setAttribute("type","checkbox")
-      input.setAttribute('class','sub_actualized sub_actualized_'+id_.split[1]);
-      input.setAttribute('id','actualized_'+id_.split[1]);
+      input.setAttribute('class','sub_actualized sub_actualized_'+id_.split("_")[1]);
+      input.setAttribute('id','actualized_'+id_.split("_")[1]);
       input_tag.replaceWith(input)
 
     }
@@ -874,9 +898,30 @@ function field_edit(input_tag){
 //////////////////////////////////////////////////////////////////////
 /*Checks for today's date once the document loads and inputs it onto the start date div*/
 function set_start_date(){
-    var today = new Date();
+  ////Initialize for today////
+    var today=new Date();
     var day = today.getDay()
-    today = new Date(today.getTime()-(parseInt(day)-1)*86400000)
+
+    ////Start Monday///
+    if(window.sday == 1){
+      today = new Date(today.getTime()-(parseInt(day))*86400000)
+    }
+    ///Start Sunday///
+    else if(window.sday == 2){
+      today = new Date(today.getTime()-(parseInt(day)+1)*86400000)
+    }
+    ///Start on Saturday///
+    else if(window.sday==3){
+      today = new Date(today.getTime()-(parseInt(day)+2)*86400000)
+    }
+
+    ////Check if to start this week or the previous week///
+    if(window.lookahead==1||window.lookahead==3){
+      today = new Date(today.getTime()-(parseInt(day)-1)*86400000*-6)
+    }
+    else{
+      today = new Date(today.getTime()-(parseInt(day)-1)*86400000)
+    }
     var dd = today.getDate();
     var mm = today.getMonth()+1;
     var yy = today.getFullYear();
@@ -921,7 +966,7 @@ function start_date_picker(date_input_tag){
           var start_date = date_format_changer3(dates.split(" ")[0])
           var end_date = date_format_changer3(dates.split(" ")[2])
           date_array = date_filler(start_date,end_date)
-          log_dates_to_schedule(date_array,id_,'update')
+          bdate_child = log_dates_to_schedule(date_array,bdate_box,'new')
         }
       }
 
@@ -1160,7 +1205,13 @@ function toggle_filters(){
 
   /* Creates the dates to go on the three week ahead using the existing start date*/
 function three_week_ahead(bdate_dates,bdate_days){
-  var m = 6
+  if (window.lookahead == '1'||window.lookahead=='2'){
+    var m = 3
+  }
+  else{
+    var m = 6
+  }
+  
   var n;
   var date = document.getElementById("start_date").value;
 
@@ -1325,7 +1376,6 @@ function log_dates_to_schedule(date_array,id_handler,action){
     var id = id_handler
     var date_id = document.getElementById("bdate_"+id);
     let date_all = date_id.getElementsByClassName('schedule')
-    let l = date_all.length
     let j=0
     while (date_all.length>0){
       var dates = date_all[j]
@@ -1775,7 +1825,7 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
   var input_activity = document.createElement("h5");
   input_activity.setAttribute("class","sub_name sub");
   input_activity.setAttribute("id","name_"+id.toString());
-  input_activity.setAttribute('ondblclick','input_edit(this)')
+  input_activity.setAttribute('onclick','input_edit(this)')
   input_activity.innerHTML=activity_title;
 
    /* Create Date */
@@ -1790,14 +1840,14 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
    var input_duration = document.createElement("h5");
    input_duration.setAttribute("class","sub_duration sub collapsable");
    input_duration.setAttribute("id","duration_"+id.toString());
-   input_duration.setAttribute('ondblclick','input_edit(this)')
+   input_duration.setAttribute('onclick','input_edit(this)')
    input_duration.innerHTML = duration;
 
      /* Create Contartcor Option */
    var input_contractor = document.createElement("h5");
    input_contractor.setAttribute("class","sub_contractor sub collapsable");
    input_contractor.setAttribute("id","contractor_"+id.toString());
-   input_contractor.setAttribute('ondblclick','input_edit(this)')
+   input_contractor.setAttribute('onclick','input_edit(this)')
    input_contractor.innerHTML = party_involved
   //Sub_Activity Div
   let sub_activity = document.createElement('div')
@@ -1885,7 +1935,7 @@ function download_sub_activity(main_id,sub_id,activity_title,date,duration,party
   var input_activity = document.createElement("h5");
   input_activity.setAttribute("class","sub_name sub_activity_"+id.toString());
   input_activity.setAttribute("id","name_"+id.toString());
-  input_activity.setAttribute('ondblclick','input_edit(this)')
+  input_activity.setAttribute('ondclick','input_edit(this)')
   input_activity.innerHTML=activity_title;
 
    /* Create Start Date */
@@ -2201,7 +2251,10 @@ $(document).on('change','.sub_duration', function(){
   date_tag.innerHTML = dates
   var datelog={}
   var array_answer = relationship_date(window.relationship_log,id,1,[id],datelog)
-  update_dates_rel(array_answer[1])
+  if(!(did("actualized_"+id)==undefined)){
+    console.log(did("actualized_"+id));
+    update_dates_rel(array_answer[1]) 
+  }
 
   var date_array = date_filler(date_format_changer3(start_date),date_format_changer3(end_date));
   log_dates_to_schedule(date_array,id,'update')
@@ -2292,46 +2345,67 @@ function delete_sub_activity_box(delete_icon_tag){
     return
   }
 
-  var sub_id= delete_icon_tag.id.split("_")[1];
+  var sub_id= parseInt(delete_icon_tag.id.split("_")[1]);
   // var sub_tags_array = get_all_sub_tags_with_id(sub_id);
-  var sub_activity_title = document.getElementById('name_'+sub_id).innerHTML;
-  var url = "../HTML/delete_confirm.html";
-  let content_box = add_box_blur_background(url);
-  var parent_id = delete_icon_tag.parentElement.parentElement.parentElement.id;
-  var action = "delete_sub_activity";
-  var id_array = [sub_id,parent_id,action];
-  var message = "You sure you want to delete:<br>"+sub_activity_title;
-  setTimeout(add_id_to_box,150,id_array);
-  setTimeout(add_value_to_message_box,150,message)
+  let values = get_all_sub_tags_with_id(sub_id);
+  
+  let content_box =create_delete_box(sub_id,'sub');
+  let delete_box = content_box.children[0];
+  delete_box.innerHTML = "Please confirm we are to delete the following activity:<br>"+values[1].innerHTML+"<br>"
+  // delete_box.appendChild(values[1]);
+  // let affected_area = content_box.children[1];
+  // let predecessor_div = document.createElement("div");
+  // predecessor_div.className = "rel_area";
+  // let successor_div = document.createElement("div");
+  // successor_div.className = "rel_area";
+  // let predecessor_title = document.createElement('h3');
+  // predecessor_title.innerHTML = "Predecessor - Activities";
+  // let successor_title = document.createElement('h3');
+  // successor_title.innerHTML = "Successor - Activities";
+  // predecessor_div.appendChild(predecessor_title);
+  // successor_div.appendChild(successor_title);
+  // let div = document.createElement("h5")
+  // if(window.relationship_log[sub_id]!=undefined){
+  //   if(window.relationship_log[sub_id][0]!=undefined){
+  //     for (let i in Object.keys(window.relationship_log[sub_id][0])){
+  //       let pre = div.cloneNode(true);
+  //       pre.innerHTML = did("name_"+window.relationship_log[sub_id][0][i]["sub_id"]).innerHTML;
+  //       predecessor_div.appendChild(pre)
+  //     }
+  //   }
+  //   if(window.relationship_log[sub_id][1]!=undefined){
+  //     for (let i in Object.keys(window.relationship_log[sub_id][1])){
+  //       let succ = div.cloneNode(true);
+  //       succ.innerHTML = did("name_"+window.relationship_log[sub_id][1][i]["sub_id"]).innerHTML;
+  //       successor_div.appendChild(succ)
+  //     }
+  //   }
+  // }
+  add_box_blur_background(content_box);
+  
+
+
+
+
 }
 
-function delete_selected_items(delete_button_tag){
+function delete_selected_items(delete_id,action){
   ////This function deletes any item that needs to be deleted. Input is the delete button. Use If statements to add other items to be deleted/////
-  
-  var action = document.getElementById("delete_box").getAttribute("name");
-  var id = document.getElementById("main_id").innerHTML; ////this should be in the respective format ex id = 1001 for sub_id id=1 for main id/////
-  var delete_button_parent = document.getElementById('delete_'+id).parentElement;
-
   if (action == 'delete_sub_activity'){
   ///Removes the deleted sub Activity////
-  let sub_act = document.getElementById('sub_'+id)
+  let sub_act = document.getElementById('sub_'+delete_id)
   sub_act.remove()
 }
 else if(action=='delete_main_activity') {
-  var main_activity_parent = document.getElementById(id);
+  var main_activity_parent = document.getElementById(delete_id);
   main_activity_parent.remove();
 }
-  
-
-
-
-
   ////Delete Activity/////
 
-  $.post( "../PHP/delete_activity.php",{ id: parseInt(id), action:action,project_id:window.project_id} );
-  var content_box = delete_button_tag.parentElement.parentElement;
+  $.post( "../PHP/delete_activity.php",{ id: parseInt(delete_id), action:action,project_id:window.project_id} );
+  var content_box = did('content_box');
   ///location.reload();
-
+  pull_relationship();
   removeAllChildNodes(content_box);
 $('#main_page').removeAttr('style');
 return false;
@@ -2461,11 +2535,9 @@ function add_function_to_push(function_call){
   search_tag.setAttribute('onclick',function_call);
 }
 
-function cancel_box(cancel_button_tag){
-  var content_box = cancel_button_tag.parentElement.parentElement;
+function cancel_box(){
+  var content_box = did("content_box");
   ///location.reload();
-
-
   removeAllChildNodes(content_box);
 $('#main_page').removeAttr('style');
 return false;
@@ -2580,6 +2652,7 @@ function change_rel(new_rel){
   });
   rel_area[0].appendChild(rel_sub_titles)
   rel_area[1].appendChild(rel_t2)
+  did("relationship_apply").children[0].setAttribute('onclick','update_relationship_log('+sub_id+')')
 
   if(window.relationship_log[parseInt(sub_id)]!=null){
     for(let i in window.relationship_log[parseInt(sub_id)]){
@@ -2589,6 +2662,60 @@ function change_rel(new_rel){
 
     }
   }
+
+}
+
+function create_relationship_area(sub_id){
+  /////////Relationship Boxes////////////////////////////
+  var activity_h5 = document.createElement('h5')
+  activity_h5.innerHTML='Activity'
+  activity_h5.setAttribute('class','rel_title rel_left')
+  var relationship_h5 = document.createElement('h5')
+  relationship_h5.innerHTML = 'Relationship'
+  relationship_h5.setAttribute('class','rel_title rel_mid')
+  var lag_h5 = document.createElement('h5')
+  lag_h5.innerHTML = 'lag'
+  lag_h5.setAttribute('class','rel_title rel_right')
+  var undo_h5 = document.createElement('div')
+  undo_h5.setAttribute('class','rel_title rel_delete_undo')
+  var title_div = document.createElement('div')
+  title_div.setAttribute('class','rel_row')
+  title_div.appendChild(activity_h5)
+  title_div.appendChild(relationship_h5)
+  title_div.appendChild(lag_h5)
+  title_div.appendChild(undo_h5)
+  var relationship_area = document.createElement('div')
+  relationship_area.setAttribute('class','rel_area')
+  relationship_area.append(title_div)
+  var relationship_area2 = relationship_area.cloneNode(true)
+  ///////Prdecessor//////
+  var div_pre = document.createElement('div')
+  var pre_title = document.createElement('h4')
+  pre_title.innerHTML = 'Predecessor'
+  var add_pre = document.createElement('i')
+  add_pre.setAttribute('class','far fa-plus-square clickable pre_suc')
+  add_pre.setAttribute('onclick','add_predecessor_successor(0,0,'+sub_id+')')
+  add_pre.innerHTML='Add Predecessor'
+  div_pre.append(pre_title)
+  div_pre.append(relationship_area2)
+  div_pre.append(add_pre)
+  /////Successor//////////////
+  var div_suc = document.createElement('div')
+  var suc_title = document.createElement('h4')
+  suc_title.innerHTML = 'Successor'
+  var add_suc = document.createElement('i')
+  add_suc.setAttribute('class','far fa-plus-square clickable pre_suc')
+  add_suc.setAttribute('onclick','add_predecessor_successor(1,0,'+sub_id+')')
+  add_suc.innerHTML='Add Successor'
+  div_suc.append(suc_title)
+  div_suc.append(relationship_area)
+  div_suc.append(add_suc)
+  var rel_bot_div = document.getElementById('relationship_bottom')
+  window.rel_data = rel_bot_div.children[1].cloneNode(true)
+  removeAllChildNodes(rel_bot_div)
+  rel_bot_div.append(div_pre)
+  rel_bot_div.append(div_suc)
+  rel_bot_div.append(window.rel_data)
 
 }
 
@@ -2901,7 +3028,7 @@ function update_relationship_log(id){
       }
       else{
         dict[id][0][rel_id]={'sub_id':pre_id,'Rel':relationship,'Lag':lag}
-        dict[pre_id][1][rel_id] = {'sub_id':pre_id,'Rel':relationship,'Lag':lag}
+        dict[pre_id][1][rel_id] = {'sub_id':id,'Rel':relationship,'Lag':lag}
       }
     }
   }
@@ -2972,6 +3099,8 @@ function update_relationship_log(id){
 
   }
   var datelog = {}
+  console.log("dict")
+  console.log(dict);
   var array_answer = relationship_date(dict,id,1,[id],datelog)
   // for(let i =0;i<n_pre_id.length;i++){
   //   console.log(n_pre_id[i])
@@ -3065,6 +3194,7 @@ function update_relationship_log(id){
                 add_predecessor_successor(i,k,id)
               }
             }
+            console.log(relationship_log)
           }
         })
 
@@ -3072,7 +3202,20 @@ function update_relationship_log(id){
     })
     }
 
-
+function pull_relationship(){
+  $.ajax({
+    url : "../PHP/pull_relationship.php",
+    type : 'POST',
+    data:'project_id='+window.project_id,
+    success:function(data){
+      var rel_data = JSON.parse(data)
+      for (let key in rel_data){
+        window.relationship_log[key]=rel_data[key]
+      }
+      console.log(relationship_log)
+    }
+  })
+}
 
 function update_dates_rel(date_changes){
   let doc = []
@@ -3091,6 +3234,7 @@ function update_dates_rel(date_changes){
       upload_sub_activity(sub_id,'update')
       let date_array = date_filler(date_format_changer3(date.split(' ')[0]),date_format_changer3(date.split(' ')[2]))
       log_dates_to_schedule(date_array,sub_id,'update')
+      window.date_log[sub_id] = date_changes[sub_id];
       // doc_date.setAttribute('class','sub_date')
     }
   }
@@ -3104,13 +3248,15 @@ function update_dates_rel(date_changes){
 function calculate_max_sdate(pre_id,post_id,rel_dict,datelog){
   var lag = rel_dict['Lag']
   var relationship = rel_dict['Rel']
-  if (datelog[pre_id]!=undefined){
+  // console.log(pre_id)
+  // console.log(window.relationship_log)
+  if (datelog[pre_id]!=undefined&&datelog[pre_id]!=0){
     var dates = datelog[pre_id]
   }
   else{
     var dates = window.date_log[pre_id]
   }
-  
+  // console.log("dates= "+dates)
   var sdate = dates.split(' ')[0]
   var edate = dates.split(' ')[2]
   var duration = parseInt(document.getElementById('duration_'+post_id).innerHTML)
@@ -3174,6 +3320,8 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
       var i = Object.keys(id_rel_dict[sub_id][0])[z]
       //////New Predecessor/////////////
       if (i==0){
+        // console.log("new line")
+        // console.log(id_rel_dict)
         for(var k in Object.keys(id_rel_dict[sub_id][0][0])){
           let loc = id_rel_dict[sub_id][0][0]
           var pre_id = loc[k]['sub_id']
@@ -3189,6 +3337,9 @@ function relationship_date(id_rel_dict,sub_id,need_prdecessor,original_id,datelo
         
         let loc = id_rel_dict[sub_id][0][i]
         var pre_id = loc['sub_id']
+        // console.log("existing line")
+        // console.log(loc)
+        // console.log(pre_id)
 
         new_sdate = Math.max(calculate_max_sdate(pre_id,sub_id,loc,datelog),new_sdate)
 

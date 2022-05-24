@@ -1,6 +1,9 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+function did(id){
+    return document.getElementById(id);
+}
 ////////Settings for Project s//////
 $(document).ready(function(){
     window.project_id = cookie_value('project_id');
@@ -22,6 +25,7 @@ $(document).ready(function(){
                 var p_address = js_data['ProjectAddress'];
                 var p_workweek = js_data['WorkWeek'];
                 var p_startday = js_data['Start_Day'];
+                var p_lookahead = js_data['LookAhead'];
     
                 ////Project Name
                 document.getElementById('projectname').value = p_name;
@@ -41,6 +45,7 @@ $(document).ready(function(){
                 if (p_address != null){
                     document.getElementById('address').value = p_address;
                 }
+                did('lookahead').value = p_lookahead;
                     document.getElementById('workweek').value = p_workweek ;
                     document.getElementById('start_day').value=p_startday
                     $.ajax({
@@ -191,7 +196,7 @@ function add_holidays(add_button){
     parentElement.appendChild(cloned_tag);
 }
 
-function update_settings(){
+function update_settings(button_tag){
     var workweek = document.getElementById('workweek').value;
     var start_day = document.getElementById('start_day').value;
     var h_name_array = document.getElementsByClassName('holidayname');

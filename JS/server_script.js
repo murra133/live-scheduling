@@ -1,3 +1,6 @@
+///AWS Bucket//
+AWS_bucket = ".."
+
 function ReadCookie() {
     //// Np Input, Returns Array with all Cookies
    var allcookies = document.cookie;
@@ -31,6 +34,25 @@ function close_button(){
 
 }
 
+function add_blur(){
+    $("#main_page").css({
+        "-webkit-filter": "blur(3px)", 
+        "-moz-filter": "blur(3px)", 
+        "-o-filter": "blur(3px)", 
+        "-ms-filter": "blur(3px)", 
+        "filter": "blur(3px)", 
+        "overflow": "hidden",
+        "scroll":"none"
+      }
+    );
+}
+function remove_blur(){
+    $('#main_page').removeAttr('style');
+}
+
+function did(id){
+    return document.getElementById(id);
+}
 function pull_all_schedules(){
     var all_cookies = ReadCookie();
     for(var n=0; n<all_cookies.length;n++){
@@ -40,7 +62,7 @@ function pull_all_schedules(){
     
     $.ajax({
         type: "POST",
-        url: "../PHP/pull_project.php",
+        url: AWS_bucket+"/PHP/pull_project.php",
         data: 'register_id='+register_id,
         success: function(data){
             var js_data = JSON.parse(data);
@@ -48,20 +70,8 @@ function pull_all_schedules(){
                 var project_id = Object.keys(js_data)[i];
                 var user_name = js_data[project_id][0];
                 var project_name = js_data[project_id][1];
-                var schedule_line = document.getElementById('sample_line');
-                var cloned_schedule_line = schedule_line.cloneNode(true);
-                cloned_schedule_line.getElementsByTagName('i')[0].setAttribute('onclick','delete_schedule('+project_id+')')
-                cloned_schedule_line.getElementsByTagName('i')[0].classList.add('clickable')
-                cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
-                cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
-                cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= user_name;
-                cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
-                cloned_schedule_line.getElementsByTagName('span')[0].id= project_id;
-                cloned_schedule_line.removeAttribute('style');
-                cloned_schedule_line.removeAttribute('id');
-                
-                var add_project_button = document.getElementById("add_project");
-                add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
+                make_project_box(project_name,project_id,user_name,"")
+
 
             }
         }
@@ -78,10 +88,59 @@ function WriteCookie(Cookie_Value_Str) {
     }
  }
 //////////////////////////////////////////////////////////////////
+function create_delete_box_schedule(id){
+    ////id->id of item to be deleted, ////delete_item-> either "sub" or "main" depending of what is deleted
+    ///Main Box
+    let content_box = document.createElement('div');
+    content_box.id = "delete_box";
+    content_box.className = "box"
 
+    ///Item being deleted
+    let html = did("schedule_"+id).innerHTML
+    let delete_box = document.createElement('h3');
+    delete_box.innerHTML = "Please confirm we are to delete the following schedule: <br>"+html
+    delete_box.id = "main_delete_item";
+    ///All items affected->Only div is provided you must wirte the values
+    // let affected_area = document.createElement('div');
+    // affected_area.className = "area_affected";
+    let delete_button = document.createElement('button');
+    delete_button.className = "website_button";
+    delete_button.innerHTML="Confirm"
+    // let message = document.createElement('h6');
+    // message.id = "message_box"
+    delete_button.setAttribute("onclick","delete_schedule('"+id+"')")
+    let cancel_button = document.createElement('button');
+    cancel_button.setAttribute('onclick','cancel_box()')
+    cancel_button.innerHTML = "Cancel"
+    cancel_button.className = "website_button"
+    let button_div = document.createElement('div')
+    content_box.appendChild(delete_box);
+    // content_box.appendChild(affected_area)
+    button_div.appendChild(delete_button);
+    button_div.appendChild(cancel_button);
+    content_box.appendChild(button_div)
+    return content_box;
+  }
+///////////////////////////////////////////////////////////////////////////////////
+function confirm_delete(id){
+    add_blur();
+    let content_box = did("content_box");
+    let box = create_delete_box_schedule(id);
+    content_box.appendChild(box);
+    
+
+}
+////////////////////////////////////////////////////////////////////////
 function delete_schedule(id){
-    $.post( "../PHP/delete_schedule.php",{project_id:id} );
-
+    $.post( AWS_bucket+"/PHP/delete_schedule.php",{project_id:id} );
+    removeAllChildNodes(did("content_box"));
+    did(id).remove();
+    remove_blur();
+}
+////////////////////////////////////////////////////////////////////
+function cancel_box(){
+    removeAllChildNodes(did("content_box"))
+    remove_blur()
 }
 
 //////////////////////////////////////////////////////////////////
@@ -96,7 +155,7 @@ function ValidateEmail(mail)
 //////////////////////////////////////////////////////////////////////
 function pull_user_write_cookie(username_password){
     $.ajax({
-        url : '../PHP/pull_user.php?username='+username_password[0]+'&password='+username_password[1],
+        url : AWS_bucket+'/PHP/pull_user.php?username='+username_password[0]+'&password='+username_password[1],
         type : 'GET',     
         success:function(data){
           if (JSON.parse(data)==null){
@@ -177,8 +236,12 @@ function submit_register(action){
         }
 
         document.getElementById("message").innerHTML = "";
+<<<<<<< HEAD
         $.post( "../PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
         setInterval(delete_registered_from_unregistered_personel,300,email);
+=======
+        $.post( AWS_bucket+"/PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
+>>>>>>> e18158d1d022a18edf63bd523e195620c2006560
     }
 
     var input_array=[username,password];
@@ -208,24 +271,39 @@ function removeAllChildNodes(parent) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function delete_user_admin_input(delete_tag){
     var parent_node = delete_tag.parentNode;
-    removeAllChildNodes(parent_node);
+        parent_node.remove()
 
 }
 
 //////////////////////////////////////////////////////////////////////////////
 function add_user_to_project_box(user_array){
     ///// var user_array = [first_name, last_name, email];
-    document.getElementsByClassName('firstname')[1].innerHTML = user_array[0];
-    document.getElementsByClassName('firstname')[1].setAttribute('value',user_array[0]);
-    document.getElementsByClassName('lastname')[1].setAttribute('value',user_array[1]);
-    document.getElementsByClassName('lastname')[1].innerHTML = user_array[1];
-    document.getElementsByClassName('email')[1].setAttribute('value',user_array[2]);
-    document.getElementsByClassName('email')[1].innerHTML = user_array[2];
+    let admin = did("user_admin")
+    admin.getElementsByClassName('firstname')[0].innerHTML = user_array[0];
+    admin.getElementsByClassName('firstname')[0].setAttribute('value',user_array[0]);
+    admin.getElementsByClassName('lastname')[0].setAttribute('value',user_array[1]);
+    admin.getElementsByClassName('lastname')[0].innerHTML = user_array[1];
+    admin.getElementsByClassName('email')[0].setAttribute('value',user_array[2]);
+    admin.getElementsByClassName('email')[0].innerHTML = user_array[2];
 
 
 }
 
 ///////////////////////////////////////////////////////////
+function add_project_next(){
+    let admin = did('administrator_info');
+    let info = did("project_info");
+    console.log(admin.getAttribute('style'))
+    if(admin.getAttribute('style')=="display:none;"){
+        admin.removeAttribute('style');
+        info.setAttribute('style','display:none;');
+    }
+    else{
+        info.removeAttribute('style');
+        admin.setAttribute('style','display:none;');
+    }
+}
+//////////////////////////////////////////////////////////
 function open_add_project_box(){
     document.getElementById("main_page").style.blur = "10px";
     $('#content_box').load("../HTML/add_new_project.html");
@@ -235,6 +313,8 @@ function open_add_project_box(){
       "-o-filter": "blur(3px)", 
       "-ms-filter": "blur(3px)", 
       "filter": "blur(3px)", 
+      "overflow": "hidden",
+      "scroll":"none"
     }
   );
   var cookiearray = ReadCookie();
@@ -250,13 +330,31 @@ setTimeout(add_user_to_project_box,150,user_array);
 }
 
 function create_project(submit_button_tag){
-    document.getElementById("message").innerHTML = "";
-    var project_name = document.getElementById("add_project_input").value;
+    var project_name = document.getElementById("projectname").value;
     if (project_name==""){
-        document.getElementById("message").innerHTML = "Please Input a Title for the Project";
+        alert("Please Input a Title for the Project");
         return false;
     }
-    console.log(project_name);
+    let description = did('projectdesc').value;
+    let sdate = did('projectsdate').value;
+    let edate = did('projectedate').value;
+    let address = did('address').value;
+    if(description==""){
+        alert("Project Description must be inputted")
+        return
+    };
+    if(sdate==""){
+        alert("Project Start Date must be inputted")
+        return
+    }
+    if(edate==""){
+        alert("Project End Date must be inputted")
+        return
+    }
+    if(address==""){
+        alert("Project address must be inputted")
+        return
+    }
     ///Input arrays////
     var tag_fname_array = document.getElementsByClassName('firstname');
     //fname_array.splice(0,1);
@@ -269,14 +367,14 @@ function create_project(submit_button_tag){
     var lname_array = Array();
     var email_array = Array();
     var admin_level_array = Array();
-    fname_array[0] = tag_fname_array[1].getAttribute('value')
-    lname_array[0] = tag_lname_array[1].getAttribute('value');
-    email_array[0] = tag_email_array[1].getAttribute('value');
-    admin_level_array[0] = tag_admin_level_array[1].getAttribute('value');
+    console.log(tag_fname_array)
+    fname_array[0] = tag_fname_array[0].innerHTML
+    lname_array[0] = tag_lname_array[0].innerHTML
+    email_array[0] = tag_email_array[0].innerHTML
+    admin_level_array[0] = tag_admin_level_array[0].getAttribute('value');
     var n=1;
     //admin_level.splice(0,1);
     for(var i = 2; i<tag_email_array.length;i++){
-
         fname_array[n] = tag_fname_array[i].value;
         lname_array[n] = tag_lname_array[i].value;
         email_array[n] = tag_email_array[i].value;
@@ -291,12 +389,11 @@ function create_project(submit_button_tag){
         console.log(line);
         console.log(fname_array);
         if (fname_array[k]==""||lname_array[k]==""||email_array[k]==""){
-            document.getElementById("message").innerHTML = "Parameters on Administrator Line "+line+" are missing";
+            alert("Parameters on Administrator Line "+line+" are missing");
             return false;
         }
         else if(ValidateEmail(email_array[k])==false){
-            console.log('running');
-            document.getElementById("message").innerHTML = "Email on Administrator Line "+line+" is not in Email format";
+            alert("Email on Administrator Line "+line+" is not in Email format");
             return false;
         };
     }
@@ -305,26 +402,16 @@ function create_project(submit_button_tag){
     var post_lname = lname_array.join();
     var post_email = email_array.join();
     var post_admin_level = admin_level_array.join();
-
     $.ajax({
         type: "POST",
-        url: "../PHP/create_project.php",
-        data: 'project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level,
+        url: AWS_bucket+"/PHP/create_project.php",
+        data: 'project_name='+project_name+"&first_name="+post_fname+"&last_name="+post_lname+"&email="+post_email+"&admin_level="+post_admin_level+
+        "&project_description="+description+"&start_date="+sdate+"&end_date="+edate+"&address="+address,
         success: function(data){
             var js_data = JSON.parse(data);
             console.log(js_data);
             var project_id = js_data;
-            var schedule_line = document.getElementById('sample_line');
-            var cloned_schedule_line = schedule_line.cloneNode(true);
-            cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
-            cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
-            cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= fname_array[0]+" "+lname_array[0];
-            cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
-            cloned_schedule_line.getElementsByTagName('span')[0].id= project_id;
-            cloned_schedule_line.removeAttribute('style');
-            cloned_schedule_line.removeAttribute('id');
-            var add_project_button = document.getElementById("add_project");
-            add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
+            make_project_box(project_name,project_id,fname_array[0],lname_array[0])
         }
      });
      var content = document.getElementById('content_box');
@@ -334,8 +421,27 @@ function create_project(submit_button_tag){
 
 }
 
+////////////////////////////////////////////////////////////////
+function make_project_box(project_name,project_id,fname,lname,){
+    var schedule_line = document.getElementById('sample_line');
+    var cloned_schedule_line = schedule_line.cloneNode(true);
+    cloned_schedule_line.getElementsByTagName('h3')[0].innerHTML = project_name;
+    cloned_schedule_line.getElementsByTagName('h3')[0].id = "schedule_"+project_id;
+    cloned_schedule_line.getElementsByTagName('h3')[1].innerHTML= fname+" "+lname;
+    cloned_schedule_line.getElementsByTagName('h3')[1].id= "administrator_"+project_id;
+    cloned_schedule_line.getElementsByTagName("span")[0].id = "tag_"+project_id
+    cloned_schedule_line.removeAttribute('style');
+    cloned_schedule_line.id = project_id;
+    var add_project_button = document.getElementById("add_project");
+    let delete_button = cloned_schedule_line.getElementsByClassName("schedule_delete")[0];
+    delete_button.id = "delete_"+project_id;
+    delete_button.setAttribute("onclick","confirm_delete('"+project_id+"')");
+    add_project_button.parentNode.insertBefore(cloned_schedule_line,add_project_button);
+}
+//////////////////////////////////////////////////////////////
+
 function Write_id_Cookie(tag_with_id){
-    var id = tag_with_id.id;
+    var id = tag_with_id.id.split("_")[1];
     var name = document.getElementById('schedule_'+id).innerHTML;
     var cookie = 'project_id='+id+';project_name='+name;
     WriteCookie(cookie);

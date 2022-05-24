@@ -1,21 +1,25 @@
 <?php
 require_once("db_link.php");
 
-// $project_name =$_GET['project_name'];
-// $first_name_array = explode(',',$_GET['first_name']);
-// $last_name_array =explode(',',$_GET['last_name']);
-// $email_array = explode(',',$_GET['email']);
-// $admin_level_array= explode(',',$_GET['admin_level']);
+// $project_name =$_POST['project_name'];
+// $first_name_array = explode(',',$_POST['first_name']);
+// $last_name_array =explode(',',$_POST['last_name']);
+// $email_array = explode(',',$_POST['email']);
+// $admin_level_array= explode(',',$_POST['admin_level']);
 
 $project_name =$_POST['project_name'];
 $first_name_array = explode(',',$_POST['first_name']);
 $last_name_array =explode(',',$_POST['last_name']);
 $email_array = explode(',',$_POST['email']);
 $admin_level_array= explode(',',$_POST['admin_level']);
+$start_date = $_POST['start_date'];
+$end_date = $_POST['end_date'];
+$addresss = $_POST['address'];
+$description = $_POST['project_description'];
 $workweek = 1;
 
-$stmt = $link->prepare("INSERT INTO project_database (ProjectName,WorkWeek) VALUES (?,?)");
-$stmt->bind_param("si",$project_name,$workweek);
+$stmt = $link->prepare("INSERT INTO project_database (ProjectName,WorkWeek,ProjectDescription,ProjectStart,ProjectEnd,ProjectAddress) VALUES (?,?,?,?,?,?)");
+$stmt->bind_param("sissss",$project_name,$workweek,$description,$start_date,$end_date,$addresss);
 $stmt->execute();
 sleep(1);
 $stmt = $link->prepare("SELECT Project_id FROM project_database WHERE ProjectName = ?");
@@ -123,8 +127,8 @@ $stmt = ("CREATE TABLE Relationship_".$project_id['Project_id']."(
     $stmt = ("CREATE TABLE holidays_".$project_id['Project_id']."(
         Holiday_id int NOT NULL AUTO_INCREMENT,
         HolidayName varchar(255) NOT NULL,
-        HolidayDate varchar(255) NOT NULL
-        PRIMARY KEY (Holiday_id)");
+        HolidayDate varchar(255) NOT NULL,
+        PRIMARY KEY (Holiday_id))");
         mysqli_query($link,$stmt);
 
 

@@ -25,7 +25,7 @@ CREATE TABLE Sub_Activities (
 CREATE TABLE Parties (
     PARTY_ID int NOT NULL,
     PARTY_NAME varchar(255) NOT NULL,
-    PRIMARY KEY (Main_ID)
+    PRIMARY KEY (Party_ID)
 );
 
 //Creates the Personel Table
@@ -59,12 +59,13 @@ CREATE TABLE Project_Database (
     Project_id int NOT NULL AUTO_INCREMENT,
     ProjectName varchar(255) NOT NULL,
     PRIMARY KEY (Project_id),
-    ADD ProjectDescription text,
-    ADD ProjectStart date,
-    ADD ProjectEnd date,
-    ADD ProjectAddress text,
-    ADD WorkWeek int NOT NULL,
-    ADD Start_Day int NOT NULL DEFAULT 1;
+    ProjectDescription text,
+    ProjectStart date,
+    ProjectEnd date,
+    ProjectAddress text,
+    WorkWeek int NOT NULL,
+    Start_Day int NOT NULL DEFAULT 1,
+    LookAhead int NOT NULL DEFAULT 3
 );
 
 Create Project Merger Database

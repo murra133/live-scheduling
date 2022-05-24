@@ -65,10 +65,20 @@
                 
                 </script>
             <!---->
-
-            <div id="header">
-
-            </div>
+                <nav id="topbar" class="navbar navbar-light bg-light justify-content-between" >
+                    <div id="user_account" class="btn-group">
+                      <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user-circle clickable"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="party_involved.html">Parties Involved</a>
+                        <a class="dropdown-item" href="header.html">Schedule</a>
+                        <a class="dropdown-item" href="project_schedule_view.html">Project View</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item clickable" onclick="logout()">Sign Out</a>
+                      </div>
+                    </div>
+                </nav>
             <div id = "schedule_box">
                 <h1>Your Schedules</h1>
                 <div  id="schedule_titles">
@@ -84,10 +94,10 @@
                         </div>
                     </span>
                     <div class="project_delete_div">
-                        <i class = "far fa-minus-square schedule_delete" id="delete_1" aria-hidden="true"></i>
+                        <i class = "far fa-minus-square schedule_delete clickable" id="delete_1" aria-hidden="true"></i>
                      </div>
                 </div>
-                <div class = "schedule_line">
+                <!-- <div class = "schedule_line">
                     <a href = "header.html" id ="1">
                         <div class = "project_link">
                             <h3 id="schedule_1">Company Schedule</h3>
@@ -95,9 +105,9 @@
                         </div>
                     </a>
                     <div class="project_delete_div"> 
-                        <i class = "far fa-minus-square schedule_delete" id="delete_1" aria-hidden="true"></i>
+                        <i class = "far fa-minus-square schedule_delete clickable" id="delete_1" aria-hidden="true"></i>
                      </div>
-                </div>
+                </div> -->
 
                 <div id = "add_project">
                     <i class="far fa-plus-square clickable" aria-hidden="true" onclick="open_add_project_box()">  Add New Project</i>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!--  This file has been downloaded from bootdey.com    @bootdey on twitter -->
     <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>Profile settings - Bootdey.com</title>
+    <title>Profile settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/38a84518ea.js" crossorigin="anonymous"></script>
@@ -157,15 +157,6 @@
                 <hr>
                 <form>
                   <div class="form-group">
-                    <label for="time_zone">Project time_zone</label>
-                    <select class = "form-control" id = "start_day">
-                      <option value="1">Start On Sunday</option>
-                      <option value="2">Start on Monday</option>
-                      <option value="3">Start on Saturday</option>
-                      <option value="4">Start Today</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <label for="workweek">Work Week</label>
                     <select class = "form-control" id = "workweek">
                       <option value="1">5 Day Work Week (Saturday and Sunday off)</option>
@@ -176,10 +167,19 @@
                     </select>
                   </div>
                   <div class="form-group">
+                    <label for="lookahead">Schedule View Range</label>
+                    <select class = "form-control" id = "lookahead">
+                      <option value="1">3 Week Look Ahead, Start Last Week</option>
+                      <option value="2">3 Week Look Ahead, Start This Week</option>
+                      <option value="3">6 Week Look Ahead, Start Last Week</option>
+                      <option value="4">6 Week Look Ahead, Start This Week</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <label for="start_day">Schedule Start Day</label>
                     <select class = "form-control" id = "start_day">
-                      <option value="1">Start On Sunday</option>
-                      <option value="2">Start on Monday</option>
+                      <option value="2">Start On Sunday</option>
+                      <option value="1">Start on Monday</option>
                       <option value="3">Start on Saturday</option>
                       <option value="4">Start Today</option>
                     </select>

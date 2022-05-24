@@ -10,7 +10,7 @@ $title = $_POST['title'];
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-    $stmt = $link->prepare("INSERT INTO user_registry(FirstName, LastName, Email, Company, Title, Username, Password) VALUES (?,?,?,?,?,?,?)");
+    $stmt = $link->prepare("INSERT INTO User_Registry(FirstName, LastName, Email, Company, Title, Username, Password) VALUES (?,?,?,?,?,?,?)");
     $stmt->bind_param("sssssss",$firstName,$lastName,$email,$company,$title,$username,$password);
     $stmt->execute();
 

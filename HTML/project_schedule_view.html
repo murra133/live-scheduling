@@ -37,8 +37,9 @@
                             var register_id = all_cookies[cookies_variable_array.indexOf('Registry_ID')].split("=")[1];
                             console.log(register_id);
                             $.ajax({
-                                url : '../PHP/pull_user.php?register_id='+register_id,
-                                type : 'GET',     
+                                url : '../PHP/pull_user.php',
+                                type : 'POST',
+                                data: 'register_id='+register_id,     
                                 success:function(data){
                                 if (JSON.parse(data)==null){
                                     window.location.replace("../HTML/index.html");

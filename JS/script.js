@@ -844,7 +844,7 @@ function field_edit(input_tag){
   else if(class_type=='sub_date'){
     var HTML = input_tag.getAttribute('value')
     var input = document.createElement('h5');
-    input.setAttribute('class','sub_date');
+    input.setAttribute('class',class_);
     input.setAttribute('id',id_);
     input.setAttribute('onClick','input_edit(this)')
     input.setAttribute('value',HTML)
@@ -884,7 +884,7 @@ function field_edit(input_tag){
   if(sub.querySelectorAll("input").length==0 && sub.querySelectorAll("select").length==0){
     let undo_tag = did('actualized_'+id_.split('_')[1]);
     let actualized_i = document.createElement('input');
-    actualized_i.setAttribute('class','sub_actualized collapsable clickable');
+    actualized_i.setAttribute('class','sub_actualized clickable');
     actualized_i.setAttribute('type','checkbox');
     actualized_i.setAttribute('id','actualized_'+id_.split('_')[1]);
     undo_tag.replaceWith(actualized_i)
@@ -1341,20 +1341,21 @@ function log_dates_to_schedule(date_array,id_handler,action){
   if (action == 'new'){
     for(var z = 0; z<id_handler.children.length;z++){
       date = id_handler.children[z].id.split("_")[1]
+      id_handler.children[z].setAttribute("onclick","schedule_dates(this)");
       if (date_array.indexOf(date)>=0){
         if(date_array.indexOf(date)==0){
           if(date_array.length==1){
-            id_handler.children[z].className ="date_box schedule schedule_single";
+            id_handler.children[z].className ="date_box schedule schedule_single clickable";
           }
           else{
-            id_handler.children[z].className ="date_box schedule schedule_start";
+            id_handler.children[z].className ="date_box schedule schedule_start clickable";
           }
         }
         else if(date_array.indexOf(date)==date_array.length-1){
-          id_handler.children[z].className ="date_box schedule schedule_end";
+          id_handler.children[z].className ="date_box schedule schedule_end clickable";
         }
         else{
-          id_handler.children[z].className ="date_box schedule";
+          id_handler.children[z].className ="date_box schedule clickable";
         }
       }
       if (window.holidays[date_format_changer3(date)]!=undefined){
@@ -1379,25 +1380,25 @@ function log_dates_to_schedule(date_array,id_handler,action){
     let j=0
     while (date_all.length>0){
       var dates = date_all[j]
-      dates.className = 'date_box'
+      dates.className = 'date_box clickable'
     }
     for(var i=0;i<date_array.length;i++){
       let date_box = document.getElementById(id+"_"+date_array[i])
       if(date_box!=null && (date_box.className!="date_box holiday" && date_box.className!="date_box weekend")){
         if (i==0){
           if (date_array.length==1){
-            date_box.className = 'date_box schedule schedule_single'
+            date_box.className = 'date_box schedule schedule_single clickable'
 
           }
           else{
-            date_box.className = 'date_box schedule schedule_start'
+            date_box.className = 'date_box schedule schedule_start clickable'
           }
         }
         else if(i==date_array.length-1){
-          date_box.className = 'date_box schedule schedule_end'
+          date_box.className = 'date_box schedule schedule_end clickable'
         }
         else{
-          date_box.className = 'date_box schedule'
+          date_box.className = 'date_box schedule clickable'
         }
 
       }
@@ -1420,7 +1421,7 @@ function log_dates_to_schedule(date_array,id_handler,action){
         box.setAttribute("class","date_box weekend");
       }
       else{
-        box.setAttribute("class","date_box")
+        box.setAttribute("class","date_box clickable")
       }
       this_tag.appendChild(box);
     }
@@ -1675,7 +1676,7 @@ function cancel_main_activity(cancel_tag){
     s_activity_div.appendChild(name_title);
     /* Add Title for Start Date */
     var date_title = document.createElement("h3");
-    date_title.setAttribute("class","sub_date_title sub date_title");
+    date_title.setAttribute("class","sub_date_title sub date_title collapsable");
     date_title.innerHTML="Dates";
     s_activity_div.appendChild(date_title);
 
@@ -1708,13 +1709,13 @@ function cancel_main_activity(cancel_tag){
 
     /* Add edit to the Activity Location */
     var actualized_title = document.createElement("h3");
-    actualized_title.setAttribute("class","sub_actualized_title collapsable");
+    actualized_title.setAttribute("class","sub_actualized_title");
     actualized_title.innerHTML = "A"
     s_activity_div.appendChild(actualized_title);
 
     // Adds Delete Icon ///s
     var delete_empty_title = document.createElement("div");
-    delete_empty_title.setAttribute("class","delete_icon sub_delete_title collapsable");
+    delete_empty_title.setAttribute("class","delete_icon sub_delete_title");
     s_activity_div.appendChild(delete_empty_title);
     action_div.appendChild(s_activity_div)
     date_div.appendChild(bdate)
@@ -1746,7 +1747,7 @@ function cancel_main_activity(cancel_tag){
     name_div.appendChild(name_title);
     /* Add Title for Start Date */
     var date_div = document.createElement('div');
-    date_div.setAttribute("class","sub_activity_date sub")
+    date_div.setAttribute("class","sub_activity_date collapsable sub")
     var date_title = document.createElement("h3");
     date_title.setAttribute("class","date_title");
     date_title.innerHTML="Dates";
@@ -1784,7 +1785,7 @@ function cancel_main_activity(cancel_tag){
 
     /* Add edit to the Activity Location */
     var actualized_div = document.createElement('div');
-    actualized_div.setAttribute("class","sub_activity_actualized collapsable sub")
+    actualized_div.setAttribute("class","sub_activity_actualized sub")
     var actualized_title = document.createElement("h3");
     actualized_title.setAttribute("class","actualized");
     actualized_title.innerHTML = "A"
@@ -1792,7 +1793,7 @@ function cancel_main_activity(cancel_tag){
 
     // Adds Delete Icon ///
     var delete_div = document.createElement('div');
-    delete_div.setAttribute("class","sub_activity_delete collapsable sub")
+    delete_div.setAttribute("class","sub_activity_delete sub")
     var delete_empty_title = document.createElement("div");
     delete_empty_title.setAttribute("class","delete_icon");
     delete_div.appendChild(delete_empty_title);
@@ -1830,7 +1831,7 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
 
    /* Create Date */
    var input_date = document.createElement("h5");
-   input_date.setAttribute("class","sub_date sub");
+   input_date.setAttribute("class","sub_date sub collapsable");
    input_date.setAttribute("id","date_"+id.toString());
    input_date.setAttribute("value",date);
    input_date.setAttribute('onclick','input_edit(this)')
@@ -1863,7 +1864,7 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
   // Actualized
    var input_actualized = document.createElement("input");
    input_actualized.setAttribute("type","checkbox")
-   input_actualized.setAttribute("class","sub_actualized collapsable");
+   input_actualized.setAttribute("class","sub_actualized");
    input_actualized.setAttribute("id","actualized_"+id.toString());
    if(actualized==1){
      input_actualized.checked = true;
@@ -1877,7 +1878,7 @@ function download_sub_activity2(main_id,sub_id,activity_title,date,duration,part
    }
    
    var delete_button= document.createElement("i");
-   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable collapsable");
+   delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable");
    delete_button.setAttribute("id","delete_"+id);
    delete_button.setAttribute("onclick","delete_sub_activity_box(this)")
 
@@ -2072,7 +2073,7 @@ function add_sub_activity(this_tag){
         /* Create Start Date */
         var input_date = document.createElement("input");
         input_date.setAttribute('type','text')
-        input_date.setAttribute("class","sub_date");
+        input_date.setAttribute("class","sub_date collapsable");
         input_date.setAttribute("id","date_"+id.toString());
         input_date.setAttribute("onfocus","date_range_picker(this.id,'new',this.value)");
         var today_ = date_format_changer2(date_standard_to_yyyy_mm_dd_format(new Date()))
@@ -2095,14 +2096,14 @@ function add_sub_activity(this_tag){
     
         //// Create Add Button////
         var add = document.createElement("i");
-        add.setAttribute("class","far fa-plus-square add_sub_icon sub_actualized clickable collapsable");
+        add.setAttribute("class","far fa-plus-square add_sub_icon sub_actualized clickable");
         add.setAttribute("id","add_"+id);
         add.setAttribute("onclick","upload_sub_activity(this,'add')")
         sub_activity.appendChild(add);
     
         ////Create Delete Button/////
         var delete_button= document.createElement("i");
-        delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable collapsable");
+        delete_button.setAttribute("class","far fa-minus-square delete_sub_icon clickable");
         delete_button.setAttribute("id","delete_"+id);
         delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
         sub_activity.appendChild(delete_button);
@@ -2125,6 +2126,17 @@ function add_sub_activity(this_tag){
     })
   }
 }
+
+
+/*
+* All Date Related Functions to be housed below this section
+*
+*
+*/
+///Global Variables///
+var schedule_start = "";
+var schedule_start_id = "";
+
 //////////////////////////////////////////////////////////////////////////////
 function number_of_days_from_date(date){
   //Input in yyyy-mm-dd//
@@ -2235,6 +2247,47 @@ function return_end_date(start_date, duration, holidays, weekend_days){
     var yyyy = date.getFullYear();
     var end_date = mm+"/"+dd+"/"+yyyy;
     return end_date;
+
+}
+//////////////////////////////////////////////////////////////////////////////
+function schedule_dates(date_tag){
+  ///Function Adds schedule building to the actual interface///
+  let date = date_tag.id.split("_")[1];
+  let id = date_tag.id.split("_")[0];
+  if(schedule_start==""){
+    schedule_start = date;
+    schedule_start_id = id;
+    return;
+  }
+  else if(schedule_start==date &&schedule_start_id==id){
+    schedule_start = "";
+    schedule_start_id = "";
+    return;
+  }
+  else{
+    ///Check if new date is less if less, new date is start old date is end///
+    if(new Date(date).getTime()<new Date(schedule_start).getTime()){
+      let date_array =date_filler(date_format_changer3(date),date_format_changer3(schedule_start));
+      log_dates_to_schedule(date_array,id,'update');
+      let duration = return_duration(date,schedule_start,window.holidays,weekend_value)
+      did("date_"+id).innerHTML = date+" - "+ schedule_start;
+      did("date_"+id).setAttribute("value",date+" - "+ schedule_start);
+      did("duration_"+id).innerHTML = duration;
+
+    }
+    else{
+      ///Update date if second date is larger
+      let date_array =date_filler(date_format_changer3(schedule_start),date_format_changer3(date),);
+      log_dates_to_schedule(date_array,id,'update');
+      let duration = return_duration(schedule_start,date,window.holidays,weekend_value)
+      did("date_"+id).innerHTML = schedule_start+" - "+ date;
+      did("date_"+id).setAttribute("value",schedule_start+" - "+ date);
+      did("duration_"+id).innerHTML = duration;
+    }
+  }
+  schedule_start = "";
+  schedule_start_id = "";
+  return
 
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -2564,7 +2617,7 @@ function collapse_activities(collapse_button){
     var action='active'
   }
   let name_div = document.getElementsByClassName('sub_name')
-  let date_div = document.getElementsByClassName('sub_date')
+  // let date_div = document.getElementsByClassName('sub_date')
   let name_title = document.getElementsByClassName('sub_name_title')
   let children_array = document.getElementsByClassName('collapsable')
   if (action == 'active'){
@@ -2578,7 +2631,7 @@ function collapse_activities(collapse_button){
 }
 
     for(var i =0; i<name_div.length;i++){
-        date_div[i].setAttribute('class','sub_date sub collapsed')
+        // date_div[i].setAttribute('class','sub_date sub collapsed')
         name_div[i].setAttribute('class','sub_name sub collapsed')
     }
     for (var i =0; i<children_array.length;i++){
@@ -2596,7 +2649,7 @@ function collapse_activities(collapse_button){
     name_title[i].setAttribute('class','sub_name_title sub activity_title')
 }
     for(var i =0; i<name_div.length;i++){
-        date_div[i].setAttribute('class','sub_date sub')
+        // date_div[i].setAttribute('class','sub_date sub')
         name_div[i].setAttribute('class','sub_name sub')
     }
     setTimeout(() => {

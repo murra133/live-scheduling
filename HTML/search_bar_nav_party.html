@@ -1,0 +1,23 @@
+<nav id="topbar" class="navbar navbar-light bg-light justify-content-between" >
+    <h5 id = "search_bar_title" class="navbar-brand"></h5>
+    <div id="filters" class="btn-group">
+      <button type="button" class="btn dropdown-toggle clickable" onclick="toggle_filters()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Additional Options</button>
+    </div>
+    <form class="form-inline">
+      <input id="searchbar" class="form-control mr-sm-2" type="search" placeholder="Search for keywords" aria-label="Search">
+    </form>
+
+
+    <div id="user_account" class="btn-group">
+      <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-user-circle clickable"></i>
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="party_involved.html">Parties Involved</a>
+        <a class="dropdown-item" href="header.html">Schedule</a>
+        <a class="dropdown-item" href="project_schedule_view.html">Project View</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item clickable" onclick="logout()">Sign Out</a>
+      </div>
+    </div>
+  </nav>

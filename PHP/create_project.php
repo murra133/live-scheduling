@@ -79,6 +79,8 @@ $stmt = ("CREATE TABLE Personel_".$project_id['Project_id']." (
                 PERSON_LNAME varchar(255) Not NULL,
                 TITLE varchar(255) Not NULL,
                 EMAIL varchar(255) Not NULL,
+                PHONE varchar(255) Not NULL,
+                NOTIFY int Not NULL,
                 PRIMARY KEY (PERSON_ID),
                 FOREIGN KEY (PARTY_ID) REFERENCES Parties_".$project_id['Project_id']."(PARTY_ID)
                 ON UPDATE CASCADE ON DELETE CASCADE)");

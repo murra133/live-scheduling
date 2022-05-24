@@ -14,31 +14,43 @@
 }
 
 .personel_info_fname{
-    width: 20%;
+    width: 15%;
     margin-top: 0.75%;
     text-align: left;
 }
 
 .personel_info_lname{
-    width: 20%;
+    width: 15%;
     margin-top: 0.75%;
     text-align: left;
 }
 
 .personel_info_title{
-    width: 20%;
+    width: 15%;
     margin-top: 0.75%;
     text-align: left;
 }
 
 .personel_info_email{
-    width: 30%;
+    width: 20%;
     margin-top: 0.75%;
     text-align: left;
 }
 
-h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel_info_email{
+.personel_info_phone{
+    width: 20%;
+    margin-top: 0.75%;
+    text-align: left;
+}
+
+.personel_info_notify{
+    text-align: left;
+    margin-right: 5%;
+}
+
+h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel_info_email, h5.personel_info_phone{
     transition: background-color 500ms;
+    font-size: 15px;
 }
 
 
@@ -57,14 +69,10 @@ h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel
     box-shadow: 0px 1px 0px 0px grey;
 }
 
-h5.personel_info_fname:hover,h5.personel_info_lname:hover,h5.personel_info_title:hover,h5.personel_info_email:hover{
+h5.personel_info_fname:hover,h5.personel_info_lname:hover,h5.personel_info_title:hover,h5.personel_info_email:hover, h5.personel_info_phone:hover{
     background-color: rgb(240, 240, 240);
     cursor: pointer;
     border-radius: 4px;
-}
-
-h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel_info_email{
-    font-size: 15px;
 }
 
 .sub input{
@@ -75,12 +83,26 @@ h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel
     margin-top: 50px;
 }
 
-.fa-caret-down, .fa-caret-up{
-    padding-left: 1%;
+.fa-caret-right, .fa-caret-down{
+    padding-right: 1%;
 }
 
 .card {
     height: auto;
+}
+
+#filter_button_div_invisible {
+    width: 4%;
+    height: 8%;
+    position: fixed;
+    right: 0px;
+    transition: 0.3s; /* Add transition on hover */
+    margin-top: 23%;
+    margin-right: 15%;
+    border-radius: 5px 0 0 5px; /* Rounded corners on the top right and bottom right side */
+    display: grid;  
+    right: -15%;
+    z-index: 3;
 }
 
 #filter_button_div {
@@ -89,12 +111,13 @@ h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel
     position: fixed;
     right: 0px;
     transition: 0.3s; /* Add transition on hover */
-    margin-top: 12%;
+    margin-top: 23%;
     margin-right: 15%;
     border-radius: 5px 0 0 5px; /* Rounded corners on the top right and bottom right side */
-    background-color: rgba(255, 255, 255, 0.534);
+    background-color: rgba(0,0,0,.03);
     display: grid;  
     right: -15%;
+    z-index: 2;
 }
 
 #sort_button {
@@ -102,8 +125,9 @@ h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel
 }
 
 #filter_bar {
+    background-color: rgba(0,0,0,.03);
     width: 15%;
-    height: 50%;
+    height: 93%;
     position: fixed;
     right: 0px;
     transition: 0.3s; /* Add transition on hover */
@@ -111,6 +135,7 @@ h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel
     margin-top: 3%;
     border-radius: 5px 0 0 5px; /* Rounded corners on the top right and bottom right side */
     right: -15%;
+    z-index: 1;
 }
 
 .filter-check {
@@ -119,15 +144,26 @@ h5.personel_info_fname,h5.personel_info_lname,h5.personel_info_title,h5.personel
 }
 
 #cell {
-    margin : auto !important;
-    width: 60% !important;
-    padding: 10px;
+    left: 50% !important;
 }
 
 /*#filter_bar {
     right: -16%;
 }*/
 
-#filter_bar:hover, #filter_button_div:hover + #filter_bar{
+#filter_bar:hover, #filter_button_div_invisible:hover ~ #filter_bar, #filter_button_div_invisible:hover ~ #filter_button_div{
     right: 0;
+}
+
+#filter_bar:hover ~ #filter_button_div {
+    right: 0;
+}
+
+#main_party_added {
+    font-size: 1.2vw;
+    color: rgb(128,128,128);
+}
+
+.form-check-input {
+    position: relative !important;
 }

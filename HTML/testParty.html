@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../CS/party_style.css">
     <link rel="stylesheet" href="../CS/settings_styles.css">
     <link rel="stylesheet" href="../CS/general_styles.css">
-
+    <script src="../JS/party.js"></script>
 
 
     <!-- Email service script -->
@@ -28,8 +28,6 @@
 emailjs.init("user_okYz0VtMf7EE7qy6o3kdw");
 })();
 </script>
-
-    <script src="../JS/party.js"></script>
 	<script>
 
             function init2(party_id) {
@@ -76,7 +74,9 @@ emailjs.init("user_okYz0VtMf7EE7qy6o3kdw");
                 <input class = "admin_input lastname" type="text" placeholder="Last Name:">
                 <input class = "admin_input title" type="text" placeholder="Title:">
                 <input class = "admin_input email" type="text" placeholder="Email:">
-
+                <input name="person_phone" placeholder="Phone" />
+                <input class = "admin_input checkboxNotify" name = "person_notify" type="checkbox" onclick="notify_checkbox(this)">
+          
                     <i class="far fa-trash-alt clickable" onclick="delete_user_admin_input(this)"></i>
             </div>
         </div>

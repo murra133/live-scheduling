@@ -1,7 +1,4 @@
 
-
-
-
 // --------- Cookie Script ---------//
 function ReadCookie() {
   //// Np Input, Returns Array with all Cookies
@@ -41,6 +38,16 @@ return false;
 ////////////////////////////////////////////////////////////////////////////
 ///////////////   UNDER CONSTRUCTION ////////////////////////
 
+
+function notify_checkbox(e){
+  if(e.value == 1){
+    e.value = 0;
+  }
+  else{
+    e.value = 1;
+  }
+}
+
 function add_id_Party_Update(id){
   document.getElementById('party_form').id = id;
   return;
@@ -73,7 +80,7 @@ function add_id_Party_Input(){
 
 //for adding party: calls an empty edit page
 function add_party(){
-	//document.getElementById("main_page").style.blur = "10px";
+	//document.getElementById("party_page").style.blur = "10px";
   console.log("add parties!!!!!");
     $('#content_box').load("../HTML/testParty.html");
     setTimeout(add_id_Party_Input,500);
@@ -109,9 +116,6 @@ function add_id_Party_Update(id){
   document.getElementById('party_form').id = id;
   return;
 }
-
-
-
 
 
 function morePerson(party_id) {
@@ -186,6 +190,8 @@ function submit_person(this_id){
           var lname = insertHere.getElementsByTagName("input")[1].value;
           var title = insertHere.getElementsByTagName("input")[2].value;
           var email = insertHere.getElementsByTagName("input")[3].value;
+          var phone = insertHere.getElementsByTagName("input")[4].value;
+          var notify = parseInt(insertHere.getElementsByTagName("input")[5].value);
           if(fname == "" ||lname == "" ||title == "" ||email == "" ){
             alert("Input cannot be empty");
             return;
@@ -200,9 +206,9 @@ function submit_person(this_id){
           }
           $.post( "../PHP/add_parties.php", { party_id: this_id, party_name: name, project_id:window.project_id});
           console.log(fname);
-          var personel_field = create_card_personel(party_counter, id, fname, lname, title, email)
+          var personel_field = create_card_personel(party_counter, id, fname, lname, title, email, phone, notify)
           div_project.children[0].children[0].children[1].children[0].children[1].appendChild(personel_field);
-          $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, project_id:window.project_id, action:"Add"} );
+          $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, personel_phone : phone, personel_notify : notify, project_id:window.project_id, action:"Add"} );
           console.log(email);
           //checking existing users and adding administry level if not assigned
           //TODO: auto email for personels noy yet registered
@@ -212,6 +218,8 @@ function submit_person(this_id){
             update_user_merge(js_data[email], window.project_id);
           }
           else{
+            let personel_id = project_id+'_'+id;
+            $.post( "../PHP/update_unregistered_personel.php", { personel_fname: fname, personel_lname: lname, personel_email : email, personel_company: name, personel_title : title, project_id : window.project_id, action:"Add"} );
             console.log("unregistered");
             //TODO: email invitation
             var templateParams = {
@@ -248,38 +256,3 @@ function update_user_merge(register_id, project_id){
   $.post( "../PHP/update_merge_from_party.php", { Register_id: register_id, Project_id: project_id} );
 }
 
-function search_party() { 
-  let input = document.getElementById('searchbar').value;
-  input=input.toLowerCase(); 
-  let x = document.getElementsByClassName('project_title'); 
-  let y = document.getElementsByClassName('personel_box'); 
-    
-  /*for (i = 0; i < x.length; i++) {  
-      console.log(x[i].childNodes[0].childNodes[0]);
-  } */
-
-  for (var i = 0; i < x.length; i++) {  
-    if(input==""){
-      x[i].parentElement.parentElement.style.display="inline-block";
-    }
-    else if (!x[i].childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)) { 
-        x[i].parentElement.parentElement.style.display="none"; 
-    } 
-    else { 
-        x[i].parentElement.parentElement.style.display="inline-block";                  
-    } 
-  } 
-
-  for (var j = 0; j < y.length; j++){
-    if (y[j].childNodes[0].textContent.toLowerCase().includes(input)){
-      y[j].parentElement.parentElement.style.display="inline-block"; 
-    }
-  }
-} 
-
-function add_function_to_search(function_call){
-  var search_tag =document.getElementById('searchbar');
-  search_tag.setAttribute('onkeyup',function_call);
-  var search_title = document.getElementById("search_bar_title");
-  search_title.innerHTML += " Party";
-};

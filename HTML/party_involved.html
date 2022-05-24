@@ -22,18 +22,19 @@
     <script src="../JS/side_bar.js"></script>   
     <script src="../JS/jquery.min.js"></script>
     <script src="../JS/server_script.js"></script>   
-    <link rel="stylesheet" href="../CS/settings_styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
     
 
-    <body>
-    <div>
+    <body style="background-color:white;">
+    <div id = "party_page">
     <div class="wrapper d-flex align-items-stretch">
         <nav id="sidebar" class = "active" onclick="toggle_side_bar()" >
         </nav>
-        <div id = "filter_button_div"><i id = "sort_button" class="fa-solid fa-sort fa-xl"></i></div>
+        <div id = "search_navbar"></div>
+        <!--hovering over this empty div will trigger the slide animation of button&sort bar-->
+        <div id = "filter_button_div_invisible"></div>
         <div id = "filter_bar" class = "card">
             <div class="filter-check">
                 <input class="filter-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked onclick="sort_least_recent()">
@@ -60,9 +61,11 @@
                 </label>
             </div>
         </div>
+        <!--The visible sort button-->
+        <div id = "filter_button_div"><i id = "sort_button" class="fa-solid fa-sort fa-xl"></i></div>
         <div id = "content">
             <div id="main_page">
-                <div id = "search_navbar"></div>
+                <!--div id = "search_navbar"></div-->
                 <div id="cell">
                     <div id="cell_header">
                         <br>
@@ -74,7 +77,7 @@
 
                     <div id="party_add">
                         <div id="main_party_added" onclick="add_party()">
-                            <i class="far fa-plus-square">  Add Party</i>
+                            <i class="far fa-plus-square clickable">  Add Party</i>
                         </div>
                     </div>
 
@@ -105,7 +108,7 @@
         </body>
 <footer>
     <script>
-        $('#search_navbar').load('../HTML/search_bar_nav.html');
+        $('#search_navbar').load('../HTML/search_bar_nav_party.html');
         $('#sidebar').load('../HTML/side_bar_nav.html');
         setTimeout(add_function_to_search,300,'search_party()');
     </script>

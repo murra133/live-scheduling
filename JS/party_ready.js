@@ -67,7 +67,9 @@ $( document ).ready(function() {
               var person_lname = person[person_id]['PERSON_LNAME'];
               var person_title = person[person_id]['TITLE'];
               var person_email = person[person_id]['EMAIL'];
-              var personel_list = create_card_personel(main_id, person_id, person_fname, person_lname, person_title, person_email);
+              var person_phone = person[person_id]['PHONE'];
+              var person_notify = person[person_id]['NOTIFY'];
+              var personel_list = create_card_personel(main_id, person_id, person_fname, person_lname, person_title, person_email, person_phone, person_notify);
               console.log(div_project.children[0].children[0].children[1].children[0]);
               div_project.children[0].children[0].children[1].children[0].children[1].appendChild(personel_list);
               //console.log(div_project.children[0].children[0].children[1].children[1].children[0]);
@@ -95,79 +97,6 @@ $( document ).ready(function() {
     }
     
   });
-
- /*
-  $.ajax({
-    url : '../PHP/pull_parties.php',
-    type : 'POST',   
-    data : 'project_id='+window.project_id,  
-    success:function(data){
-      var js_data = JSON.parse(data);
-        //console.log(js_data.length);
-        if(js_data.length!=0){
-          const sortNameMap = new Map();
-          for (var i = 0; i < Object.keys(js_data).length; i++){
-            var location = Object.keys(js_data)[i];
-            var main_id = js_data[location]["PARTY_ID"];
-            //console.log(main_id);
-            var main_title = js_data[main_id]['PARTY_NAME'];
-            sortNameMap.set(main_id, main_title);
-            //sortNameMap.set("a",3);
-            //sortNameMap.set("c",4);
-            //sortNameMap.set("b",1);
-            //sortNameMap.set("d",2);
-          }
-          //Sort A-Z
-          const mapSort2 = new Map([...sortNameMap.entries()].sort((a, b) => a[1].localeCompare(b[1])));
-          console.log(mapSort2);
-          // Map(4) {"b" => 1, "d" => 2, "a" => 3, "c" => 4}
-          if(js_data.length!=0){
-            for (const entry of mapSort2.entries()){
-              var main_id = entry[0];
-              var main_title = entry[1];
-              console.log(main_id);
-              var div_grid = document.createElement('div');
-              div_grid.className = "party_card_div";
-              var div_project = create_card_title(main_id, main_title)
-              console.log(div_project);
-              ///submit_form(div_newFields);
-              var person = js_data[main_id]['PERSON_NAME'];
-              var newFields2 = document.createElement("ul");
-              for (var j = 0; j < Object.keys(person).length; j++){
-                var person_location = Object.keys(person)[j];
-                var person_id = person[person_location]['PERSON_ID'];
-                var person_fname = person[person_id]['PERSON_FNAME'];
-                var person_lname = person[person_id]['PERSON_LNAME'];
-                var person_title = person[person_id]['TITLE'];
-                var person_email = person[person_id]['EMAIL'];
-                var personel_list = create_card_personel(main_id, person_id, person_fname, person_lname, person_title, person_email);
-                console.log(div_project.children[0].children[0].children[1].children[0]);
-                div_project.children[0].children[0].children[1].children[0].children[1].appendChild(personel_list);
-                //console.log(div_project.children[0].children[0].children[1].children[1].children[0]);
-                var add_party_block14 = document.createElement('i');
-                add_party_block14.className = "far fa-plus-square clickable add_user " + main_id;
-                add_party_block14.onclick = function(){add_personel(this)};
-                ///submit_form(newFields2);
-                if(main_id > MAX_PARTY_ID){
-                  MAX_PARTY_ID = parseInt(main_id);
-                }
-              }
-              div_project.children[0].children[0].children[1].children[0].append(add_party_block14);
-              div_grid.appendChild(div_project);
-              submit_form(div_grid);
-    
-    
-    
-            }
-            var last_id = document.getElementsByClassName("existing_parties").length
-            console.log(last_id);
-            GLOBAL_COUNTER = last_id;
-            console.log(GLOBAL_COUNTER);
-        }
-    }
-  }
-    
-  });*/
 });
 
 function sortA_Z(){
@@ -484,61 +413,6 @@ function sort_most_recent(){
 
 function create_card_title(main_id, main_title){
   
-/*  var div_project = document.createElement('div');
-  div_project.className = "party_card";
-  var newFields = document.createElement('h2');
-  newFields.id = main_id;
-  newFields.className = "party_name";
-  newFields.className = "card-header"
-  newFields.innerHTML = main_title;
-  div_project.id = "div"+main_id;
-  var div_newFields = document.createElement('div');
-  div_newFields.className = "project_title";
-
-  var edit = document.createElement("i");
-  edit.setAttribute("class","fas fa-edit main_edit title");
-  edit.setAttribute("id","edit_"+main_id);
-  edit.setAttribute("onclick","update_project(this)")
-  
-  var delete_button= document.createElement("i");
-  delete_button.setAttribute("class","far fa-minus-square main_delete title");
-  delete_button.setAttribute("id","delete_"+main_id);
-  delete_button.setAttribute("onclick","delete_project(this)")
-
-  newFields.appendChild(edit);
-  newFields.appendChild(delete_button);
-  
-  div_newFields.appendChild(newFields);
-  //console.log(div_newFields);
-  div_project.appendChild(div_newFields);
-  return div_project;
-
-  */
-  /*
-  <div class="container">
-        <div class="col-8">
-          <div class="card" style="width: 60rem; overflow:auto;">
-            <div class="card-body tab-content">
-                <h6 style="display:inline-block"> PROJECT INFORMATION</h6>
-                <i class="far fa-window-close clickable close_button" onclick="close_button()" style="display:inline-block"></i>
-                <hr>
-                <form id = "party_form">
-                  <div class="form-group">
-                    <h8>Project Name</h8>
-                    <input type="text" class="form-control" id="partyname" aria-describedby="fullNameHelp" placeholder="Enter party name">
-                  </div>
-                  <h8>Add Personel</h8>
-                  <span class="person_field"></span>
-                <i class="far fa-plus-square clickable add_user" aria-hidden="true" onclick="init2(this.parentNode.id)"> Add User</i>
-                  <button id = "submit_button" type="button" class="btn btn-primary" onclick="submit_person(this.parentNode.id)">Update Profile</button>
-                  <button type="reset" class="btn btn-light">Reset Changes</button>
-                </form>
-          </div>
-        </div>
-      </div>
-
-    </div>
-*/
 
   var add_party_block1 = document.createElement('div');
   add_party_block1.id = main_id;
@@ -547,7 +421,7 @@ function create_card_title(main_id, main_title){
   add_party_block1.style.width = "100%";
 
   var add_party_block2 = document.createElement('div');
-  add_party_block2.className = "col-8";
+  /*add_party_block2.className = "col-8*"*/;
 
   var add_party_block3 = document.createElement('div');
   add_party_block3.className = "card";
@@ -562,11 +436,12 @@ function create_card_title(main_id, main_title){
   add_party_block4.id = "collapseParty_" + main_id;
 
   var add_party_block5 = document.createElement('h6');
+  add_party_block5.className = "party_names";
   add_party_block5.style.display = "inline-block"
   add_party_block5.textContent = main_title;
 
   var collapse_down = document.createElement('i');
-  collapse_down.className = "fas fa-caret-down clickable";
+  collapse_down.className = "fas fa-caret-right clickable";
   collapse_down.onclick = function(){expand_party(collapse_down)};
   collapse_down.style.display = "inline-block";
   collapse_down.setAttribute("data-toggle", "collapse");
@@ -602,11 +477,21 @@ function create_card_title(main_id, main_title){
   email_text.className = "personel_info_email";
   email_text.innerHTML = "Email";
 
+  var phone_text = document.createElement('h4');
+  phone_text.className = "personel_info_phone";
+  phone_text.innerHTML = "phone";
+
+  var notify_text = document.createElement('h4');
+  notify_text.className = "personel_info_notify";
+  notify_text.innerHTML = "notify";
+
 
   personel_header.appendChild(fname_text);
   personel_header.appendChild(lname_text);
   personel_header.appendChild(title_text);
   personel_header.appendChild(email_text);
+  personel_header.appendChild(phone_text);
+  personel_header.appendChild(notify_text);
 
   var add_party_block9 = document.createElement('div');
   add_party_block9.className = "form-group";
@@ -624,8 +509,8 @@ function create_card_title(main_id, main_title){
   add_party_block8.appendChild(add_party_block9);
   add_party_block8.appendChild(add_party_block13);
 
-  party_card_header.appendChild(add_party_block5);
   party_card_header.appendChild(collapse_down);
+  party_card_header.appendChild(add_party_block5);
   party_card_header.appendChild(add_party_block6);
 
   add_party_block4.appendChild(add_party_block8);
@@ -646,12 +531,12 @@ function create_card_title(main_id, main_title){
 
 
 function expand_party(e){
-  e.className = "fas fa-caret-up clickable";
+  e.className = "fas fa-caret-down clickable";
   e.onclick = function(){collapse_party(e)};
 }
 
 function collapse_party(e){
-  e.className = "fas fa-caret-down clickable";
+  e.className = "fas fa-caret-right clickable";
   e.onclick = function(){expand_party(e)};
 }
 
@@ -663,21 +548,29 @@ function add_personel(e){
 
     var fname_text = document.createElement('input');
     fname_text.className = "personel_info_fname";
-    fname_text.innerHTML = person_fname;
-    //name_text.readOnly = true;
+
 
     var lname_text = document.createElement('input');
     lname_text.className = "personel_info_lname";
-    lname_text.innerHTML = person_lname;
 
     var title_text = document.createElement('input');
     title_text.className = "personel_info_title";
-    title_text.innerHTML = person_title;
 
 
     var email_text = document.createElement('input');
     email_text.className = "personel_info_email";
-    email_text.innerHTML = person_email;
+
+    var phone_text = document.createElement('input');
+    phone_text.className = "personel_info_phone";
+
+    var notify_text = document.createElement('input');
+    notify_text.className = "personel_info_email";
+
+    var notify_text = document.createElement('input');
+    notify_text.className = "personel_info_notify";
+    notify_text.type = "checkbox";
+    notify_text.value = 0;
+    notify_text.setAttribute('onclick','notify_checkbox(this);');
 
     var submit_button = document.createElement("i");
     submit_button.className = "far fa-plus-square clickable collapsable";
@@ -694,6 +587,8 @@ function add_personel(e){
     person_info.appendChild(lname_text);
     person_info.appendChild(title_text);
     person_info.appendChild(email_text);
+    person_info.appendChild(phone_text);
+    person_info.appendChild(notify_text);
     person_info.appendChild(delete_button);
     person_info.appendChild(submit_button);
     var field_to_add = document.getElementById(e.parentElement.parentElement.parentElement.parentElement.parentElement.id);
@@ -704,6 +599,15 @@ function add_personel(e){
     person_info.id = parseInt(proxy_id) + 1;
     field_to_add.children[0].children[0].children[1].children[0].children[1].appendChild(person_info);
     submit_button.onclick = function(){get_add_personel_info(this)};
+}
+
+function notify_checkbox(e){
+  if(e.value == 1){
+    e.value = 0;
+  }
+  else{
+    e.value = 1;
+  }
 }
 
 //when double clicking element turn it into input
@@ -743,6 +647,8 @@ function submit_edit(main_id, person_id, person_text, className){
       personel_lname: text.parentElement.children[1].innerHTML, 
       personel_title : text.parentElement.children[2].innerHTML, 
       personel_email : text.parentElement.children[3].innerHTML, 
+      personel_phone : text.parentElement.children[4].innerHTML, 
+      personel_notify : text.parentElement.children[5].value, 
       project_id:window.project_id,
       action:"Update"} );
 }
@@ -791,7 +697,7 @@ function add_id_Party_Input(){
 
 //for adding party: calls an empty edit page
 function add_party(){
-	//document.getElementById("main_page").style.blur = "10px";
+	//document.getElementById("party_page").style.blur = "10px";
   console.log("add parties!!!!!");
     $('#content_box').load("../HTML/testParty.html");
     setTimeout(add_id_Party_Input,500);
@@ -855,93 +761,6 @@ function containsKey(object, key) {
   return !!Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase());
 }
 
-function submit_person(this_id){
-  var name = document.getElementById('partyname').value;
-  console.log(name);
-  var div_grid = document.createElement('div');
-  div_grid.className = "party_card_div";
-  var div_project = create_card_title(this_id, name);
-  console.log("This is a test for posting id: ", this_id);
-
-  //$.post( "../PHP/add_parties.php", { party_id: this_id, party_name: name, project_id:window.project_id});
-
-  $.ajax({
-    url : '../PHP/pull_all_registered_users.php',
-    type : 'POST',     
-    success:function(data){
-      js_data = JSON.parse(data);
-      console.log(js_data);
-      console.log(email);
-      
-        /*for(var i = 0; i<js_data.length;i++){
-          js_data[i] = js_data[i].toLowerCase();
-        }
-        var user_exist = data.includes(email.toLowerCase());
-        if(user_exist){
-
-        }*/
-        var party_counter = MAX_PARTY_ID;
-        var n = count_person(party_counter);
-        var parent_element = document.getElementById(this_id).parentElement.parent_element;
-        var newFields2 = document.createElement("ul");
-        for(var i = 1; i <= n; i++){
-          var id = party_counter*100+i;
-          var insertHere = document.getElementById(id);
-          var fname = insertHere.getElementsByTagName("input")[0].value;
-          var lname = insertHere.getElementsByTagName("input")[1].value;
-          var title = insertHere.getElementsByTagName("input")[2].value;
-          var email = insertHere.getElementsByTagName("input")[3].value;
-          if(fname == "" ||lname == "" ||title == "" ||email == "" ){
-            alert("Input cannot be empty");
-            return;
-          }
-          else if(email!=""){
-            const email_format = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
-            const valid = email_format.test(email);
-            if(valid == false){
-              alert("Input must be of email format");
-              return;
-            }
-          }
-          $.post( "../PHP/add_parties.php", { party_id: this_id, party_name: name, project_id:window.project_id});
-          console.log(fname);
-          var personel_field = create_card_personel(party_counter, id, fname, lname, title, email)
-          div_project.children[0].children[0].children[1].children[0].children[1].appendChild(personel_field);
-          $.post( "../PHP/add_personel.php", { personel_id: id, party_id: party_counter, personel_fname: fname, personel_lname: lname, personel_title : title, personel_email : email, project_id:window.project_id, action:"Add"} );
-          console.log(email);
-          //checking existing users and adding administry level if not assigned
-          //TODO: auto email for personels noy yet registered
-          console.log("registered");
-          if(containsKey(js_data, email)){
-            console.log(js_data[email]);
-            update_user_merge(js_data[email], window.project_id);
-          }
-          else{
-            console.log("unregistered");
-            //TODO: email invitation
-            var templateParams = {
-              name: fname,
-              email: email
-          };
-           
-          emailjs.send('service_zkn8nva', 'template_3xuubji', templateParams, 'user_okYz0VtMf7EE7qy6o3kdw')
-              .then(function(response) {
-                 console.log('SUCCESS!', response.status, response.text);
-              }, function(error) {
-                 console.log('FAILED...', error);
-              });
-          }
-        }
-        div_grid.appendChild(div_project);
-        submit_form(div_grid);
-        console.log(div_grid)
-        var parent_element = document.getElementById("submit_button").parentElement.parentElement.parentElement.parentElement;
-        removeAllChildNodes(parent_element);
-    }
-    
-  });
-}
-
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -956,8 +775,10 @@ function get_add_personel_info(e){
   var person_lname = new_person_input.getElementsByClassName('personel_info_lname')[0].value;
   var person_title = new_person_input.getElementsByClassName('personel_info_title')[0].value;
   var person_email = new_person_input.getElementsByClassName('personel_info_email')[0].value;
+  var person_phone = new_person_input.getElementsByClassName('personel_info_phone')[0].value;
+  var person_notify = new_person_input.getElementsByClassName('personel_info_notify')[0].value;
 
-  if(person_fname == "" ||person_lname == "" ||person_title == "" ||person_email == "" ){
+  if(person_fname == "" ||person_lname == "" ||person_title == "" ||person_email == "" ||person_phone == ""){
     alert("Input cannot be empty");
     return;
   }
@@ -970,12 +791,20 @@ function get_add_personel_info(e){
     }
   }
   
-  var new_person = create_card_personel(party_id, person_id, person_fname, person_lname, person_title, person_email);
+  var new_person = create_card_personel(party_id, person_id, person_fname, 
+                                        person_lname, person_title, person_email, 
+                                        person_phone, person_notify);
   console.log(new_person);
   document.getElementById(person_id).replaceWith(new_person);
-  $.post( "../PHP/add_personel.php", { personel_id: person_id, party_id: party_id, personel_fname: person_fname, personel_lname: person_lname, personel_title : person_title, personel_email : person_email, project_id:window.project_id, action:"Add"} );
+  $.post( "../PHP/add_personel.php", { personel_id: person_id, party_id: party_id, 
+                                       personel_fname: person_fname, personel_lname: person_lname, 
+                                       personel_title : person_title, personel_email : person_email, 
+                                       personel_phone : person_phone, personel_notify : person_notify, 
+                                       project_id:window.project_id, action:"Add"} );
+
 }
-function create_card_personel(main_id, person_id, person_fname, person_lname, person_title, person_email){
+
+function create_card_personel(main_id, person_id, person_fname, person_lname, person_title, person_email, person_phone, person_notify){
  var person_info = document.createElement('div');
  person_info.id = person_id;
  person_info.className = "personel_info";
@@ -1002,6 +831,29 @@ function create_card_personel(main_id, person_id, person_fname, person_lname, pe
  email_text.innerHTML = person_email;
  email_text.ondblclick = function(){edit_triggered(main_id, person_id, email_text, email_text.className)};
 
+ var phone_text = document.createElement('h5');
+ phone_text.className = "personel_info_phone";
+ phone_text.innerHTML = person_phone;
+ phone_text.ondblclick = function(){edit_triggered(main_id, person_id, phone_text, phone_text.className)};
+
+ var notify_text = document.createElement('input');
+ notify_text.className = "personel_info_notify";
+ notify_text.type = "checkbox";
+
+ console.log(person_notify)
+ if(person_notify==1){
+   console.log("yesss")
+   notify_text.checked = 1;
+   notify_text.disabled = 1;
+   notify_text.value = 1;
+ }
+ else{
+  notify_text.disabled = 1;
+  notify_text.value = 0;
+ }
+
+
+
  var delete_button = document.createElement("i");
  delete_button.className = "far fa-minus-square clickable collapsable";
  //delete_button.type = "button";
@@ -1012,6 +864,8 @@ function create_card_personel(main_id, person_id, person_fname, person_lname, pe
  person_info.appendChild(lname_text);
  person_info.appendChild(title_text);
  person_info.appendChild(email_text);
+ person_info.appendChild(phone_text);
+ person_info.appendChild(notify_text);
  person_info.appendChild(delete_button);
   return person_info;
 
@@ -1026,30 +880,34 @@ function update_user_merge(register_id, project_id){
 function search_party() { 
   let input = document.getElementById('searchbar').value;
   input=input.toLowerCase(); 
-  let x = document.getElementsByClassName('project_title'); 
-  let y = document.getElementsByClassName('personel_box'); 
-    
-  /*for (i = 0; i < x.length; i++) {  
-      console.log(x[i].childNodes[0].childNodes[0]);
-  } */
-
-  for (var i = 0; i < x.length; i++) {  
-    if(input==""){
-      x[i].parentElement.parentElement.style.display="inline-block";
+  if(input==''){
+    for(var x = 0; x < parties.length; x++){
+      parties[x].style.display = "inline-block";
     }
-    else if (!x[i].childNodes[0].childNodes[0].textContent.toLowerCase().includes(input)) { 
-        x[i].parentElement.parentElement.style.display="none"; 
-    } 
-    else { 
-        x[i].parentElement.parentElement.style.display="inline-block";                  
-    } 
-  } 
-
-  for (var j = 0; j < y.length; j++){
-    if (y[j].childNodes[0].textContent.toLowerCase().includes(input)){
-      y[j].parentElement.parentElement.style.display="inline-block"; 
+    return
+  }
+  let party_name = document.getElementsByClassName('party_names'); 
+  let first_name = document.getElementsByClassName('personel_info_fname'); 
+  let last_name = document.getElementsByClassName('personel_info_fname'); 
+  let parties = document.getElementsByClassName('party_card_div');
+  for(var x = 0; x < parties.length; x++){
+    parties[x].style.display = "none";
+  }
+  for(var i = 0; i < party_name.length; i++){
+    if(party_name[i].innerHTML.includes(input)){
+      party_name[i].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "inline-block";
     }
   }
+  for(i = 0; i < first_name.length; i++){
+    if(first_name[i].innerHTML.includes(input)){
+      first_name[i].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "inline-block";
+    }
+  } 
+  for(i = 0; i < last_name.length; i++){
+    if(last_name[i].innerHTML.includes(input)){
+      last_name[i].parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "inline-block";
+    }
+  } 
 } 
 
 function add_function_to_search(function_call){
@@ -1058,4 +916,3 @@ function add_function_to_search(function_call){
   var search_title = document.getElementById("search_bar_title");
   search_title.innerHTML += " Party";
 };
-

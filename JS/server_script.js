@@ -155,8 +155,9 @@ function ValidateEmail(mail)
 //////////////////////////////////////////////////////////////////////
 function pull_user_write_cookie(username_password){
     $.ajax({
-        url : AWS_bucket+'/PHP/pull_user.php?username='+username_password[0]+'&password='+username_password[1],
-        type : 'GET',     
+        url : AWS_bucket+'/PHP/pull_user.php',
+        type : 'POST',
+        data: 'username='+username_password[0]+'&password='+username_password[1],     
         success:function(data){
           if (JSON.parse(data)==null){
             document.getElementById("message").innerHTML = "Username or Password is Incorrect";

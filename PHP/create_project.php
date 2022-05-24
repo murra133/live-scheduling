@@ -49,14 +49,14 @@ for($i =0; $i<sizeof($email_array); $i++){
     unset($register_id);
 };
 
-$stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."(
+$stmt = ("CREATE TABLE main_activities_".$project_id['Project_id']."(
                 Main_ID int NOT NULL,
                 Main_Activity varchar(255) NOT NULL,
                 Position int NOT NULL,
                 PRIMARY KEY (Main_ID))");
                 mysqli_query($link,$stmt);
 
- $stmt = ("CREATE TABLE Sub_Activities_".$project_id['Project_id']." (
+ $stmt = ("CREATE TABLE sub_activities_".$project_id['Project_id']." (
                 Sub_ID int NOT NULL,
                 Main_ID int NOT NULL,
                 Sub_Activity varchar(255) NOT NULL,
@@ -66,17 +66,17 @@ $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."(
                 Position int Not NULL,
                 Actualized int DEFAULT 0,
                 PRIMARY KEY (Sub_ID),
-                FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
+                FOREIGN KEY (Main_ID) REFERENCES main_activities_".$project_id['Project_id']."(Main_ID)
                 ON UPDATE CASCADE ON DELETE CASCADE)");
                 mysqli_query($link,$stmt);
 
-$stmt = ("CREATE TABLE Parties_".$project_id['Project_id']." (
+$stmt = ("CREATE TABLE parties_".$project_id['Project_id']." (
                 PARTY_ID int NOT NULL,
                 PARTY_NAME varchar(255) NOT NULL,
                 PRIMARY KEY (PARTY_ID))");
                 mysqli_query($link,$stmt);
 
-$stmt = ("CREATE TABLE Personel_".$project_id['Project_id']." (
+$stmt = ("CREATE TABLE personel_".$project_id['Project_id']." (
                 PERSON_ID int NOT NULL,
                 PARTY_ID int NOT NULL,
                 PERSON_FNAME varchar(255) NOT NULL,
@@ -90,14 +90,14 @@ $stmt = ("CREATE TABLE Personel_".$project_id['Project_id']." (
                 ON UPDATE CASCADE ON DELETE CASCADE)");
                 mysqli_query($link,$stmt);
 
-$stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."_General(
+$stmt = ("CREATE TABLE main_activities_".$project_id['Project_id']."_General(
                 Main_ID int NOT NULL,
                 Main_Activity varchar(255) NOT NULL,
                 Position int NOT NULL,
                 PRIMARY KEY (Main_ID))");
                 mysqli_query($link,$stmt);
 
- $stmt = ("CREATE TABLE Sub_Activities_".$project_id['Project_id']."_General (
+ $stmt = ("CREATE TABLE sub_activities_".$project_id['Project_id']."_General (
                 Sub_ID int NOT NULL,
                 Main_ID int NOT NULL,
                 Sub_Activity varchar(255) NOT NULL,
@@ -107,16 +107,16 @@ $stmt = ("CREATE TABLE Main_Activities_".$project_id['Project_id']."_General(
                 Actualized int NOT NULL,
                 Position int Not NULL,
                 PRIMARY KEY (Sub_ID),
-                FOREIGN KEY (Main_ID) REFERENCES Main_Activities_".$project_id['Project_id']."(Main_ID)
+                FOREIGN KEY (Main_ID) REFERENCES main_activities_".$project_id['Project_id']."(Main_ID)
                 ON UPDATE CASCADE ON DELETE CASCADE)");
                 mysqli_query($link,$stmt);                
                 
-$stmt = ("CREATE TABLE Relationship_".$project_id['Project_id']."(
+$stmt = ("CREATE TABLE relationship_".$project_id['Project_id']."(
     Relationship_ID int NOT NULL AUTO_INCREMENT,
     Parent_ID int NOT NULL,
     Child_ID int NOT NULL,
     Relationship varchar(255) NOT NULL,
-    Lag int NOT NULL,
+    LAG_ int NOT NULL,
     PRIMARY KEY (Relationship_ID),
     FOREIGN KEY (Parent_ID) REFERENCES sub_activities_".$project_id['Project_id']."(Sub_ID)
     ON UPDATE CASCADE ON DELETE CASCADE,

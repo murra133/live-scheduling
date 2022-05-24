@@ -10,11 +10,11 @@ $stmt = ("DELETE FROM project_database WHERE Project_id = ".$project_id.";");
 
 $stmt .=("DROP TABLE relationship_".$project_id.";
         DROP TABLE sub_activities_".$project_id.";
-        DROP TABLE sub_activities_".$project_id."_general;
+        DROP TABLE sub_activities_".$project_id."_General;
         DROP TABLE personel_".$project_id.";
         DROP TABLE parties_".$project_id.";
         DROP TABLE main_activities_".$project_id.";
-        DROP TABLE main_activities_".$project_id."_general;
+        DROP TABLE main_activities_".$project_id."_General;
         DROP TABLE holidays_".$project_id.";");
 
 

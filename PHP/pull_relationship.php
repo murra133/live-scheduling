@@ -10,7 +10,7 @@ if($query_main->num_rows > 0){
         $c_id = $row_main["Child_ID"];
         $r_id = $row_main["Relationship_ID"];
         $rel = $row_main["Relationship"];
-        $lag = $row_main["Lag"];
+        $lag = $row_main["LAG_"];
         $data_main[$c_id][0][$r_id]= ['sub_id'=>$p_id,'Rel'=>$rel,'Lag'=>$lag];
         $data_main[$p_id][1][$r_id]= ['sub_id'=>$c_id,'Rel'=>$rel,'Lag'=>$lag];      
     }

@@ -1,8 +1,8 @@
 <?php
 require_once("db_link.php");
-if (isset($_GET['username']) && isset($_GET['password'])){
-    $username = $_GET['username'];
-    $password = $_GET['password'];
+if (isset($_POST['username']) && isset($_POST['password'])){
+    $username = $_POST['username'];
+    $password = $_POST['password'];
     
     
         $stmt = $link->prepare("SELECT Register_id FROM user_registry WHERE (Username,Password) = (?,?)");
@@ -14,8 +14,8 @@ if (isset($_GET['username']) && isset($_GET['password'])){
     echo json_encode($data);
 }
 
-elseif(isset($_GET['register_id'])){
-    $id = $_GET['register_id'];
+elseif(isset($_POST['register_id'])){
+    $id = $_POST['register_id'];
     $stmt = $link->prepare("SELECT FirstName, LastName, Email, Company, Title, Username FROM user_registry WHERE Register_id = ?");
     $stmt->bind_param("i",$id);
     $stmt->execute();

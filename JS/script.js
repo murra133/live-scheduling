@@ -1,3 +1,9 @@
+//Global Variables//
+window.project_id = ""; /// Holds the project ID of your project;
+window.collapsed = 0; /// Shows whether activities are collapsed or not
+
+
+
 // ------ Brian's JavaScript------//
 //------------General Scripts Start-------//
 // --------- Cookie Script ---------//
@@ -539,8 +545,12 @@ window.holidays = {};
         set_start_date()
       }})
       pull_relationship()
-var project_name = cookie_value('project_name');
-document.getElementById('main_title').innerHTML = project_name+" Schedule";
+      setTimeout(function(){
+        collapse_activities("Blank")
+        did("main_page").removeAttribute('style','display:none');
+        },200);
+      var project_name = cookie_value('project_name');
+      document.getElementById('main_title').innerHTML = project_name+" Schedule";
 
 });
 //////////////////////////////////////////////////////////////////////////////
@@ -568,6 +578,14 @@ $(document).ready(function(){
     success:function(data){
       var js_data = JSON.parse(data);
          window.party_list = document.createElement('select')
+         document.getElementById('party').replaceWith(window.party_list)
+         var input = document.getElementById('party_div').children[1]
+         input.setAttribute('id','party')
+         var show_all = document.createElement('option')
+         show_all.value='All'
+         show_all.innerHTML='All'
+         input.appendChild(show_all)
+         input.value = 'All'
         for (var i = 0; i < Object.keys(js_data).length; i++){
           var div_grid = document.createElement('div');
           var div_project = document.createElement('div');
@@ -581,20 +599,7 @@ $(document).ready(function(){
           party_option.innerHTML = main_title;
           party_list.appendChild(party_option);
             ///submit_form(newFields2);          }
-
-        
-
-
         }
-        
-        document.getElementById('party').replaceWith(window.party_list)
-        var input = document.getElementById('party_div').children[1]
-        input.setAttribute('id','party')
-        var show_all = document.createElement('option')
-        show_all.value='All'
-        show_all.innerHTML='Show All'
-        input.appendChild(show_all)
-        input.value = 'All'
   }});
 
 })
@@ -901,7 +906,7 @@ function set_start_date(){
   ////Initialize for today////
     var today=new Date();
     var day = today.getDay()
-
+    console.log(day)
     ////Start Monday///
     if(window.sday == 1){
       today = new Date(today.getTime()-(parseInt(day))*86400000)
@@ -914,14 +919,17 @@ function set_start_date(){
     else if(window.sday==3){
       today = new Date(today.getTime()-(parseInt(day)+2)*86400000)
     }
+    console.log(today)
 
     ////Check if to start this week or the previous week///
     if(window.lookahead==1||window.lookahead==3){
-      today = new Date(today.getTime()-(parseInt(day)-1)*86400000*-6)
+      today = new Date(today.getTime()-(parseInt(day))*86400000)
     }
     else{
-      today = new Date(today.getTime()-(parseInt(day)-1)*86400000)
+      today = new Date(today.getTime()-(parseInt(day)-1)*8640000)
     }
+    console.log(today)
+
     var dd = today.getDate();
     var mm = today.getMonth()+1;
     var yy = today.getFullYear();
@@ -969,7 +977,7 @@ function start_date_picker(date_input_tag){
           bdate_child = log_dates_to_schedule(date_array,bdate_box,'new')
         }
       }
-
+      apply_filters();
       // var bdate_children = bdate_array[i].children
       // var length_ = bdate_children.length
       // var id_array =[]
@@ -1252,13 +1260,14 @@ function three_week_ahead(bdate_dates,bdate_days){
       var date = document.createElement("h3");
       date.setAttribute("class","date");
       let odate = nmm+'/'+ndd+'/'+nyy 
-      date.innerHTML = nmm+'/'+ndd+'/'+nyy;
+      date.innerHTML = nmm+'/'+ndd
+      date.setAttribute("value",nmm+'/'+ndd+'/'+nyy)
       var day_value = (standarize_dates_to_UTC(new Date(nyy+"-"+nmm+"-"+ndd))).getDay();
       var day = weekday_name(day_value);
       let ndate_day = change_dates_title(odate,day)
       var day_tag = document.createElement("h3");
       day_tag.setAttribute("class","day");
-      day_tag.innerHTML =day;
+      day_tag.innerHTML =ndate_day[1];
       // date.innerHTML = ndate_day[0]
       // day_tag.innerHTML=ndate_day[1]
       bdate_dates.appendChild(date);
@@ -1342,6 +1351,7 @@ function log_dates_to_schedule(date_array,id_handler,action){
     for(var z = 0; z<id_handler.children.length;z++){
       date = id_handler.children[z].id.split("_")[1]
       id_handler.children[z].setAttribute("onclick","schedule_dates(this)");
+      id_handler.children[z].setAttribute("onmouseover","schedule_dates_mouseenter(this)");
       if (date_array.indexOf(date)>=0){
         if(date_array.indexOf(date)==0){
           if(date_array.length==1){
@@ -1414,10 +1424,12 @@ function log_dates_to_schedule(date_array,id_handler,action){
   function date_box(this_tag,id,this_dates){
     var dates = this_dates.getElementsByClassName("date");
     for (i=0;i<dates.length;i++){
-      box_id = id+"_"+dates[i].innerHTML;
+      box_id = id+"_"+dates[i].getAttribute("value");
       var box = document.createElement("div");
+      box.setAttribute('onclick',"schedule_dates(this)");
+      box.setAttribute("onmouseover","schedule_dates_mouseenter(this)")
       box.setAttribute("id",box_id);
-      if (check_if_no_work(dates[i].innerHTML,weekend_date_transform(weekend_value))==false){
+      if (check_if_no_work(dates[i].getAttribute("value"),weekend_date_transform(weekend_value))==false){
         box.setAttribute("class","date_box weekend");
       }
       else{
@@ -1682,13 +1694,13 @@ function cancel_main_activity(cancel_tag){
 
     /* Add Duration */
     var duration_title = document.createElement("h3");
-    duration_title.setAttribute("class","sub_duration_title collapsable");
+    duration_title.setAttribute("class","sub_duration_title collapsable sub");
     duration_title.innerHTML="Duration";
     s_activity_div.appendChild(duration_title);
 
     /* Add Party Invloved */
     var contractor_title = document.createElement("h3");
-    contractor_title.setAttribute("class","sub_contractor_title collapsable");
+    contractor_title.setAttribute("class","sub_contractor_title collapsable sub");
     contractor_title.innerHTML="Party Involved";
     s_activity_div.appendChild(contractor_title);
 
@@ -1709,7 +1721,7 @@ function cancel_main_activity(cancel_tag){
 
     /* Add edit to the Activity Location */
     var actualized_title = document.createElement("h3");
-    actualized_title.setAttribute("class","sub_actualized_title");
+    actualized_title.setAttribute("class","sub_actualized_title sub");
     actualized_title.innerHTML = "A"
     s_activity_div.appendChild(actualized_title);
 
@@ -1719,6 +1731,15 @@ function cancel_main_activity(cancel_tag){
     s_activity_div.appendChild(delete_empty_title);
     action_div.appendChild(s_activity_div)
     date_div.appendChild(bdate)
+
+    if(window.collapsed==1){
+      name_title.classList.add("collapsed");
+      duration_title.classList.add("sub_collapsed");
+      date_title.classList.add("sub_collapsed");
+      contractor_title.classList.add("sub_collapsed");
+      action_div.classList.add("collapsed");
+      c_button.classList.add("rotate180")
+    }
 
     activity_div.appendChild(action_div)
     activity_div.appendChild(collapsable_button)
@@ -2107,6 +2128,14 @@ function add_sub_activity(this_tag){
         delete_button.setAttribute("id","delete_"+id);
         delete_button.setAttribute("onclick","delete_sub_activity_box(this)");
         sub_activity.appendChild(delete_button);
+
+
+        if(window.collapsed==1){
+          input_activity.classList.add("collapsed")
+          input_date.classList.add("sub_collapsed");
+          input_duration.classList.add("sub_collapsed");
+          input_contractor.classList.add("sub_collapsed");
+        }
     
         /* Create Date Box */
         var bdate_parent= parent_div.getElementsByClassName("sub_activity_bdate")[0];
@@ -2136,6 +2165,7 @@ function add_sub_activity(this_tag){
 ///Global Variables///
 var schedule_start = "";
 var schedule_start_id = "";
+var schedule_hover ="";
 
 //////////////////////////////////////////////////////////////////////////////
 function number_of_days_from_date(date){
@@ -2171,7 +2201,7 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
   var date = new Date(start_date).getTime();
   var e_date = ((new Date(end_date))).getTime();
   var duration = 1;
-  while(date != e_date){
+  while(date < e_date){
     date = 86400000+date;
     if((date+3600000==e_date)){
       date = date+3600000
@@ -2182,7 +2212,12 @@ function return_duration(start_date,end_date,holidays_array,weekend_days){
       continue
     }
     let date_n = date_format_changer3(date_format_changer4(date))
+    console.log(date_n)
+    console.log(holidays_array[date_n]!=undefined)
+    console.log(weekend.indexOf(day)>=0)
+    console.log("n")
     if(weekend.indexOf(day)>=0||holidays_array[date_n]!=undefined){
+      console.log("Inside")
       day = day+1
     }
     else{
@@ -2250,21 +2285,14 @@ function return_end_date(start_date, duration, holidays, weekend_days){
 
 }
 //////////////////////////////////////////////////////////////////////////////
-function schedule_dates(date_tag){
-  ///Function Adds schedule building to the actual interface///
+/////////////////////////////////////////////////////////////////////////////
+function schedule_dates_mouseenter(date_tag){
   let date = date_tag.id.split("_")[1];
   let id = date_tag.id.split("_")[0];
   if(schedule_start==""){
-    schedule_start = date;
-    schedule_start_id = id;
     return;
   }
-  else if(schedule_start==date &&schedule_start_id==id){
-    schedule_start = "";
-    schedule_start_id = "";
-    return;
-  }
-  else{
+  else if(schedule_start_id==id){
     ///Check if new date is less if less, new date is start old date is end///
     if(new Date(date).getTime()<new Date(schedule_start).getTime()){
       let date_array =date_filler(date_format_changer3(date),date_format_changer3(schedule_start));
@@ -2272,24 +2300,108 @@ function schedule_dates(date_tag){
       let duration = return_duration(date,schedule_start,window.holidays,weekend_value)
       did("date_"+id).innerHTML = date+" - "+ schedule_start;
       did("date_"+id).setAttribute("value",date+" - "+ schedule_start);
-      did("duration_"+id).innerHTML = duration;
-
+      let duration_tag = did("duration_"+id)
+      duration_tag.innerHTML = duration;
+      if(duration_tag.tagName=="INPUT"){
+        duration_tag.value=duration;
+      }
+      else{
+        duration_tag.setAttribute("value",duration)
+      }
     }
-    else{
+    else {
       ///Update date if second date is larger
       let date_array =date_filler(date_format_changer3(schedule_start),date_format_changer3(date),);
       log_dates_to_schedule(date_array,id,'update');
       let duration = return_duration(schedule_start,date,window.holidays,weekend_value)
       did("date_"+id).innerHTML = schedule_start+" - "+ date;
       did("date_"+id).setAttribute("value",schedule_start+" - "+ date);
-      did("duration_"+id).innerHTML = duration;
+      let duration_tag = did("duration_"+id)
+      duration_tag.innerHTML = duration;
+      console.log(duration_tag.tagName)
+      if(duration_tag.tagName=="INPUT"){
+        console.log("Running Inside")
+        duration_tag.value=duration;
+      }
+      else{
+        duration_tag.setAttribute("value",duration)
+      }
     }
   }
-  schedule_start = "";
-  schedule_start_id = "";
   return
 
 }
+
+function schedule_dates(date_tag){
+  ///Function Adds schedule building to the actual interface///
+  let date = date_tag.id.split("_")[1];
+  let id = date_tag.id.split("_")[0];
+  if(schedule_start==""){
+    schedule_start = date;
+    schedule_start_id = id;
+    let date_array =date_filler(date_format_changer3(date),date_format_changer3(schedule_start));
+    log_dates_to_schedule(date_array,id,'update');
+    return;
+  }
+  // else if(schedule_start==date &&schedule_start_id==id){
+  //   schedule_start = "";
+  //   schedule_start_id = "";
+
+  //   return;
+  // }
+  else if (schedule_start_id==id){
+    ///Check if new date is less if less, new date is start old date is end///
+    if(new Date(date).getTime()<new Date(schedule_start).getTime()){
+      console.log("Inside")
+      let date_array =date_filler(date_format_changer3(date),date_format_changer3(schedule_start));
+      log_dates_to_schedule(date_array,id,'update');
+      let duration = return_duration(date,schedule_start,window.holidays,weekend_value)
+      did("date_"+id).innerHTML = date+" - "+ schedule_start;
+      did("date_"+id).setAttribute("value",date+" - "+ schedule_start);
+      let duration_tag = did("duration_"+id)
+      duration_tag.innerHTML = duration;
+      if(duration_tag.tagName=="INPUT"){
+        duration_tag.value=duration;
+      }
+      else{
+        duration_tag.setAttribute("value",duration)
+      }
+      if(!(did("sub_"+id).getElementsByTagName('input').length>=3)){
+        upload_sub_activity(id,"update");}
+    }
+    else{
+      ///Update date if second date is larger
+      let date_array =date_filler(date_format_changer3(schedule_start),date_format_changer3(date),);
+      log_dates_to_schedule(date_array,id,'update');
+      let duration = return_duration(schedule_start,date,window.holidays,weekend_value)
+      console.log(window.holidays)
+      did("date_"+id).innerHTML = schedule_start+" - "+ date;
+      did("date_"+id).setAttribute("value",schedule_start+" - "+ date);
+      let duration_tag = did("duration_"+id)
+      duration_tag.innerHTML = duration;
+      if(duration_tag.tagName=="INPUT"){
+        duration_tag.value=duration;
+      }
+      else{
+        duration_tag.setAttribute("value",duration)
+      }
+      if(!(did("sub_"+id).getElementsByTagName('input').length>=3)){
+      upload_sub_activity(id,"update");}
+
+    }
+    // datelog = {};
+    // let array_answer = relationship_date(window.relationship_log,id,1,[id],datelog)
+    // if(!(did("actualized_"+id)==undefined)){
+    //   console.log(did("actualized_"+id));
+    //   update_dates_rel(array_answer[1]) 
+    // }
+    schedule_start = "";
+    schedule_start_id = "";
+    return
+  }
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
 $(document).on('change','.sub_duration', function(){
   var duration = this.value;
@@ -2393,8 +2505,10 @@ function add_value_to_message_box(message){
 //////////////////////////////////////////////////////////////////////////////
 function delete_sub_activity_box(delete_icon_tag){
   let parent = delete_icon_tag.parentElement
+  let id = parent.id.split("_")[1]
   if(parent.getElementsByTagName('input').length>=3){
     parent.remove()
+    did("bdate_"+id).remove();
     return
   }
 
@@ -2448,6 +2562,7 @@ function delete_selected_items(delete_id,action){
   ///Removes the deleted sub Activity////
   let sub_act = document.getElementById('sub_'+delete_id)
   sub_act.remove()
+  did("bdate_"+delete_id).remove();
 }
 else if(action=='delete_main_activity') {
   var main_activity_parent = document.getElementById(delete_id);
@@ -2560,8 +2675,6 @@ function search_activity(){
 function add_function_to_search(function_call){
   var search_tag =document.getElementById('searchbar');
   search_tag.setAttribute('onkeyup',function_call);
-  var search_title = document.getElementById("search_bar_title");
-  search_title.innerHTML += " title";
 }
 
 function hide_searchbar(body){
@@ -2621,6 +2734,7 @@ function collapse_activities(collapse_button){
   let name_title = document.getElementsByClassName('sub_name_title')
   let children_array = document.getElementsByClassName('collapsable')
   if (action == 'active'){
+    window.collapsed = 1;
     // collapse_button.setAttribute('type','hidden');
     for(var i =0; i<activities_div.length;i++){
       activities_div[i].setAttribute('class','activity_left collapsed')
@@ -2635,11 +2749,12 @@ function collapse_activities(collapse_button){
         name_div[i].setAttribute('class','sub_name sub collapsed')
     }
     for (var i =0; i<children_array.length;i++){
-      children_array[i].style.display = 'none'
+      children_array[i].classList.add("sub_collapsed");
     }
   }
   else{
     // collapse_button.setAttribute('type','active');
+    window.collapsed = 0;
     for(var i =0; i<activities_div.length;i++){
       activities_div[i].setAttribute('class','activity_left')
       collapsed_buttons[i].children[0].className = "fa-solid fa-angle-left clickable rotate0"
@@ -2654,9 +2769,8 @@ function collapse_activities(collapse_button){
     }
     setTimeout(() => {
       for (var i =0; i<children_array.length;i++){
-        children_array[i].removeAttribute('style')
-      }
-    }, 600);
+        children_array[i].classList.remove("sub_collapsed")
+    }}, 600);
   }
    
 }
@@ -3565,7 +3679,7 @@ function change_dates_title(date,day){
   else if(day=="Thursday"){
     day="Thur"
   }
-  else if(day=="Firday"){
+  else if(day=="Friday"){
     day="Fri"
   }
   else if(day=="Saturday"){
@@ -3579,26 +3693,27 @@ function change_dates_title(date,day){
 function print_PDF(){
   let timestamp = document.createElement('h5')
   timestamp.setAttribute('id','time_stamp')
-  timestamp.innerHTML=new Date()
+  timestamp.innerHTML="Date: "+date_standard_to_yyyy_mm_dd_format(new Date())
   let p_body = document.getElementById('added_cell').cloneNode(true)
   p_body.className="PDF"
   let title = did('main_title').cloneNode(true)
-  let date_array = p_body.getElementsByClassName('date')
-  let day_array = p_body.getElementsByClassName('day')
-  for (let i=0; i<date_array.length;i++){
-    let odate = date_array[i].innerHTML
-    let oday = day_array[i].innerHTML
-    let ndate_day =  change_dates_title(odate,oday)
-    date_array[i].innerHTML = ndate_day[0]
-    day_array[i].innerHTML = ndate_day[1]
-  }
+  // let date_array = p_body.getElementsByClassName('date')
+  // let day_array = p_body.getElementsByClassName('day')
+  // // for (let i=0; i<date_array.length;i++){
+  // //   let odate = date_array[i].innerHTML
+  // //   let oday = day_array[i].innerHTML
+  // //   let ndate_day =  change_dates_title(odate,oday)
+  // //   date_array[i].innerHTML = ndate_day[0]
+  // //   day_array[i].innerHTML = ndate_day[1]
+  // // }
   let schedule = document.createElement('div');
   schedule.append(title)
   schedule.append(timestamp)
   schedule.append(p_body)
+  let schedule_title = title.innerHTML.split(" ").join("_")+"_"+timestamp.innerHTML;
   var opt = {
     margin: 0.5,
-    filename: 'schedule.pdf',
+    filename: schedule_title+'.pdf',
     image: {type:'jpeg',quality:1},
     pagebreak:{avoid:'.main_activity'},
     html2canvas: {scale:2},
@@ -3745,6 +3860,8 @@ function dragDrop_sub(){
   }
 
 function dragEnter_sub(){
+  console.log("Enter");
+  console.log(this)
   this.classList.add('sub_drag_over')
   let childs = this.querySelectorAll('.sub');
   childs.forEach(child_ =>{
@@ -3752,6 +3869,8 @@ function dragEnter_sub(){
  }
 
 function dragLeave_sub(){
+  console.log("Leave");
+  console.log(this)
   this.classList.remove('sub_drag_over')
   let childs = this.querySelectorAll('.sub');
   childs.forEach(child_ =>{
@@ -3765,12 +3884,13 @@ function dragOver_sub(e){
 
 
 function sub_draggables(drag){
-  dragging = 'sub'
+  dragging ='sub'
   sdragstartIndex = drag.getAttribute('data-index')
   sdragstartid = drag.id
   let main_div = drag.parentElement
   let draggables = main_div.querySelectorAll('.sub_activity');
   drag.addEventListener('dragstart',dragStart_sub)
+
   draggables.forEach(draggable => {
     if(draggable!=drag){
       draggable.addEventListener('drop',dragDrop_sub);
@@ -3941,10 +4061,10 @@ function dragOver_m(e){
 
 
 function main_draggables(drag){
-  console.log('main_drag')
   if (dragging=='sub'){
     return
   }
+  console.log('main_drag')
   let main_title = document.querySelectorAll('.main_activity_title')
   let sub_box = document.querySelectorAll('.sub_activity_box')
   main_title.forEach(title=>{

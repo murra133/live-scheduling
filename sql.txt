@@ -32,7 +32,7 @@ CREATE TABLE Project_User_Merge(
 )
 
 //awaiting these uses to register
-CREATE TABLE Unregistered_personel (
+CREATE TABLE unregistered_personel (
     personel_id int NOT NULL AUTO_INCREMENT,
     FirstName varchar(255) NOT NULL,
     LastName varchar(255) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE Unregistered_personel (
     PRIMARY KEY (personel_id)
 )
 
-CREATE TABLE Project_Unregistered_User_Merge ( 
+CREATE TABLE project_unregistered_user_merge ( 
     personel_id int NOT NULL, 
     FOREIGN KEY (personel_id) REFERENCES Unregistered_personel(personel_id), 
     email varchar(255) NOT NULL, 

@@ -237,17 +237,12 @@ function submit_register(action){
         }
 
         document.getElementById("message").innerHTML = "";
-<<<<<<< HEAD
-        $.post( "../PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
-        setInterval(delete_registered_from_unregistered_personel,300,email);
-=======
         $.post( AWS_bucket+"/PHP/user_register.php",{ firstName: firstName, lastName:lastName,username:username,company:company,title:title,email:email,password:password} );
->>>>>>> e18158d1d022a18edf63bd523e195620c2006560
     }
 
     var input_array=[username,password];
     console.log(input_array);
-    setInterval(pull_user_write_cookie,300,input_array)
+    setTimeout(pull_user_write_cookie,300,input_array)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 function containsKey(object, key) {
